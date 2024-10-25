@@ -5,8 +5,18 @@ project(myApp
 	DESCRIPTION "Stub"
 	LANGUAGES CXX)
 
+# Find OpenCV package
+find_package(OpenCV REQUIRED)
+
+# Include for all targets
+include_directories($OpenCV_INCLUDE_DIRS})
+
+
 add_executable(myApp
 	src/main.cpp)
+
+# Target libraries (.a files)
+target_link_libraries(myApp ${OpenCV_LIBS})
 
 target_compile_features(myApp PRIVATE cxx_std_20)
 
