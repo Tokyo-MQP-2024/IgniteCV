@@ -9,7 +9,7 @@ project(myApp
 find_package(OpenCV REQUIRED)
 
 # Include for all targets
-include_directories($OpenCV_INCLUDE_DIRS})
+include_directories(${OpenCV_INCLUDE_DIRS})
 
 
 add_executable(myApp
