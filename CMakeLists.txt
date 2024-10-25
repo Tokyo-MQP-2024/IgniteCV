@@ -8,6 +8,7 @@ project(myApp
 # Find OpenCV package
 find_package(OpenCV REQUIRED)
 
+
 # Include for all targets
 include_directories(${OpenCV_INCLUDE_DIRS})
 
