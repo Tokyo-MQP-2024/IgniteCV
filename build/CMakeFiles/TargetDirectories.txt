@@ -1,0 +1,3 @@
+C:/Users/chris/WPI/JapanMQPClone/JapanMQP/build/CMakeFiles/myApp.dir
+C:/Users/chris/WPI/JapanMQPClone/JapanMQP/build/CMakeFiles/ALL_BUILD.dir
+C:/Users/chris/WPI/JapanMQPClone/JapanMQP/build/CMakeFiles/ZERO_CHECK.dir

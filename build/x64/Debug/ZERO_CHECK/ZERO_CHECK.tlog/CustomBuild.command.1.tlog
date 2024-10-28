@@ -1,0 +1,10 @@
+^C:\USERS\CHRIS\WPI\JAPANMQPCLONE\JAPANMQP\BUILD\CMAKEFILES\91C635B8D690A2D6C02C8C5DE06E73E6\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/chris/WPI/JapanMQPClone/JapanMQP -BC:/Users/chris/WPI/JapanMQPClone/JapanMQP/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/chris/WPI/JapanMQPClone/JapanMQP/build/myApp.sln
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd

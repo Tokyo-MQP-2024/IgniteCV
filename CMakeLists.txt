@@ -13,7 +13,8 @@ include_directories(${OpenCV_INCLUDE_DIRS})
 
 
 add_executable(myApp
-	src/main.cpp)
+	src/main.cpp
+	src/FrameAnalyzer.cpp)
 
 # Target libraries (.a files)
 target_link_libraries(myApp ${OpenCV_LIBS})
@@ -25,7 +26,7 @@ target_compile_features(myApp PRIVATE cxx_std_20)
 #target_compile_definitions(myApp PRIVATE DEFINITIONHERE)
 
 # Classic compile options NOT CROSS PLATFORM
-target_compile_options(myApp PRIVATE -Wall -Wextra -Wpedantic)
+#target_compile_options(myApp PRIVATE -Wall -Wextra -Wpedantic)
 
 
 
