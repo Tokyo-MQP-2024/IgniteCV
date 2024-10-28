@@ -37,7 +37,7 @@ void parseVideo() {
         std::cout << "Frames per second: " << fps << std::endl;
 
         // Frame-by-frame analysis
-        cv::Mat frame, grayScaleFrame, HSVFrame;
+        cv::Mat frame, HSVFrame;
         int frameCount = 0;
 
         while (true) {
