@@ -50,27 +50,27 @@ void parseVideo() {
             }
 
             // Process the frame (you can add your analysis here)
-            std::cout << "Processing frame #" << frameCount << std::endl;
+            //std::cout << "Processing frame #" << frameCount << std::endl;
 
            //// 3. Capture and convert frame to HSV color space
-            cv::cvtColor(frame, HSVFrame, cv::COLOR_BGR2HSV);
+            //cv::cvtColor(frame, HSVFrame, cv::COLOR_BGR2HSV);
             //cv::cvtColor(frame, grayScaleFrame, cv::COLOR_RGB2GRAY);
 
              //// 3. Create mask and result (masked) image
-            cv::Mat mask;
-            // params: input array, lower boundary array, upper boundary array, output array
-            cv::inRange(
-                HSVFrame, 
-                cv::Scalar(minHue, minSat, minVal), 
-                cv::Scalar(maxHue, maxSat, maxVal), 
-                mask
-            );
-            cv::Mat resultImage;
+            // cv::Mat mask;
+            // // params: input array, lower boundary array, upper boundary array, output array
+            // cv::inRange(
+            //     HSVFrame, 
+            //     cv::Scalar(minHue, minSat, minVal), 
+            //     cv::Scalar(maxHue, maxSat, maxVal), 
+            //     mask
+            // );
+            // cv::Mat resultImage;
             // params: src1	array, src2 array, output array, mask
-            cv::bitwise_and(HSVFrame, HSVFrame, resultImage, mask);
+            //cv::bitwise_and(HSVFrame, HSVFrame, resultImage, mask);
             
             // Example: Display the frame
-            cv::imshow("Frame", resultImage);
+            cv::imshow("Frame", frame);
 
             // Wait for 1 ms between frames (to simulate real-time playback)
             if (cv::waitKey(1) == 27) { // Exit if 'Esc' is pressed
