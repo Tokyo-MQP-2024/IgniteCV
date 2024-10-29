@@ -18,10 +18,6 @@ include_directories(${OpenCV_INCLUDE_DIRS})
 set(TS_FILES OpenCV_Integration_en_US.ts)
 
 set(PROJECT_SOURCES
-
-
-
-
         ${TS_FILES}
 )
 
