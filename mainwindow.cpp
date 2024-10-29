@@ -85,3 +85,11 @@ void MainWindow::closeEvent(QCloseEvent *event) {
         event->accept();
     }
 }
+
+void MainWindow::on_actionOpen_triggered()
+{
+    // Create file dialog
+    QString fileName = QFileDialog::getOpenFileName(this, "Open A File", "C://");
+    ui->lineEdit->setText(fileName);
+}
+

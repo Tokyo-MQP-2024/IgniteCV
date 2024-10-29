@@ -28,7 +28,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         mainwindow.cpp mainwindow.h mainwindow.ui
         image.png
         main.cpp mainwindow.cpp
-        gaming.mp4
+
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET OpenCV_Integration APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

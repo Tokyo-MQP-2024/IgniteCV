@@ -10,6 +10,9 @@
 #include <QCloseEvent>
 #include <QMessageBox>
 
+// For file dialog
+#include <QFileDialog>
+
 #include "opencv2/opencv.hpp"
 
 QT_BEGIN_NAMESPACE
@@ -29,6 +32,8 @@ protected:
     void closeEvent(QCloseEvent *event);
 private slots:
     void startBtnPressed();
+    void on_actionOpen_triggered();
+
 private:
     Ui::MainWindow *ui;
     QGraphicsPixmapItem pixmap;

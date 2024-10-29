@@ -63,8 +63,23 @@
      <height>20</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuBig_Test">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionOpen"/>
+   </widget>
+   <addaction name="menuBig_Test"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionOpen">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::DocumentOpen"/>
+   </property>
+   <property name="text">
+    <string>Open</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>
