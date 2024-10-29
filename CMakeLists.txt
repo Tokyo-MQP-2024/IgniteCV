@@ -19,15 +19,15 @@ set(TS_FILES OpenCV_Integration_en_US.ts)
 
 set(PROJECT_SOURCES
         ${TS_FILES}
+        mainwindow.cpp mainwindow.h mainwindow.ui
+        image.png
+        main.cpp mainwindow.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(OpenCV_Integration
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
-        mainwindow.cpp mainwindow.h mainwindow.ui
-        image.png
-        main.cpp mainwindow.cpp
 
     )
 # Define target properties for Android with Qt 6 as:
@@ -51,6 +51,20 @@ else()
 
     qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 endif()
+
+# Language stuff
+# configure_file(${QM_FILES} ${CMAKE_SOURCE_DIR} COPYONLY)
+#qt_collect_translation_source_targets(TARGETS)
+#qt_add_lupdate(
+#    TS_FILES ${TS_FILES}
+#   SOURCES ${TARGETS}
+#)
+
+qt_standard_project_setup(I18N_TRANSLATED_LANGUAGES ja)
+qt6_add_translations(OpenCV_Integration
+    QM_FILES_OUTPUT_VARIABLE qm_files)
+install(FILES ${qm_files} DESTINATION ${CMAKE_SOURCE_DIR}/translations)
+
 
 target_link_libraries(OpenCV_Integration PRIVATE Qt${QT_VERSION_MAJOR}::Widgets ${OpenCV_LIBS})
 
@@ -78,3 +92,4 @@ install(TARGETS OpenCV_Integration
 if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(OpenCV_Integration)
 endif()
+
