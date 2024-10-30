@@ -1,6 +1,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+#include "imagesubtraction.h"
+
+#include <QThreadPool>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 
@@ -21,6 +24,19 @@ MainWindow::MainWindow(QWidget *parent) :
     // cv::namedWindow("My Image");
     // // show the image on window
     // cv::imshow("My Image", image);
+
+    cv::Mat im1 = cv::imread("original.tif");
+    cv::Mat im2 = cv::imread("background.tif");
+    cv::Mat diff;
+
+    QMutex mutex;
+    ImageSubtraction *subtraction = new ImageSubtraction(im1, im2, &diff, &mutex);
+    QThreadPool::globalInstance()->start(subtraction);
+
+    QThreadPool::globalInstance()->waitForDone();
+    cv::imshow("My iamg", diff);
+
+
 }
 
 MainWindow::~MainWindow()
