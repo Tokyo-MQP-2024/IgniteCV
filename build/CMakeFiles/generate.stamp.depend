@@ -22,13 +22,12 @@ C:/Program Files/CMake/share/cmake-3.31/Modules/Platform/Windows-MSVC-CXX.cmake
 C:/Program Files/CMake/share/cmake-3.31/Modules/Platform/Windows-MSVC.cmake
 C:/Program Files/CMake/share/cmake-3.31/Modules/Platform/Windows.cmake
 C:/Program Files/CMake/share/cmake-3.31/Modules/Platform/WindowsPaths.cmake
-C:/Users/chris/Documents/ProjectLibraries/opencv/build/OpenCVConfig-version.cmake
-C:/Users/chris/Documents/ProjectLibraries/opencv/build/OpenCVConfig.cmake
-C:/Users/chris/Documents/ProjectLibraries/opencv/build/x64/vc16/lib/OpenCVConfig.cmake
-C:/Users/chris/Documents/ProjectLibraries/opencv/build/x64/vc16/lib/OpenCVModules-debug.cmake
-C:/Users/chris/Documents/ProjectLibraries/opencv/build/x64/vc16/lib/OpenCVModules-release.cmake
-C:/Users/chris/Documents/ProjectLibraries/opencv/build/x64/vc16/lib/OpenCVModules.cmake
 C:/Users/chris/WPI/JapanMQPClone/JapanMQP/CMakeLists.txt
 C:/Users/chris/WPI/JapanMQPClone/JapanMQP/build/CMakeFiles/3.31.0-rc2/CMakeCXXCompiler.cmake
 C:/Users/chris/WPI/JapanMQPClone/JapanMQP/build/CMakeFiles/3.31.0-rc2/CMakeRCCompiler.cmake
 C:/Users/chris/WPI/JapanMQPClone/JapanMQP/build/CMakeFiles/3.31.0-rc2/CMakeSystem.cmake
+C:/opencv/build/x64/vc16/lib/OpenCVConfig-version.cmake
+C:/opencv/build/x64/vc16/lib/OpenCVConfig.cmake
+C:/opencv/build/x64/vc16/lib/OpenCVModules-debug.cmake
+C:/opencv/build/x64/vc16/lib/OpenCVModules-release.cmake
+C:/opencv/build/x64/vc16/lib/OpenCVModules.cmake
