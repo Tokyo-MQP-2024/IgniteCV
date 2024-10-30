@@ -25,18 +25,6 @@ MainWindow::MainWindow(QWidget *parent) :
     // // show the image on window
     // cv::imshow("My Image", image);
 
-    cv::Mat im1 = cv::imread("original.tif");
-    cv::Mat im2 = cv::imread("background.tif");
-    cv::Mat diff;
-
-    QMutex mutex;
-    ImageSubtraction *subtraction = new ImageSubtraction(im1, im2, &diff, &mutex);
-    QThreadPool::globalInstance()->start(subtraction);
-
-    QThreadPool::globalInstance()->waitForDone();
-    cv::imshow("My iamg", diff);
-
-
 }
 
 MainWindow::~MainWindow()
@@ -107,5 +95,42 @@ void MainWindow::on_actionOpen_triggered()
     // Create file dialog
     QString fileName = QFileDialog::getOpenFileName(this, "Open A File", "C://");
     ui->lineEdit->setText(fileName);
+}
+
+
+void MainWindow::on_actionHome_triggered() {
+    ui->stackedWidget->setCurrentIndex(0);
+}
+
+void MainWindow::on_backgroundRemoval_clicked() {
+    ui->stackedWidget->setCurrentIndex(1);
+}
+
+void MainWindow::on_image1_clicked() {
+    QString fileName = QFileDialog::getOpenFileName(this, "Open A File", "C://");
+    ui->label_2->setText(fileName);
+}
+
+
+void MainWindow::on_image2_clicked() {
+    QString fileName = QFileDialog::getOpenFileName(this, "Open A File", "C://");
+    ui->label_3->setText(fileName);
+}
+
+
+void MainWindow::on_run_clicked() {
+    // NO ERROR CHECKING YET
+    cv::Mat im1 = cv::imread("original.tif");
+    cv::Mat im2 = cv::imread("background.tif");
+    cv::Mat diff;
+
+    // Multithreading is a bit useless here but I'm planninng on extending
+    // the ImageSubtraction class to accept videos & batch images
+    QMutex mutex;
+    ImageSubtraction *subtraction = new ImageSubtraction(im1, im2, &diff, &mutex);
+    QThreadPool::globalInstance()->start(subtraction);
+
+    QThreadPool::globalInstance()->waitForDone();
+    cv::imshow("My iamg", diff);
 }
 

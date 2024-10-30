@@ -33,6 +33,15 @@ protected:
 private slots:
     void startBtnPressed();
     void on_actionOpen_triggered();
+    void on_actionHome_triggered();
+
+    void on_backgroundRemoval_clicked();
+
+    void on_image1_clicked();
+
+    void on_image2_clicked();
+
+    void on_run_clicked();
 
 private:
     Ui::MainWindow *ui;
