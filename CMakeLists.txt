@@ -14,7 +14,8 @@ include_directories(${OpenCV_INCLUDE_DIRS})
 
 add_executable(myApp
 	src/main.cpp
-	src/FrameAnalyzer.cpp)
+	src/FrameAnalyzer.cpp
+	src/contours.cpp)
 
 # Target libraries (.a files)
 target_link_libraries(myApp ${OpenCV_LIBS})

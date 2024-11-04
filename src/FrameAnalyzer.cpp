@@ -13,10 +13,10 @@ void parseVideo() {
     std::string videoFilePath = "C:/Users/chris/WPI/JapanMQPClone/JapanMQP/data/FireSafetyVideo.mp4";
     cv::VideoCapture cap(videoFilePath);
 
-    // HSV range to detect blue color
-    int minHue = 0, maxHue = 32;
+    // HSV range to detect flame
+    int minHue = 5, maxHue = 35;
     int minSat = 50, maxSat = 255;
-    int minVal =  180, maxVal = 255;
+    int minVal =  200, maxVal = 255;
 
     // Create trackbars in mask settings window
     cv::createTrackbar("Min Hue", MASK_WINDOW, &minHue, 179);
