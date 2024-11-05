@@ -3,9 +3,12 @@
 
 #include "imagesubtraction.h"
 
+#include <QFuture>
 #include <QThreadPool>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
+#include <qtconcurrentrun.h>
+#include <qtranslator.h>
 #include "utils.h"
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -178,7 +181,14 @@ void MainWindow::on_pushButton_2_clicked() {
 // Average images in selected folder
 void MainWindow::on_pushButton_4_clicked() {
     // Helper function from utils
-    cv::Mat averageImage = averageImagesFromFolder(ui->label_4->text());
+    //cv::Mat averageImage = averageImagesFromFolder(ui->label_4->text());
+    ui->pushButton_4->setDisabled(true);
+    QFuture<cv::Mat> future = QtConcurrent::run(averageImagesFromFolder, ui->label_4->text());
+    cv::Mat averageImage = future.result();
     cv::imshow("test", averageImage);
+    ui->pushButton_4->setDisabled(false);
 }
+
+
+
 

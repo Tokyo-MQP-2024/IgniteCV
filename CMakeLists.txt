@@ -15,8 +15,10 @@ find_package(Qt6 REQUIRED COMPONENTS Concurrent)
 
 find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
+qt_standard_project_setup(I18N_TRANSLATED_LANGUAGES ja)
 
 set(TS_FILES OpenCV_Integration_en_US.ts)
+#set(TS_FILES OpenCV_Integration_ja.ts)
 
 set(PROJECT_SOURCES
         ${TS_FILES}
@@ -63,8 +65,8 @@ endif()
 #   SOURCES ${TARGETS}
 #)
 
-qt_standard_project_setup(I18N_TRANSLATED_LANGUAGES ja)
-qt6_add_translations(OpenCV_Integration
+
+qt_add_translations(OpenCV_Integration
     QM_FILES_OUTPUT_VARIABLE qm_files)
 install(FILES ${qm_files} DESTINATION ${CMAKE_SOURCE_DIR}/translations)
 

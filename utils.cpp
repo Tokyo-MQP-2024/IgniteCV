@@ -5,6 +5,12 @@
 #include <QMutex>
 #include <QtConcurrent/QtConcurrentMap>
 #include <opencv2/opencv.hpp>
+#include <QFileInfoList>
+#include <QImage>
+#include <QList>
+#include <QtConcurrent/QtConcurrent>
+#include <opencv2/opencv.hpp>
+#include <algorithm>
 
 // UNTESTED
 QImage matToQImage(const cv::Mat &mat) {
@@ -25,80 +31,6 @@ QImage matToQImage(const cv::Mat &mat) {
         return QImage();
     }
 }
-
-// Average Images
-// cv::Mat averageImagesFromFolder(const QString& folderPath) {
-//     QDir directory(folderPath);
-
-//     // Set filter to include only files (not directories)
-//     directory.setFilter(QDir::Files);
-
-//     // Name filters to accept only common image formats
-//     QStringList nameFilters;
-//     nameFilters << "*.jpg" << "*.jpeg" << "*.png" << "*.bmp" << "*.tif" << "*.tiff";
-//     directory.setNameFilters(nameFilters);
-
-//     // Retrieve list of files that match the filters
-//     QFileInfoList fileList = directory.entryInfoList();
-
-//     // Check if there are any valid images
-//     if (fileList.isEmpty()) {
-//         qWarning() << QFileDevice::tr("No valid images found in the folder.");
-//         return cv::Mat();
-//     }
-
-//     // Initialize an accumulator matrix with the size of the first valid image and float precision
-//     cv::Mat accumulator;
-
-//     int imageCount = 0;
-//     for (const QFileInfo& fileInfo : fileList) {
-//         QString filePath = fileInfo.absoluteFilePath();
-//         cv::Mat img = cv::imread(filePath.toStdString());  // Load the image using OpenCV
-
-//         // Check if the image is valid
-//         if (img.empty()) {
-//             qWarning() << QFileDevice::tr("Skipping invalid or incompatible file:") << filePath;
-//             continue;
-//         }
-
-//         // Convert the image to float format for accumulation
-//         cv::Mat floatImg;
-//         img.convertTo(floatImg, CV_32FC3);
-
-//         // Initialize accumulator on the first valid image
-//         if (accumulator.empty()) {
-//             accumulator = cv::Mat::zeros(floatImg.size(), CV_32FC3);
-//         }
-
-//         // Add the current image to the accumulator
-//         accumulator += floatImg;
-//         ++imageCount;
-//     }
-
-//     // Ensure we have at least one valid image to average
-//     if (imageCount == 0) {
-//         qWarning() << QFileDevice::tr("No valid images could be processed for averaging.");
-//         return cv::Mat();
-//     }
-
-//     // Divide the accumulator by the number of images to get the average
-//     accumulator /= static_cast<float>(imageCount);
-
-//     // Convert the result back to 8-bit for display or saving
-//     cv::Mat averageImage;
-//     accumulator.convertTo(averageImage, CV_8UC3);
-
-//     return averageImage;
-// }
-
-
-#include <QDir>
-#include <QFileInfoList>
-#include <QImage>
-#include <QList>
-#include <QtConcurrent/QtConcurrent>
-#include <opencv2/opencv.hpp>
-#include <algorithm>
 
 // Map function to average a batch of images
 cv::Mat averageBatch(const QStringList& batchPaths) {
@@ -146,47 +78,11 @@ cv::Mat averageBatch(const QStringList& batchPaths) {
     // Divide the accumulator by the number of images to get the average
     accumulator /= static_cast<float>(imageCount);
 
-    // Convert the result back to 8-bit for display or saving
+    // Convert the result back to 8-bit for display or saving - DONT DO THIS
     //cv::Mat averageImage;
     //accumulator.convertTo(averageImage, CV_8UC3);
 
     return accumulator;
-
-    // if (batchPaths.isEmpty()) {
-    //     return cv::Mat(); // No images in batch
-    // }
-
-    // cv::Mat batchAccumulator;
-    // int batchCount = 0;
-
-    // for (const QString& filePath : batchPaths) {
-    //     QImage image(filePath);
-    //     if (image.isNull()) {
-    //         qWarning() << "Skipping invalid or incompatible file:" << filePath;
-    //         continue;
-    //     }
-
-    //     // Convert QImage to OpenCV Mat
-    //     cv::Mat img = cv::Mat(image.height(), image.width(), CV_8UC3, image.bits(), image.bytesPerLine()).clone();
-    //     cv::cvtColor(img, img, cv::COLOR_RGB2BGR); // Convert from RGB to BGR
-
-    //     // Convert to float for accumulation
-    //     cv::Mat floatImg;
-    //     img.convertTo(floatImg, CV_32FC3);
-
-    //     // Initialize or accumulate
-    //     if (batchAccumulator.empty()) {
-    //         batchAccumulator = cv::Mat::zeros(floatImg.size(), CV_32FC3);
-    //     }
-    //     batchAccumulator += floatImg;
-    //     ++batchCount;
-    // }
-
-    // // Average the batch if any valid images were processed
-    // if (batchCount > 0) {
-    //     batchAccumulator /= static_cast<float>(batchCount);
-    // }
-    // return batchAccumulator;
 }
 
 // Reduce function to accumulate each batch average
