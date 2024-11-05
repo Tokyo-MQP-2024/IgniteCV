@@ -43,6 +43,12 @@ private slots:
 
     void on_run_clicked();
 
+    void on_pushButton_2_clicked();
+
+    void on_averageImages_clicked();
+
+    void on_pushButton_4_clicked();
+
 private:
     Ui::MainWindow *ui;
     QGraphicsPixmapItem pixmap;

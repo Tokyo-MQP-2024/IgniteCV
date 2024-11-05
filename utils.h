@@ -5,5 +5,7 @@
 #include <qimage.h>
 
 QImage matToQImage(const cv::Mat &mat);
+cv::Mat averageImagesFromFolder(const QString& folderPath);
+
 
 #endif // UTILS_H
