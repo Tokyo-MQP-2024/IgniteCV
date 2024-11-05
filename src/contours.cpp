@@ -95,14 +95,14 @@ void parseVideoContours() {
             contourMask = cv::Mat::zeros(frame.size(), CV_8UC1);
 
             // // Draw contours on the mask
-            cv::drawContours(contourMask, contours, -1, cv::Scalar(170), cv::LINE_8);
+            cv::drawContours(frame, contours, -1, cv::Scalar(255, 0, 0), cv::LINE_4);
 
              
 
        
 
             // Display the original frame and the mask
-            cv::imshow("Frame", contourMask);
+            cv::imshow("Frame", frame);
             
 
             

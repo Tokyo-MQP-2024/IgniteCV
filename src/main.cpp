@@ -7,7 +7,7 @@ using namespace cv;
 int main()
 {
     parseVideo();
- 
+
     return 0;
 }
 
