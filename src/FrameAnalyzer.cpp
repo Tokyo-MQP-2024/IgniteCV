@@ -1,12 +1,37 @@
 #include <stdio.h>
+#include <fstream>
 #include <opencv2/opencv.hpp>
 #include "opencv2/highgui.hpp"
 #include "FrameAnalyzer.hpp"
 
 
 
+void writeToCSV(std::string col1, std::string col2, std::vector<std::pair<int,int>> &data) {
+      // Create an output filestream object
+
+   // std::cout << "HERE????????????";
+    std::ofstream myFile("FirePositions.csv");
+    
+    // Send data to the stream
+    myFile << col1 << "," << col2 << "\n";
+
+    for (const auto &entry : data) {
+        myFile << entry.first << ", " << entry.second << "\n";
+    }
+   
+    
+    // Close the file
+    myFile.close();
+    
+    
+}
+
 
 void parseVideo() {
+
+    
+
+
     auto const MASK_WINDOW = "Mask Settings";
     cv::namedWindow(MASK_WINDOW, cv::WINDOW_AUTOSIZE);
     // Open the video file
@@ -23,6 +48,8 @@ void parseVideo() {
     int blurAmount = 2;
 
     int minBBArea = 40;
+
+    std::vector<std::pair<int, int>> fireVerticalPositions;
 
     // Create trackbars in mask settings window
     // cv::createTrackbar("Min Hue", MASK_WINDOW, &minHue, 179);
@@ -43,7 +70,18 @@ void parseVideo() {
 
         // Get video frame rate
         double fps = cap.get(cv::CAP_PROP_FPS);
+        double timePerFrame = 1.0/fps; // in seconds
+        double accumulatedTime = 0.0;
+        double sampleInterval = 1.0;
+        int seconds = 0;
+
+
+
         std::cout << "Frames per second: " << fps << std::endl;
+
+        
+
+
 
         // FRAME VARIABES
         cv::Mat frame, HSVFrame, foreground, mask, hsvMask, resultImage, dilateErodeMask;
@@ -55,9 +93,22 @@ void parseVideo() {
         cv::Ptr<cv::BackgroundSubtractor> bg_sub = cv::createBackgroundSubtractorKNN();
 
 
+
+
         int currY = -1;
 
         while (true) {
+
+            accumulatedTime = accumulatedTime + timePerFrame;
+
+
+            // if(accumulatedTime > sampleInterval) {
+            //     std::cout << frameCount << "\n";
+            //     accumulatedTime = accumulatedTime - sampleInterval;
+            //     seconds++;
+            // }
+
+
             // Capture each frame
             cap >> frame;
 
@@ -122,22 +173,38 @@ void parseVideo() {
              for (const auto& contour : contours) {
                 // Get the bounding box for the current contour
                 cv::Rect boundingBox = cv::boundingRect(contour);
-                //std::cout << boundingBox.y << " ";
-                if (boundingBox.y > currY && frameCount > 30) {
-                    currY = boundingBox.y;
+                int bottom_y = boundingBox.y + boundingBox.height;
+                //std::cout << bottom_y << " ";
+                if (bottom_y > currY && frameCount > 10) {
+                    currY = bottom_y;
                 }
 
              }
 
-            std::cout << currY << "\n";
+            //std::cout << "NEXT" << "\n";
+
+            if(accumulatedTime > sampleInterval) {
+                std::cout << frameCount << "\n";
+
+                fireVerticalPositions.emplace_back(seconds, currY);
+
+                //std::cout << " " << fireVerticalPositions() "\n";
+
+
+                accumulatedTime = accumulatedTime - sampleInterval;
+                seconds = seconds +1;
+            }
            
 
 
             // Define the point you want to draw
-            cv::Point point(80, currY);  // Coordinates of the point
+            cv::Point tl(80, currY-5);  // Coordinates of the point
+            cv::Point br(800, currY+5);  // Coordinates of the point
+         
 
             // Draw the point on the image
-            cv::circle(frame, point, 2, cv::Scalar(0, 255, 0), cv::FILLED);  // Green point with radius 2
+            //cv::circle(frame, point, 2, cv::Scalar(0, 255, 0), cv::FILLED);  // Green point with radius 2
+            cv::rectangle(frame, tl,br,cv::Scalar(0,255,0),cv::FILLED);
 
             
 
@@ -148,12 +215,12 @@ void parseVideo() {
 
 
             
-            //if (frameCount % 5 == 0) { // Show every 5th frame
-                cv::imshow("Frame", dMask);
+            if (frameCount % 5 == 0) { // Show every 5th frame
+                //cv::imshow("Frame", dMask);
                 cv::imshow("cleaned mask", frame);
                 // cv::imshow("erode", eMask);
                 // cv::imshow("dilate", dMask);
-            //}
+            }
             
 
             
@@ -169,6 +236,8 @@ void parseVideo() {
         // Release video capture object and close display window
         cap.release();
         cv::destroyAllWindows();
+
+        writeToCSV("Time", "Position", fireVerticalPositions);
     }
    
 }
