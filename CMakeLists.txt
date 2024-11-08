@@ -34,6 +34,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         utils.cpp
         utils.h
         imagesubtraction.h imagesubtraction.cpp
+        flamefeature.h flamefeature.cpp flamefeature.ui
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET OpenCV_Integration APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

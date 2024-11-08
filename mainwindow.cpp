@@ -1,6 +1,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+
+#include "flamefeature.h"
+
 #include "imagesubtraction.h"
 
 #include <QFuture>
@@ -226,6 +229,17 @@ void MainWindow::on_pushButton_7_clicked() {
     //ui->graphicsView_2->scene()->addItem(&item);
 
 
+
+}
+
+
+void MainWindow::on_FlameWindowButton_clicked()
+{
+
+    this->hide();
+    FlameFeature flamePage(this);
+    flamePage.setModal(true);
+    flamePage.exec();
 
 }
 

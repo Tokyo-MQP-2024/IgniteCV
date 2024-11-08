@@ -14,6 +14,7 @@
 #include <QFileDialog>
 
 #include "opencv2/opencv.hpp"
+//#include "flamefeature.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -54,6 +55,8 @@ private slots:
     void on_pushButton_6_clicked();
 
     void on_pushButton_7_clicked();
+
+    void on_FlameWindowButton_clicked();
 
 private:
     Ui::MainWindow *ui;
