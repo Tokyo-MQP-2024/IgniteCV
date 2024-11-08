@@ -20,6 +20,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->graphicsView->scene()->addItem(&pixmap);
     ui->graphicsView->fitInView(&pixmap, Qt::KeepAspectRatioByExpanding);
 
+
     connect(ui->pushButton, SIGNAL(clicked(bool)), this, SLOT(startBtnPressed()));
 
     // Disable bad buttons
@@ -117,6 +118,10 @@ void MainWindow::on_averageImages_clicked() {
     ui->stackedWidget->setCurrentIndex(2);
 }
 
+void MainWindow::on_pushButton_5_clicked() {
+    ui->stackedWidget->setCurrentIndex(3);
+}
+
 // BACKGROUND REMOVAL FUNCTIONS
 
 void MainWindow::on_image1_clicked() {
@@ -191,4 +196,36 @@ void MainWindow::on_pushButton_4_clicked() {
 
 
 
+// Open Image for width calculation
+void MainWindow::on_pushButton_6_clicked() {
+    QString fileName = QFileDialog::getOpenFileName(this, "Open A File", "C://");
+    ui->label_5->setText(fileName);
+}
+
+// Run width calculation on image
+void MainWindow::on_pushButton_7_clicked() {
+    QString fileName = ui->label_5->text();
+    cv::Mat image = cv::imread(fileName.toStdString());
+
+    // Modify image in place
+    imageWidthOverlay(image);
+    //cv::imshow("Result", image);
+
+    // Display to graphics window
+    QImage toDisplay = matToQImage(image);
+    QGraphicsPixmapItem item(QPixmap::fromImage(toDisplay));
+
+    //scene.addPixmap(QPixmap::fromImage(toDisplay));
+
+    //Setup 2nd graphics view
+    ui->graphicsView_2->setScene(new QGraphicsScene(this));
+    ui->graphicsView_2->scene()->addPixmap(QPixmap::fromImage(toDisplay));
+    ui->graphicsView_2->fitInView(ui->graphicsView_2->scene()->sceneRect(), Qt::KeepAspectRatio);
+    //ui->graphicsView_2->scene()->addText("Hello");
+
+    //ui->graphicsView_2->scene()->addItem(&item);
+
+
+
+}
 

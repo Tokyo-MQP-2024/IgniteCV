@@ -6,6 +6,7 @@
 
 QImage matToQImage(const cv::Mat &mat);
 cv::Mat averageImagesFromFolder(const QString& folderPath);
+void imageWidthOverlay(cv::Mat &image);
 
 
 #endif // UTILS_H

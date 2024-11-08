@@ -9,19 +9,19 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="62"/>
+        <location filename="mainwindow.ui" line="35"/>
         <source>Average Images</source>
         <translation>画像を平均化する</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="48"/>
+        <location filename="mainwindow.ui" line="62"/>
         <source>Background Removal</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="41"/>
-        <location filename="mainwindow.cpp" line="130"/>
-        <location filename="mainwindow.cpp" line="143"/>
+        <location filename="mainwindow.ui" line="28"/>
+        <location filename="mainwindow.cpp" line="135"/>
+        <location filename="mainwindow.cpp" line="148"/>
         <source>Please choose an option</source>
         <translation>オプションを選択してください</translation>
     </message>
@@ -31,105 +31,116 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="102"/>
-        <location filename="mainwindow.cpp" line="141"/>
+        <location filename="mainwindow.ui" line="109"/>
+        <location filename="mainwindow.cpp" line="146"/>
         <source>Auto</source>
         <translation>自動</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="73"/>
-        <location filename="mainwindow.ui" line="192"/>
+        <location filename="mainwindow.ui" line="80"/>
+        <location filename="mainwindow.ui" line="199"/>
+        <location filename="mainwindow.ui" line="275"/>
         <source>Run</source>
         <translation>実行</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="257"/>
+        <location filename="mainwindow.ui" line="306"/>
         <source>File Path</source>
         <translation>ファイルパス</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="267"/>
+        <location filename="mainwindow.ui" line="316"/>
         <source>Start</source>
         <translation>スタート</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="92"/>
-        <location filename="mainwindow.ui" line="139"/>
-        <location filename="mainwindow.ui" line="292"/>
+        <location filename="mainwindow.ui" line="99"/>
+        <location filename="mainwindow.ui" line="146"/>
+        <location filename="mainwindow.ui" line="341"/>
         <source>File</source>
         <translation>ファイル</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="82"/>
+        <location filename="mainwindow.ui" line="69"/>
+        <source>Calculate Width</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="89"/>
         <source>Background</source>
         <translation>バックグラウンド</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="129"/>
+        <location filename="mainwindow.ui" line="136"/>
         <source>Image</source>
         <translation>イメージ</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="149"/>
-        <location filename="mainwindow.cpp" line="128"/>
+        <location filename="mainwindow.ui" line="156"/>
+        <location filename="mainwindow.cpp" line="133"/>
         <source>Folder</source>
         <translation>フォルダ</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="201"/>
+        <location filename="mainwindow.ui" line="208"/>
         <source>Select Folder</source>
         <translation>フォルダを選択</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="217"/>
+        <location filename="mainwindow.ui" line="224"/>
         <source>Save</source>
         <translation>セーブ</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="301"/>
+        <location filename="mainwindow.ui" line="259"/>
+        <source>Select Image</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="350"/>
         <source>toolBar</source>
         <translation>ツールバー</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="316"/>
+        <location filename="mainwindow.ui" line="365"/>
         <source>Open</source>
         <translation>開ける</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="324"/>
+        <location filename="mainwindow.ui" line="373"/>
         <source>Home</source>
         <translation>ホーム</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="327"/>
+        <location filename="mainwindow.ui" line="376"/>
         <source>Return to homepage</source>
         <translation>ホームページに戻る</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="103"/>
+        <location filename="mainwindow.cpp" line="104"/>
         <source>Open A File</source>
         <translation>ファイルを開く</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="128"/>
-        <location filename="mainwindow.cpp" line="141"/>
+        <location filename="mainwindow.cpp" line="133"/>
+        <location filename="mainwindow.cpp" line="146"/>
         <source>Info</source>
         <translation>お知らせ</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="130"/>
-        <location filename="mainwindow.cpp" line="143"/>
-        <location filename="mainwindow.cpp" line="155"/>
+        <location filename="mainwindow.cpp" line="135"/>
+        <location filename="mainwindow.cpp" line="148"/>
+        <location filename="mainwindow.cpp" line="160"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="155"/>
+        <location filename="mainwindow.cpp" line="160"/>
         <source>Please select images for subtraction</source>
         <translation>減算する画像を選択してください</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="177"/>
+        <location filename="mainwindow.cpp" line="182"/>
         <source>Open a Folder</source>
         <translation>フォルダを開く</translation>
     </message>
@@ -137,12 +148,12 @@
 <context>
     <name>QFileDevice</name>
     <message>
-        <location filename="utils.cpp" line="54"/>
+        <location filename="utils.cpp" line="56"/>
         <source>Skipping invalid or incompatible file:</source>
         <translation>無効または互換性のないファイルをスキップします：</translation>
     </message>
     <message>
-        <location filename="utils.cpp" line="74"/>
+        <location filename="utils.cpp" line="76"/>
         <source>No valid images could be processed for averaging.</source>
         <translation>平均化のために有効な画像を処理できませんでした。</translation>
     </message>

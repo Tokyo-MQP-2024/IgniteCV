@@ -32,6 +32,8 @@ QImage matToQImage(const cv::Mat &mat) {
     }
 }
 
+//--------------------- IMAGE AVERAGING FUNCTIONS ---------------------
+
 // Map function to average a batch of images
 cv::Mat averageBatch(const QStringList& batchPaths) {
     QFileInfoList fileList;
@@ -149,4 +151,89 @@ cv::Mat averageImagesFromFolder(const QString& folderPath) {
     return averageImage;
 }
 
+//-------------------- WIDTH MEASUREMENT FUNCTIONS --------------------
 
+// Compute midpoint of two (x, y) coordinates
+std::pair<double, double> midpoint(double x1, double y1, double x2, double y2) {
+    double midX = (x1 + x2) / 2.0;
+    double midY = (y1 + y2) / 2.0;
+    return {midX, midY};
+}
+
+// Function to sort contours based on their x-coordinate (left-to-right)
+void sortContoursLeftToRight(std::vector<std::vector<cv::Point>>& contours) {
+    std::sort(contours.begin(), contours.end(), [](const std::vector<cv::Point>& a, const std::vector<cv::Point>& b) {
+        return cv::boundingRect(a).x < cv::boundingRect(b).x;
+    });
+}
+
+// Function to order the points in the correct sequence (top-left, top-right, bottom-right, bottom-left)
+std::vector<cv::Point> order_points(cv::Point2f *pts) {
+    std::vector<cv::Point> ordered_pts(4);
+
+    // Sort the points by x and y coordinates
+    std::vector<cv::Point2f> sorted_pts(pts, pts + 4);
+    sort(sorted_pts.begin(), sorted_pts.end(), [](cv::Point2f a, cv::Point2f b) {
+        return a.x < b.x;
+    });
+
+    // Top-left, bottom-left, top-right, bottom-right
+    cv::Point2f tl = sorted_pts[0].x < sorted_pts[1].x ? sorted_pts[0] : sorted_pts[1];
+    cv::Point2f tr = sorted_pts[2].x < sorted_pts[3].x ? sorted_pts[2] : sorted_pts[3];
+    cv::Point2f bl = sorted_pts[0].x < sorted_pts[1].x ? sorted_pts[1] : sorted_pts[0];
+    cv::Point2f br = sorted_pts[2].x < sorted_pts[3].x ? sorted_pts[3] : sorted_pts[2];
+
+    ordered_pts[0] = tl;
+    ordered_pts[1] = tr;
+    ordered_pts[2] = br;
+    ordered_pts[3] = bl;
+
+    return ordered_pts;
+}
+
+void imageWidthOverlay(cv::Mat &image) {
+    // Process image here to get rid of extraneous pixels
+
+
+    // Convert to grayscale
+    cv::Mat gray;
+    cv::cvtColor(image, gray, cv::COLOR_BGR2GRAY);
+    // May not need this
+    //cv::GaussianBlur(gray, gray, cv::Size(7,7), 0);
+
+    // Edge detection, dilation, erosion
+    cv::Mat edge;
+    cv::Canny(gray, edge, 50, 100);
+    cv::dilate(edge, edge, cv::Mat());
+    cv::erode(edge, edge, cv::Mat());
+
+    // Find contours in the edge map
+    std::vector<std::vector<cv::Point>> cnts;
+    cv::findContours(edge, cnts, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+
+    // Might not need
+    sortContoursLeftToRight(cnts);
+
+    // Loop over contours
+    for(const auto &pt : cnts) {
+        if(cv::contourArea(pt) < 100)
+            continue;
+        cv::RotatedRect box = cv::minAreaRect(pt);
+        cv::Point2f vertices[4];
+        box.points(vertices);
+
+        // Order points
+        std::vector<cv::Point> ordered_points = order_points(vertices);
+
+        // Draw the rotated bounding box
+        for (int j = 0; j < 4; j++) {
+            line(image, ordered_points[j], ordered_points[(j + 1) % 4], cv::Scalar(0, 255, 0), 2);
+        }
+
+        // Loop over the original points and draw them
+        for (int j = 0; j < 4; j++) {
+            circle(image, ordered_points[j], 5, cv::Scalar(0, 0, 255), -1);
+        }
+    }
+    //cv::imshow("Result", image);
+}
