@@ -154,10 +154,10 @@ cv::Mat averageImagesFromFolder(const QString& folderPath) {
 //-------------------- WIDTH MEASUREMENT FUNCTIONS --------------------
 
 // Compute midpoint of two (x, y) coordinates
-std::pair<double, double> midpoint(double x1, double y1, double x2, double y2) {
+cv::Point midpoint(double x1, double y1, double x2, double y2) {
     double midX = (x1 + x2) / 2.0;
     double midY = (y1 + y2) / 2.0;
-    return {midX, midY};
+    return cv::Point(midX, midY);
 }
 
 // Function to sort contours based on their x-coordinate (left-to-right)
@@ -191,6 +191,7 @@ std::vector<cv::Point> order_points(cv::Point2f *pts) {
     return ordered_pts;
 }
 
+// Modifies image in place. Overlays bounding box and width measurements
 void imageWidthOverlay(cv::Mat &image) {
     // Process image here to get rid of extraneous pixels
 
@@ -234,6 +235,44 @@ void imageWidthOverlay(cv::Mat &image) {
         for (int j = 0; j < 4; j++) {
             circle(image, ordered_points[j], 5, cv::Scalar(0, 0, 255), -1);
         }
+
+        // Unpack points, then compute midpoint between top left and top right, then bottom left and bottom right
+        cv::Point tl = ordered_points[0], tr = ordered_points[1], br = ordered_points[2], bl = ordered_points[3];
+
+        cv::Point tltr = midpoint(tl.x, tl.y, tr.x, tr.y);
+        cv::Point blbr = midpoint(bl.x, bl.y, br.x, br.y);
+
+        // between top left and top right points
+        cv::Point tlbl = midpoint(tl.x, tl.y, bl.x, bl.y);
+        cv::Point trbr = midpoint(tr.x, tr.y, br.x, br.y);
+
+        cv::circle(image, tltr, 5, cv::Scalar(255,0,0), -1);
+        cv::circle(image, blbr, 5, cv::Scalar(255,0,0), -1);
+        cv::circle(image, tlbl, 5, cv::Scalar(255,0,0), -1);
+        cv::circle(image, trbr, 5, cv::Scalar(255,0,0), -1);
+
+        // Draw lines between midpoints
+        cv::line(image, tltr, blbr, cv::Scalar(255,0,0), 2);
+        cv::line(image, tlbl, trbr, cv::Scalar(255,0,0), 2);
+
+        double dA = std::hypot(tltr.x - blbr.x, tltr.y - blbr.y);
+        double dB = std::hypot(tlbl.x - trbr.x, tlbl.y - trbr.y);
+
+        // CHANGE THIS LATER WITH MEASUREMENTS
+        double dimA = dA;
+        double dimB = dB;
+
+        // Draw the object sizes on the image
+        cv::putText(image, cv::format("%.1fpx", dimA),
+                    cv::Point(static_cast<int>(tltr.x - 15), static_cast<int>(tltr.y - 10)),
+                    cv::FONT_HERSHEY_SIMPLEX, 0.65, cv::Scalar(255, 255, 255), 2);
+
+        cv::putText(image, cv::format("%.1fpx", dimB),
+                    cv::Point(static_cast<int>(trbr.x + 10), static_cast<int>(trbr.y)),
+                    cv::FONT_HERSHEY_SIMPLEX, 0.65, cv::Scalar(255, 255, 255), 2);
+
     }
+
+
     //cv::imshow("Result", image);
 }

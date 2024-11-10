@@ -209,21 +209,14 @@ void MainWindow::on_pushButton_7_clicked() {
 
     // Modify image in place
     imageWidthOverlay(image);
-    //cv::imshow("Result", image);
+    cv::imshow("Result", image);
 
     // Display to graphics window
-    QImage toDisplay = matToQImage(image);
-    QGraphicsPixmapItem item(QPixmap::fromImage(toDisplay));
+    // QImage toDisplay = matToQImage(image);
+    // ui->graphicsView_2->setScene(new QGraphicsScene(this));
+    // ui->graphicsView_2->scene()->addPixmap(QPixmap::fromImage(toDisplay));
+    // ui->graphicsView_2->fitInView(ui->graphicsView_2->scene()->sceneRect(), Qt::KeepAspectRatio);
 
-    //scene.addPixmap(QPixmap::fromImage(toDisplay));
-
-    //Setup 2nd graphics view
-    ui->graphicsView_2->setScene(new QGraphicsScene(this));
-    ui->graphicsView_2->scene()->addPixmap(QPixmap::fromImage(toDisplay));
-    ui->graphicsView_2->fitInView(ui->graphicsView_2->scene()->sceneRect(), Qt::KeepAspectRatio);
-    //ui->graphicsView_2->scene()->addText("Hello");
-
-    //ui->graphicsView_2->scene()->addItem(&item);
 
 
 
