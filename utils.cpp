@@ -32,6 +32,29 @@ QImage matToQImage(const cv::Mat &mat) {
     }
 }
 
+// Function to convert QImage to cv::Mat
+cv::Mat QImageToCvMat(const QImage& image) {
+    cv::Mat mat;
+    switch (image.format()) {
+    case QImage::Format_RGB32: {
+        mat = cv::Mat(image.height(), image.width(), CV_8UC4, (void*)image.constBits(), image.bytesPerLine());
+        break;
+    }
+    case QImage::Format_RGB888: {
+        mat = cv::Mat(image.height(), image.width(), CV_8UC3, (void*)image.constBits(), image.bytesPerLine());
+        cv::cvtColor(mat, mat, cv::COLOR_RGB2BGR);
+        break;
+    }
+    case QImage::Format_Grayscale8: {
+        mat = cv::Mat(image.height(), image.width(), CV_8UC1, (void*)image.constBits(), image.bytesPerLine());
+        break;
+    }
+    default:
+        qWarning("QImage format not supported for conversion to cv::Mat.");
+        break;
+    }
+    return mat;
+}
 //--------------------- IMAGE AVERAGING FUNCTIONS ---------------------
 
 // Map function to average a batch of images

@@ -39,24 +39,24 @@
     <message>
         <location filename="mainwindow.ui" line="80"/>
         <location filename="mainwindow.ui" line="199"/>
-        <location filename="mainwindow.ui" line="275"/>
+        <location filename="mainwindow.ui" line="257"/>
         <source>Run</source>
         <translation>実行</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="306"/>
+        <location filename="mainwindow.ui" line="324"/>
         <source>File Path</source>
         <translation>ファイルパス</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="316"/>
+        <location filename="mainwindow.ui" line="334"/>
         <source>Start</source>
         <translation>スタート</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="99"/>
         <location filename="mainwindow.ui" line="146"/>
-        <location filename="mainwindow.ui" line="341"/>
+        <location filename="mainwindow.ui" line="359"/>
         <source>File</source>
         <translation>ファイル</translation>
     </message>
@@ -92,27 +92,32 @@
         <translation>セーブ</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="259"/>
+        <location filename="mainwindow.ui" line="279"/>
         <source>Select Image</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="350"/>
+        <location filename="mainwindow.ui" line="297"/>
+        <source>Threshold</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="368"/>
         <source>toolBar</source>
         <translation>ツールバー</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="365"/>
+        <location filename="mainwindow.ui" line="383"/>
         <source>Open</source>
         <translation>開ける</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="373"/>
+        <location filename="mainwindow.ui" line="391"/>
         <source>Home</source>
         <translation>ホーム</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="376"/>
+        <location filename="mainwindow.ui" line="394"/>
         <source>Return to homepage</source>
         <translation>ホームページに戻る</translation>
     </message>
@@ -148,12 +153,12 @@
 <context>
     <name>QFileDevice</name>
     <message>
-        <location filename="utils.cpp" line="56"/>
+        <location filename="utils.cpp" line="79"/>
         <source>Skipping invalid or incompatible file:</source>
         <translation>無効または互換性のないファイルをスキップします：</translation>
     </message>
     <message>
-        <location filename="utils.cpp" line="76"/>
+        <location filename="utils.cpp" line="99"/>
         <source>No valid images could be processed for averaging.</source>
         <translation>平均化のために有効な画像を処理できませんでした。</translation>
     </message>

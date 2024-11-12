@@ -251,7 +251,27 @@
       </widget>
       <widget class="QWidget" name="calculateWidth">
        <layout class="QGridLayout" name="gridLayout_6">
-        <item row="1" column="0">
+        <item row="5" column="1">
+         <widget class="QPushButton" name="pushButton_7">
+          <property name="text">
+           <string>Run</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1">
+         <widget class="QGraphicsView" name="graphicsView_2">
+          <property name="foregroundBrush">
+           <brush brushstyle="NoBrush">
+            <color alpha="255">
+             <red>0</red>
+             <green>0</green>
+             <blue>0</blue>
+            </color>
+           </brush>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1">
          <layout class="QHBoxLayout" name="horizontalLayout_5">
           <item>
            <widget class="QPushButton" name="pushButton_6">
@@ -269,25 +289,23 @@
           </item>
          </layout>
         </item>
-        <item row="4" column="0">
-         <widget class="QPushButton" name="pushButton_7">
-          <property name="text">
-           <string>Run</string>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="0">
-         <widget class="QGraphicsView" name="graphicsView_2">
-          <property name="foregroundBrush">
-           <brush brushstyle="NoBrush">
-            <color alpha="255">
-             <red>0</red>
-             <green>0</green>
-             <blue>0</blue>
-            </color>
-           </brush>
-          </property>
-         </widget>
+        <item row="3" column="1">
+         <layout class="QHBoxLayout" name="horizontalLayout_7">
+          <item>
+           <widget class="QLabel" name="label_6">
+            <property name="text">
+             <string>Threshold</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QSlider" name="horizontalSlider">
+            <property name="orientation">
+             <enum>Qt::Orientation::Horizontal</enum>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </item>
        </layout>
       </widget>
@@ -383,7 +401,7 @@
  <resources/>
  <connections/>
  <buttongroups>
-  <buttongroup name="buttonGroup_2"/>
   <buttongroup name="buttonGroup"/>
+  <buttongroup name="buttonGroup_2"/>
  </buttongroups>
 </ui>
