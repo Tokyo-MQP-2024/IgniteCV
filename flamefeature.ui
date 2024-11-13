@@ -39,6 +39,19 @@
     <string>OK</string>
    </property>
   </widget>
+  <widget class="QToolButton" name="toolButton">
+   <property name="geometry">
+    <rect>
+     <x>130</x>
+     <y>230</y>
+     <width>121</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Process Flame</string>
+   </property>
+  </widget>
  </widget>
  <resources/>
  <connections/>

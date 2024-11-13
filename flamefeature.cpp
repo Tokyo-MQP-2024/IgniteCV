@@ -1,5 +1,6 @@
 #include "flamefeature.h"
 #include "ui_flamefeature.h"
+#include "FlameProcessing.h"
 
 FlameFeature::FlameFeature(MainWindow *mainWindow, QWidget *parent)
     : QDialog(parent)
@@ -28,5 +29,11 @@ void FlameFeature::on_pushButton_clicked()
 
 
 
+}
+
+
+void FlameFeature::on_toolButton_clicked()
+{
+    parseVideo();
 }
 
