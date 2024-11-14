@@ -1,8 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-
 #include "imagesubtraction.h"
-
 #include <QFuture>
 #include <QThreadPool>
 #include <opencv2/core/core.hpp>
@@ -25,6 +23,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     // Disable bad buttons
     ui->backgroundRemoval->setDisabled(true);
+    ui->ProcessVideoButton->setEnabled(false);
 
     // // read an image
     // cv::Mat image = cv::imread("image.png", 1);
@@ -120,6 +119,11 @@ void MainWindow::on_averageImages_clicked() {
 
 void MainWindow::on_pushButton_5_clicked() {
     ui->stackedWidget->setCurrentIndex(3);
+}
+
+void MainWindow::on_FlameToolButton_clicked() {
+    ui->ProcessVideoButton->setEnabled(false);
+    ui->stackedWidget->setCurrentIndex(5);
 }
 
 // BACKGROUND REMOVAL FUNCTIONS
@@ -253,6 +257,46 @@ void MainWindow::on_horizontalSlider_sliderMoved(int position) {
     ui->graphicsView_2->scene()->clear();
     ui->graphicsView_2->scene()->addPixmap(QPixmap::fromImage(toDisplay));
     ui->graphicsView_2->fitInView(ui->graphicsView_2->scene()->sceneRect(), Qt::KeepAspectRatio);
+
+}
+
+
+// button for running video processing program
+void MainWindow::on_ProcessVideoButton_clicked()
+{
+    flame_process->parseVideo(videoFilePath.toStdString(), ui->VideoView);
+}
+
+
+// button to uplaod video for processing
+void MainWindow::on_VideoSelectButton_clicked()
+{
+    QString filePath = QFileDialog::getOpenFileName(this, tr("Open a File"), "C://");
+    std::string filePathSTD = filePath.toStdString();
+    flame_process = new FlameProcessing(); // create new instance of flame process
+    if(flame_process->checkMP4(filePathSTD)) {
+        ui->VideoLabel->setText(filePath);
+        ui->ProcessVideoButton->setEnabled(true);
+        // TODO: display video on the graphics viewer
+        // TODO: pass the file into parseVideo
+        videoFilePath = filePath;
+    } else {
+        ui->VideoLabel->setText("File must be .mp4");
+    }
+}
+
+
+void MainWindow::on_CancelButton_clicked()
+{
+    //TODO: stop button for processing
+    if(flame_process != nullptr) {
+        flame_process->setStopProcess(true);
+    }
+}
+
+
+void MainWindow::on_VideoView_rubberBandChanged(const QRect &viewportRect, const QPointF &fromScenePoint, const QPointF &toScenePoint)
+{
 
 }
 
