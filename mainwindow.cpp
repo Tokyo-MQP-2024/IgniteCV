@@ -241,6 +241,9 @@ void MainWindow::on_pushButton_7_clicked() {
 
     // Modify image in place
     imageWidthOverlay(image);
+    //cv::Rect2d r = cv::selectROI(image);
+    //cv::Mat imCrop = image(r);
+    //cv::imshow("Result", imCrop);
     cv::imshow("Result", image);
 
     // Display to graphics window
@@ -284,5 +287,24 @@ void MainWindow::on_horizontalSlider_sliderMoved(int position) {
     ui->graphicsView_2->scene()->addPixmap(QPixmap::fromImage(toDisplay));
     ui->graphicsView_2->fitInView(ui->graphicsView_2->scene()->sceneRect(), Qt::KeepAspectRatio);
 
+}
+
+// Checkbox for ROI
+void MainWindow::on_checkBox_checkStateChanged(const Qt::CheckState &arg1) {
+    if(arg1 == Qt::Checked) {
+        for(int i = 0; i < ui->horizontalLayout_roi->count(); ++i) {
+            QWidget* widget = ui->horizontalLayout_roi->itemAt(i)->widget();
+            if(QSpinBox* spinBox = qobject_cast<QSpinBox*>(widget)) {
+                spinBox->setEnabled(true);
+            }
+        }
+    } else {
+        for(int i = 0; i < ui->horizontalLayout_roi->count(); ++i) {
+            QWidget* widget = ui->horizontalLayout_roi->itemAt(i)->widget();
+            if(QSpinBox* spinBox = qobject_cast<QSpinBox*>(widget)) {
+                spinBox->setEnabled(false);
+            }
+        }
+    }
 }
 

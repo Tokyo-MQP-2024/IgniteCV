@@ -44,19 +44,19 @@
         <translation>実行</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="375"/>
+        <location filename="mainwindow.ui" line="414"/>
         <source>File Path</source>
         <translation>ファイルパス</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="385"/>
+        <location filename="mainwindow.ui" line="424"/>
         <source>Start</source>
         <translation>スタート</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="99"/>
         <location filename="mainwindow.ui" line="146"/>
-        <location filename="mainwindow.ui" line="423"/>
+        <location filename="mainwindow.ui" line="462"/>
         <source>File</source>
         <translation>ファイル</translation>
     </message>
@@ -132,22 +132,27 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="432"/>
+        <location filename="mainwindow.ui" line="366"/>
+        <source>Use ROI</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="471"/>
         <source>toolBar</source>
         <translation>ツールバー</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="447"/>
+        <location filename="mainwindow.ui" line="486"/>
         <source>Open</source>
         <translation>開ける</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="455"/>
+        <location filename="mainwindow.ui" line="494"/>
         <source>Home</source>
         <translation>ホーム</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="458"/>
+        <location filename="mainwindow.ui" line="497"/>
         <source>Return to homepage</source>
         <translation>ホームページに戻る</translation>
     </message>

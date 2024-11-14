@@ -57,6 +57,8 @@ private slots:
 
     void on_horizontalSlider_sliderMoved(int position);
 
+    void on_checkBox_checkStateChanged(const Qt::CheckState &arg1);
+
 private:
     Ui::MainWindow *ui;
     QGraphicsPixmapItem pixmap;

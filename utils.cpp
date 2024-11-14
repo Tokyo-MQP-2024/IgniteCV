@@ -251,12 +251,12 @@ void imageWidthOverlay(cv::Mat &image) {
 
         // Draw the rotated bounding box
         for (int j = 0; j < 4; j++) {
-            line(image, ordered_points[j], ordered_points[(j + 1) % 4], cv::Scalar(0, 255, 0), 2);
+            line(image, ordered_points[j], ordered_points[(j + 1) % 4], cv::Scalar(0, 255, 0), 1);
         }
 
         // Loop over the original points and draw them
         for (int j = 0; j < 4; j++) {
-            circle(image, ordered_points[j], 5, cv::Scalar(0, 0, 255), -1);
+            circle(image, ordered_points[j], 3, cv::Scalar(0, 0, 255), -1);
         }
 
         // Unpack points, then compute midpoint between top left and top right, then bottom left and bottom right
@@ -269,14 +269,14 @@ void imageWidthOverlay(cv::Mat &image) {
         cv::Point tlbl = midpoint(tl.x, tl.y, bl.x, bl.y);
         cv::Point trbr = midpoint(tr.x, tr.y, br.x, br.y);
 
-        cv::circle(image, tltr, 5, cv::Scalar(255,0,0), -1);
-        cv::circle(image, blbr, 5, cv::Scalar(255,0,0), -1);
-        cv::circle(image, tlbl, 5, cv::Scalar(255,0,0), -1);
-        cv::circle(image, trbr, 5, cv::Scalar(255,0,0), -1);
+        cv::circle(image, tltr, 3, cv::Scalar(255,0,0), -1);
+        cv::circle(image, blbr, 3, cv::Scalar(255,0,0), -1);
+        cv::circle(image, tlbl, 3, cv::Scalar(255,0,0), -1);
+        cv::circle(image, trbr, 3, cv::Scalar(255,0,0), -1);
 
         // Draw lines between midpoints
-        cv::line(image, tltr, blbr, cv::Scalar(255,0,0), 2);
-        cv::line(image, tlbl, trbr, cv::Scalar(255,0,0), 2);
+        cv::line(image, tltr, blbr, cv::Scalar(255,0,0), 1);
+        cv::line(image, tlbl, trbr, cv::Scalar(255,0,0), 1);
 
         double dA = std::hypot(tltr.x - blbr.x, tltr.y - blbr.y);
         double dB = std::hypot(tlbl.x - trbr.x, tlbl.y - trbr.y);
@@ -288,11 +288,11 @@ void imageWidthOverlay(cv::Mat &image) {
         // Draw the object sizes on the image
         cv::putText(image, cv::format("%.1fpx", dimA),
                     cv::Point(static_cast<int>(tltr.x - 15), static_cast<int>(tltr.y - 10)),
-                    cv::FONT_HERSHEY_SIMPLEX, 0.65, cv::Scalar(255, 255, 255), 2);
+                    cv::FONT_HERSHEY_SIMPLEX, 0.65, cv::Scalar(255, 255, 255), 1);
 
         cv::putText(image, cv::format("%.1fpx", dimB),
                     cv::Point(static_cast<int>(trbr.x + 10), static_cast<int>(trbr.y)),
-                    cv::FONT_HERSHEY_SIMPLEX, 0.65, cv::Scalar(255, 255, 255), 2);
+                    cv::FONT_HERSHEY_SIMPLEX, 0.65, cv::Scalar(255, 255, 255), 1);
 
     }
 
