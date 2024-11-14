@@ -14,6 +14,7 @@
 #include <QFileDialog>
 
 #include "opencv2/opencv.hpp"
+#include "FlameProcessing.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -57,11 +58,22 @@ private slots:
 
     void on_horizontalSlider_sliderMoved(int position);
 
-    void on_checkBox_checkStateChanged(const Qt::CheckState &arg1);
+    void on_FlameToolButton_clicked();
 
+    void on_ProcessVideoButton_clicked();
+
+    void on_VideoSelectButton_clicked();
+
+    void on_CancelButton_clicked();
+
+    void on_VideoView_rubberBandChanged(const QRect &viewportRect, const QPointF &fromScenePoint, const QPointF &toScenePoint);
+
+    void on_checkBox_checkStateChanged(const Qt::CheckState &arg1);
 private:
     Ui::MainWindow *ui;
     QGraphicsPixmapItem pixmap;
     cv::VideoCapture video;
+    QString videoFilePath;
+    FlameProcessing *flame_process;
 };
 #endif // MAINWINDOW_H
