@@ -39,24 +39,24 @@
     <message>
         <location filename="mainwindow.ui" line="80"/>
         <location filename="mainwindow.ui" line="199"/>
-        <location filename="mainwindow.ui" line="257"/>
+        <location filename="mainwindow.ui" line="288"/>
         <source>Run</source>
         <translation>実行</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="324"/>
+        <location filename="mainwindow.ui" line="375"/>
         <source>File Path</source>
         <translation>ファイルパス</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="334"/>
+        <location filename="mainwindow.ui" line="385"/>
         <source>Start</source>
         <translation>スタート</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="99"/>
         <location filename="mainwindow.ui" line="146"/>
-        <location filename="mainwindow.ui" line="359"/>
+        <location filename="mainwindow.ui" line="423"/>
         <source>File</source>
         <translation>ファイル</translation>
     </message>
@@ -92,7 +92,7 @@
         <translation>セーブ</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="279"/>
+        <location filename="mainwindow.ui" line="259"/>
         <source>Select Image</source>
         <translation type="unfinished"></translation>
     </message>
@@ -102,27 +102,59 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="368"/>
+        <location filename="mainwindow.ui" line="315"/>
+        <source>Threshold Type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="321"/>
+        <source>Binary</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="331"/>
+        <source>Binary Inverted</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="338"/>
+        <source>Threshold Truncated</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="345"/>
+        <source>Threshold to Zero</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="352"/>
+        <source>Threshold to Zero Inverted</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="432"/>
         <source>toolBar</source>
         <translation>ツールバー</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="383"/>
+        <location filename="mainwindow.ui" line="447"/>
         <source>Open</source>
         <translation>開ける</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="391"/>
+        <location filename="mainwindow.ui" line="455"/>
         <source>Home</source>
         <translation>ホーム</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="394"/>
+        <location filename="mainwindow.ui" line="458"/>
         <source>Return to homepage</source>
         <translation>ホームページに戻る</translation>
     </message>
     <message>
         <location filename="mainwindow.cpp" line="104"/>
+        <location filename="mainwindow.cpp" line="130"/>
+        <location filename="mainwindow.cpp" line="143"/>
         <source>Open A File</source>
         <translation>ファイルを開く</translation>
     </message>

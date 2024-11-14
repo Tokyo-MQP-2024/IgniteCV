@@ -127,7 +127,7 @@ void MainWindow::on_pushButton_5_clicked() {
 void MainWindow::on_image1_clicked() {
     if(ui->radioButton->isChecked()) {
         //QMessageBox::information(this, tr("Info"), tr("File"));
-        QString fileName = QFileDialog::getOpenFileName(this, "Open A File", "C://");
+        QString fileName = QFileDialog::getOpenFileName(this, tr("Open A File"), "C://");
         ui->label_2->setText(fileName);
     } else if(ui->radioButton_2->isChecked()) {
         QMessageBox::information(this, tr("Info"), tr("Folder"));
@@ -140,7 +140,7 @@ void MainWindow::on_image1_clicked() {
 void MainWindow::on_image2_clicked() {
     if(ui->radioButton_3->isChecked()) {
         //QMessageBox::information(this, tr("Info"), tr("File"));
-        QString fileName = QFileDialog::getOpenFileName(this, "Open A File", "C://");
+        QString fileName = QFileDialog::getOpenFileName(this, tr("Open A File"), "C://");
         ui->label_3->setText(fileName);
     } else if(ui->radioButton_4->isChecked()) {
         QMessageBox::information(this, tr("Info"), tr("Auto"));
@@ -215,8 +215,24 @@ void MainWindow::on_pushButton_7_clicked() {
 
     // Apply threshold from slider
     int sliderValue = ui->horizontalSlider->value();
+    int threshType = 0;
 
-    cv::threshold(image, image, sliderValue, 255, 3);
+    // Manually check radio buttons
+    if(ui->radioButton_binary->isChecked()) {
+        threshType = 0;
+    } else if(ui->radioButton_bininverted->isChecked()) {
+        threshType = 1;
+    } else if(ui->radioButton_threshtrunc->isChecked()) {
+        threshType = 2;
+    } else if(ui->radioButton_thresh0->isChecked()) {
+        threshType = 3;
+    } else if(ui->radioButton_thresh0inv->isChecked()) {
+        threshType = 4;
+    } else {
+        qErrnoWarning("ERROR: TYPE NOT DEFINED");
+    }
+
+    cv::threshold(image, image, sliderValue, 255, threshType);
 
     //QImage screen(ui->graphicsView_2->viewport()->size(), QImage::Format_RGB32);
     //QPainter painter(&screen);
@@ -233,9 +249,6 @@ void MainWindow::on_pushButton_7_clicked() {
     // ui->graphicsView_2->scene()->addPixmap(QPixmap::fromImage(toDisplay));
     // ui->graphicsView_2->fitInView(ui->graphicsView_2->scene()->sceneRect(), Qt::KeepAspectRatio);
 
-
-
-
 }
 
 // When slider changes, edit image in display with appropriate thresholding
@@ -247,8 +260,25 @@ void MainWindow::on_horizontalSlider_sliderMoved(int position) {
     cv::Mat grey, output;
     // Convert to grey
     cv::cvtColor(image, grey, cv::COLOR_BGR2GRAY);
+    int threshType = 0;
+
+    // Manually check radio buttons
+    if(ui->radioButton_binary->isChecked()) {
+        threshType = 0;
+    } else if(ui->radioButton_bininverted->isChecked()) {
+        threshType = 1;
+    } else if(ui->radioButton_threshtrunc->isChecked()) {
+        threshType = 2;
+    } else if(ui->radioButton_thresh0->isChecked()) {
+        threshType = 3;
+    } else if(ui->radioButton_thresh0inv->isChecked()) {
+        threshType = 4;
+    } else {
+        qErrnoWarning("ERROR: TYPE NOT DEFINED");
+    }
+
     // Threshold type hardcoded for now
-    cv::threshold(grey, output, position, 255, 3);
+    cv::threshold(grey, output, position, 255, threshType);
     QImage toDisplay = matToQImage(output);
     ui->graphicsView_2->scene()->clear();
     ui->graphicsView_2->scene()->addPixmap(QPixmap::fromImage(toDisplay));
