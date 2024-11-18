@@ -52,11 +52,11 @@ private slots:
 
     void on_pushButton_5_clicked();
 
-    void on_pushButton_6_clicked();
+    //void on_pushButton_6_clicked();
 
-    void on_pushButton_7_clicked();
+    //void on_pushButton_7_clicked();
 
-    void on_horizontalSlider_sliderMoved(int position);
+    //void on_horizontalSlider_sliderMoved(int position);
 
     void on_FlameToolButton_clicked();
 
@@ -68,7 +68,7 @@ private slots:
 
     void on_VideoView_rubberBandChanged(const QRect &viewportRect, const QPointF &fromScenePoint, const QPointF &toScenePoint);
 
-    void on_checkBox_checkStateChanged(const Qt::CheckState &arg1);
+    //void on_checkBox_checkStateChanged(const Qt::CheckState &arg1);
 private:
     Ui::MainWindow *ui;
     QGraphicsPixmapItem pixmap;
