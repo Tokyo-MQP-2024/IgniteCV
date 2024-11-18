@@ -12,7 +12,8 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    calculateWidth(new CalculateWidth)
 {
     ui->setupUi(this);
     ui->graphicsView->setScene(new QGraphicsScene(this));
@@ -26,24 +27,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->backgroundRemoval->setDisabled(true);
     ui->ProcessVideoButton->setEnabled(false);
 
-    // Test separate ui file
-    QFile file("../../calculateWidth.ui");
-    if (!file.open(QFile::ReadOnly)) {
-        qDebug() << "Failed to open file: " << file.errorString();
-        return;
-    }
-    QUiLoader loader;
-    QWidget *page = loader.load(&file, this); // Pass the QFile to load()
-    file.close();
-
-    if (!page) {
-        qDebug() << "Failed to load page: " << loader.errorString();
-        return;
-    }
-
-    ui->stackedWidget->addWidget(page);
-
-    int index = ui->stackedWidget->indexOf(page);
+    ui->stackedWidget->addWidget(calculateWidth);
+    int index = ui->stackedWidget->indexOf(calculateWidth);
     ui->stackedWidget->setCurrentIndex(index);
 
 }

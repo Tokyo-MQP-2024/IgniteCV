@@ -3,11 +3,9 @@
 
 #include <QWidget>
 
-QT_BEGIN_NAMESPACE
 namespace Ui {
 class CalculateWidth;
 }
-QT_END_NAMESPACE
 
 class CalculateWidth : public QWidget
 {

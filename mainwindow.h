@@ -15,6 +15,7 @@
 
 #include "opencv2/opencv.hpp"
 #include "FlameProcessing.h"
+#include "calculateWidth.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -71,6 +72,7 @@ private slots:
     //void on_checkBox_checkStateChanged(const Qt::CheckState &arg1);
 private:
     Ui::MainWindow *ui;
+    CalculateWidth *calculateWidth;
     QGraphicsPixmapItem pixmap;
     cv::VideoCapture video;
     QString videoFilePath;

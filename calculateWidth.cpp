@@ -15,7 +15,7 @@ CalculateWidth::CalculateWidth(QWidget *parent) :
     ui->setupUi(this);
 
     // Explicit signal and slot connections
-    connect(ui->pushButton_6, &QPushButton::clicked, this, &CalculateWidth::on_pushButton_6_clicked);
+    //connect(ui->pushButton_6, &QPushButton::clicked, this, &CalculateWidth::on_pushButton_6_clicked);
 }
 
 CalculateWidth::~CalculateWidth()
