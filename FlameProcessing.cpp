@@ -10,9 +10,20 @@
 #include "utils.h"
 #include <qgraphicsview.h>
 
-// Constructor definition
+
+
+// FlameProcessing Constructor definition
 FlameProcessing::FlameProcessing() {
-    // Initialization code (if any) can go here
+
+
+}
+
+void FlameProcessing::scalingMouse(int event, int x, int y, int flags) {
+    if(event == 1){
+
+        scaleClicks = scaleClicks + 1;
+        std::cout<<event<<" "<<x<<" "<<y<<" clicks:"<<scaleClicks<<"\n";
+    }
 }
 
 // class function to set the cancel button state
@@ -83,7 +94,6 @@ void FlameProcessing::parseVideo(std::string videoFilePath, QGraphicsView *view)
         std::cerr << "Error: FAILED OPENING FILE" << std::endl;
 
     } else {
-
         // Get video frame rate
         double fps = cap.get(cv::CAP_PROP_FPS);
         double timePerFrame = 1.0/fps; // in seconds
@@ -103,6 +113,28 @@ void FlameProcessing::parseVideo(std::string videoFilePath, QGraphicsView *view)
 
         int currY = -1;
         int lastY = -1;
+
+
+
+
+        cv::Mat firstframe;
+        if (!cap.read(firstframe)) {
+            std::cerr << "Error: Could not read first frame!\n";
+        }
+        cv::resize(firstframe, firstframe, cv::Size(), 0.5, 0.5); // Scale down by half
+        cv::imshow("Frame", firstframe);
+
+
+        //cv::setMouseCallback("Frame", scalingMouse, NULL);
+        cv::setMouseCallback("Frame", FlameProcessing::mouseCallback, this);
+        //cv::setMouseCallback("Frame", [this](int event, int x, int y, int flags, void* userdata) {this->onMouse(event, x, y, flags, userdata);});
+        // Wait for two points to be clicked
+        while (scaleClicks < 2) {
+            if (cv::waitKey(1) == 27) { // Press 'ESC' to exit early
+                std::cout << "Exiting before two points were selected.\n";
+            }
+        }
+
 
         while (true) {
 
@@ -255,4 +287,12 @@ void FlameProcessing::parseVideo(std::string videoFilePath, QGraphicsView *view)
     }
 
 }
+
+// Mouse callback function
+void FlameProcessing::mouseCallback(int event, int x, int y, int flags, void* userdata) {
+    // Bridge to call the non-static method
+    FlameProcessing* self = static_cast<FlameProcessing*>(userdata);
+    self->scalingMouse(event, x, y, flags);
+}
+
 

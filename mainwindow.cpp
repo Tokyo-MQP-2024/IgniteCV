@@ -310,6 +310,10 @@ void MainWindow::on_pushButton_4_clicked() {
 // button for running video processing program
 void MainWindow::on_ProcessVideoButton_clicked()
 {
+    //FlameProcessing::scaleClicks = 0;
+    //flame_process->scaleClicks = 0;
+
+
     flame_process->parseVideo(videoFilePath.toStdString(), ui->VideoView);
 }
 

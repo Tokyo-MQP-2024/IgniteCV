@@ -15,6 +15,10 @@
 
 class FlameProcessing {
 public:
+
+
+
+    //functions
     FlameProcessing();
 
     void parseVideo(std::string videoFilePath, QGraphicsView *scene);
@@ -23,10 +27,16 @@ public:
 
     void setStopProcess(bool state);
 
+    void scalingMouse(int event, int x, int y, int flags);
+
 private:
     bool stopProcess = false;
     QGraphicsScene *scene = new QGraphicsScene();
-    //QGraphicsScen *scene = new QGraphicsScene();
+    int scaleClicks = 0;
+
+    static void mouseCallback(int event, int x, int y, int flags, void* userdata);
+
+
 
 };
 
