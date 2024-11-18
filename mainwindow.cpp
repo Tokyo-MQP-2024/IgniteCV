@@ -27,7 +27,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->ProcessVideoButton->setEnabled(false);
 
     // Test separate ui file
-    QFile file("../../test.ui");
+    QFile file("../../calculateWidth.ui");
     if (!file.open(QFile::ReadOnly)) {
         qDebug() << "Failed to open file: " << file.errorString();
         return;
@@ -45,7 +45,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     int index = ui->stackedWidget->indexOf(page);
     ui->stackedWidget->setCurrentIndex(index);
-
 
 }
 
@@ -215,98 +214,98 @@ void MainWindow::on_pushButton_4_clicked() {
 
 
 
-// Open Image for width calculation
-void MainWindow::on_pushButton_6_clicked() {
-    QString fileName = QFileDialog::getOpenFileName(this, "Open A File", "C://");
-    ui->label_5->setText(fileName);
-    cv::Mat image = cv::imread(fileName.toStdString());
-    // Display to graphics window
-    QImage toDisplay = matToQImage(image);
-    ui->graphicsView_2->setScene(new QGraphicsScene(this));
-    ui->graphicsView_2->scene()->addPixmap(QPixmap::fromImage(toDisplay));
-    ui->graphicsView_2->fitInView(ui->graphicsView_2->scene()->sceneRect(), Qt::KeepAspectRatioByExpanding);
-}
+// // Open Image for width calculation
+// void MainWindow::on_pushButton_6_clicked() {
+//     QString fileName = QFileDialog::getOpenFileName(this, "Open A File", "C://");
+//     ui->label_5->setText(fileName);
+//     cv::Mat image = cv::imread(fileName.toStdString());
+//     // Display to graphics window
+//     QImage toDisplay = matToQImage(image);
+//     ui->graphicsView_2->setScene(new QGraphicsScene(this));
+//     ui->graphicsView_2->scene()->addPixmap(QPixmap::fromImage(toDisplay));
+//     ui->graphicsView_2->fitInView(ui->graphicsView_2->scene()->sceneRect(), Qt::KeepAspectRatioByExpanding);
+// }
 
-// Run width calculation on image
-void MainWindow::on_pushButton_7_clicked() {
-    QString fileName = ui->label_5->text();
-    cv::Mat image = cv::imread(fileName.toStdString());
+// // Run width calculation on image
+// void MainWindow::on_pushButton_7_clicked() {
+//     QString fileName = ui->label_5->text();
+//     cv::Mat image = cv::imread(fileName.toStdString());
 
-    // Apply threshold from slider
-    int sliderValue = ui->horizontalSlider->value();
-    int threshType = 0;
+//     // Apply threshold from slider
+//     int sliderValue = ui->horizontalSlider->value();
+//     int threshType = 0;
 
-    // Manually check radio buttons
-    if(ui->radioButton_binary->isChecked()) {
-        threshType = 0;
-    } else if(ui->radioButton_bininverted->isChecked()) {
-        threshType = 1;
-    } else if(ui->radioButton_threshtrunc->isChecked()) {
-        threshType = 2;
-    } else if(ui->radioButton_thresh0->isChecked()) {
-        threshType = 3;
-    } else if(ui->radioButton_thresh0inv->isChecked()) {
-        threshType = 4;
-    } else {
-        qErrnoWarning("ERROR: TYPE NOT DEFINED");
-    }
+//     // Manually check radio buttons
+//     if(ui->radioButton_binary->isChecked()) {
+//         threshType = 0;
+//     } else if(ui->radioButton_bininverted->isChecked()) {
+//         threshType = 1;
+//     } else if(ui->radioButton_threshtrunc->isChecked()) {
+//         threshType = 2;
+//     } else if(ui->radioButton_thresh0->isChecked()) {
+//         threshType = 3;
+//     } else if(ui->radioButton_thresh0inv->isChecked()) {
+//         threshType = 4;
+//     } else {
+//         qErrnoWarning("ERROR: TYPE NOT DEFINED");
+//     }
 
-    cv::threshold(image, image, sliderValue, 255, threshType);
+//     cv::threshold(image, image, sliderValue, 255, threshType);
 
-    //QImage screen(ui->graphicsView_2->viewport()->size(), QImage::Format_RGB32);
-    //QPainter painter(&screen);
-    //ui->graphicsView_2->render(&painter);
-    //cv::Mat image = QImageToCvMat(screen);
+//     //QImage screen(ui->graphicsView_2->viewport()->size(), QImage::Format_RGB32);
+//     //QPainter painter(&screen);
+//     //ui->graphicsView_2->render(&painter);
+//     //cv::Mat image = QImageToCvMat(screen);
 
-    // Modify image in place
-    imageWidthOverlay(image);
-    //cv::Rect2d r = cv::selectROI(image);
-    //cv::Mat imCrop = image(r);
-    //cv::imshow("Result", imCrop);
-    cv::imshow("Result", image);
+//     // Modify image in place
+//     imageWidthOverlay(image);
+//     //cv::Rect2d r = cv::selectROI(image);
+//     //cv::Mat imCrop = image(r);
+//     //cv::imshow("Result", imCrop);
+//     cv::imshow("Result", image);
 
-    // Display to graphics window
-    // QImage toDisplay = matToQImage(image);
-    // ui->graphicsView_2->setScene(new QGraphicsScene(this));
-    // ui->graphicsView_2->scene()->addPixmap(QPixmap::fromImage(toDisplay));
-    // ui->graphicsView_2->fitInView(ui->graphicsView_2->scene()->sceneRect(), Qt::KeepAspectRatio);
+//     // Display to graphics window
+//     // QImage toDisplay = matToQImage(image);
+//     // ui->graphicsView_2->setScene(new QGraphicsScene(this));
+//     // ui->graphicsView_2->scene()->addPixmap(QPixmap::fromImage(toDisplay));
+//     // ui->graphicsView_2->fitInView(ui->graphicsView_2->scene()->sceneRect(), Qt::KeepAspectRatio);
 
-}
+// }
 
-// When slider changes, edit image in display with appropriate thresholding
-void MainWindow::on_horizontalSlider_sliderMoved(int position) {
-    QString label = ui->label_5->text();
-    if(label == "")
-        return;
-    cv::Mat image = cv::imread(label.toStdString());
-    cv::Mat grey, output;
-    // Convert to grey
-    cv::cvtColor(image, grey, cv::COLOR_BGR2GRAY);
-    int threshType = 0;
+// // When slider changes, edit image in display with appropriate thresholding
+// void MainWindow::on_horizontalSlider_sliderMoved(int position) {
+//     QString label = ui->label_5->text();
+//     if(label == "")
+//         return;
+//     cv::Mat image = cv::imread(label.toStdString());
+//     cv::Mat grey, output;
+//     // Convert to grey
+//     cv::cvtColor(image, grey, cv::COLOR_BGR2GRAY);
+//     int threshType = 0;
 
-    // Manually check radio buttons
-    if(ui->radioButton_binary->isChecked()) {
-        threshType = 0;
-    } else if(ui->radioButton_bininverted->isChecked()) {
-        threshType = 1;
-    } else if(ui->radioButton_threshtrunc->isChecked()) {
-        threshType = 2;
-    } else if(ui->radioButton_thresh0->isChecked()) {
-        threshType = 3;
-    } else if(ui->radioButton_thresh0inv->isChecked()) {
-        threshType = 4;
-    } else {
-        qErrnoWarning("ERROR: TYPE NOT DEFINED");
-    }
+//     // Manually check radio buttons
+//     if(ui->radioButton_binary->isChecked()) {
+//         threshType = 0;
+//     } else if(ui->radioButton_bininverted->isChecked()) {
+//         threshType = 1;
+//     } else if(ui->radioButton_threshtrunc->isChecked()) {
+//         threshType = 2;
+//     } else if(ui->radioButton_thresh0->isChecked()) {
+//         threshType = 3;
+//     } else if(ui->radioButton_thresh0inv->isChecked()) {
+//         threshType = 4;
+//     } else {
+//         qErrnoWarning("ERROR: TYPE NOT DEFINED");
+//     }
 
-    // Threshold type hardcoded for now
-    cv::threshold(grey, output, position, 255, threshType);
-    QImage toDisplay = matToQImage(output);
-    ui->graphicsView_2->scene()->clear();
-    ui->graphicsView_2->scene()->addPixmap(QPixmap::fromImage(toDisplay));
-    ui->graphicsView_2->fitInView(ui->graphicsView_2->scene()->sceneRect(), Qt::KeepAspectRatio);
+//     // Threshold type hardcoded for now
+//     cv::threshold(grey, output, position, 255, threshType);
+//     QImage toDisplay = matToQImage(output);
+//     ui->graphicsView_2->scene()->clear();
+//     ui->graphicsView_2->scene()->addPixmap(QPixmap::fromImage(toDisplay));
+//     ui->graphicsView_2->fitInView(ui->graphicsView_2->scene()->sceneRect(), Qt::KeepAspectRatio);
 
-}
+// }
 
 // button for running video processing program
 void MainWindow::on_ProcessVideoButton_clicked()
@@ -332,24 +331,24 @@ void MainWindow::on_VideoSelectButton_clicked()
     }
 }
 
-// Checkbox for ROI
-void MainWindow::on_checkBox_checkStateChanged(const Qt::CheckState &arg1) {
-    if(arg1 == Qt::Checked) {
-        for(int i = 0; i < ui->horizontalLayout_roi->count(); ++i) {
-            QWidget* widget = ui->horizontalLayout_roi->itemAt(i)->widget();
-            if(QSpinBox* spinBox = qobject_cast<QSpinBox*>(widget)) {
-                spinBox->setEnabled(true);
-            }
-        }
-    } else {
-        for(int i = 0; i < ui->horizontalLayout_roi->count(); ++i) {
-            QWidget* widget = ui->horizontalLayout_roi->itemAt(i)->widget();
-            if(QSpinBox* spinBox = qobject_cast<QSpinBox*>(widget)) {
-                spinBox->setEnabled(false);
-            }
-        }
-    }
-}
+// // Checkbox for ROI
+// void MainWindow::on_checkBox_checkStateChanged(const Qt::CheckState &arg1) {
+//     if(arg1 == Qt::Checked) {
+//         for(int i = 0; i < ui->horizontalLayout_roi->count(); ++i) {
+//             QWidget* widget = ui->horizontalLayout_roi->itemAt(i)->widget();
+//             if(QSpinBox* spinBox = qobject_cast<QSpinBox*>(widget)) {
+//                 spinBox->setEnabled(true);
+//             }
+//         }
+//     } else {
+//         for(int i = 0; i < ui->horizontalLayout_roi->count(); ++i) {
+//             QWidget* widget = ui->horizontalLayout_roi->itemAt(i)->widget();
+//             if(QSpinBox* spinBox = qobject_cast<QSpinBox*>(widget)) {
+//                 spinBox->setEnabled(false);
+//             }
+//         }
+//     }
+// }
 
 
 void MainWindow::on_CancelButton_clicked()
