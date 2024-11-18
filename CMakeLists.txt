@@ -37,6 +37,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         FlameProcessing.h
         FlameProcessing.cpp
         calculateWidth.h calculateWidth.cpp calculateWidth.ui
+        scalingtool.h scalingtool.cpp scalingtool.ui
 
 
     )

@@ -290,7 +290,6 @@ void FlameProcessing::parseVideo(std::string videoFilePath, QGraphicsView *view)
 
 // Mouse callback function
 void FlameProcessing::mouseCallback(int event, int x, int y, int flags, void* userdata) {
-    // Bridge to call the non-static method
     FlameProcessing* self = static_cast<FlameProcessing*>(userdata);
     self->scalingMouse(event, x, y, flags);
 }

@@ -13,7 +13,9 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    calculateWidth(new CalculateWidth)
+    calculateWidth(new CalculateWidth),
+    scalingTool(new ScalingTool)
+
 {
     ui->setupUi(this);
     ui->graphicsView->setScene(new QGraphicsScene(this));
@@ -28,8 +30,13 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->ProcessVideoButton->setEnabled(false);
 
     ui->stackedWidget->addWidget(calculateWidth);
-    int index = ui->stackedWidget->indexOf(calculateWidth);
+
+
+
+    ui->stackedWidget->addWidget(scalingTool);
+    int index = ui->stackedWidget->indexOf(scalingTool);
     ui->stackedWidget->setCurrentIndex(index);
+
 
 }
 

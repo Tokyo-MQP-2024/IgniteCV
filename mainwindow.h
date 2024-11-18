@@ -16,6 +16,7 @@
 #include "opencv2/opencv.hpp"
 #include "FlameProcessing.h"
 #include "calculateWidth.h"
+#include "scalingtool.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -73,6 +74,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     CalculateWidth *calculateWidth;
+    ScalingTool *scalingTool;
     QGraphicsPixmapItem pixmap;
     cv::VideoCapture video;
     QString videoFilePath;
