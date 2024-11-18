@@ -78,8 +78,8 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="69"/>
-        <location filename="mainwindow.cpp" line="153"/>
-        <location filename="mainwindow.cpp" line="166"/>
+        <location filename="mainwindow.cpp" line="138"/>
+        <location filename="mainwindow.cpp" line="151"/>
         <source>Please choose an option</source>
         <translation>オプションを選択してください</translation>
     </message>
@@ -90,7 +90,7 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="123"/>
-        <location filename="mainwindow.cpp" line="164"/>
+        <location filename="mainwindow.cpp" line="149"/>
         <source>Auto</source>
         <translation>自動</translation>
     </message>
@@ -140,7 +140,7 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="170"/>
-        <location filename="mainwindow.cpp" line="151"/>
+        <location filename="mainwindow.cpp" line="136"/>
         <source>Folder</source>
         <translation>フォルダ</translation>
     </message>
@@ -245,37 +245,37 @@
         <translation>ホームページに戻る</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="117"/>
-        <location filename="mainwindow.cpp" line="148"/>
-        <location filename="mainwindow.cpp" line="161"/>
+        <location filename="mainwindow.cpp" line="102"/>
+        <location filename="mainwindow.cpp" line="133"/>
+        <location filename="mainwindow.cpp" line="146"/>
         <source>Open A File</source>
         <translation>ファイルを開く</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="151"/>
-        <location filename="mainwindow.cpp" line="164"/>
+        <location filename="mainwindow.cpp" line="136"/>
+        <location filename="mainwindow.cpp" line="149"/>
         <source>Info</source>
         <translation>お知らせ</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="153"/>
-        <location filename="mainwindow.cpp" line="166"/>
-        <location filename="mainwindow.cpp" line="178"/>
+        <location filename="mainwindow.cpp" line="138"/>
+        <location filename="mainwindow.cpp" line="151"/>
+        <location filename="mainwindow.cpp" line="163"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="178"/>
+        <location filename="mainwindow.cpp" line="163"/>
         <source>Please select images for subtraction</source>
         <translation>減算する画像を選択してください</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="200"/>
+        <location filename="mainwindow.cpp" line="185"/>
         <source>Open a Folder</source>
         <translation>フォルダを開く</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="320"/>
+        <location filename="mainwindow.cpp" line="305"/>
         <source>Open a File</source>
         <translation type="unfinished"></translation>
     </message>
