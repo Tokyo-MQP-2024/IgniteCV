@@ -2,19 +2,6 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="ja_JP" sourcelanguage="en_US">
 <context>
-    <name>Form</name>
-    <message>
-        <location filename="test.ui" line="14"/>
-        <source>Form</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="test.ui" line="20"/>
-        <source>PushButton</source>
-        <translation type="unfinished"></translation>
-    </message>
-</context>
-<context>
     <name>MainWindow</name>
     <message>
         <location filename="mainwindow.ui" line="14"/>
@@ -254,6 +241,19 @@
         <location filename="main.cpp" line="24"/>
         <source>This is a test</source>
         <translation>テストです</translation>
+    </message>
+</context>
+<context>
+    <name>test</name>
+    <message>
+        <location filename="test.ui" line="14"/>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="test.ui" line="20"/>
+        <source>PushButton</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>
