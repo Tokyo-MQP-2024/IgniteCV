@@ -7,6 +7,7 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <qtconcurrentrun.h>
 #include <qtranslator.h>
+#include <QtUiTools/QUiLoader>
 #include "utils.h"
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -25,12 +26,26 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->backgroundRemoval->setDisabled(true);
     ui->ProcessVideoButton->setEnabled(false);
 
-    // // read an image
-    // cv::Mat image = cv::imread("image.png", 1);
-    // // create image window named "My Image"
-    // cv::namedWindow("My Image");
-    // // show the image on window
-    // cv::imshow("My Image", image);
+    // Test separate ui file
+    QFile file("../../test.ui");
+    if (!file.open(QFile::ReadOnly)) {
+        qDebug() << "Failed to open file: " << file.errorString();
+        return;
+    }
+    QUiLoader loader;
+    QWidget *page = loader.load(&file, this); // Pass the QFile to load()
+    file.close();
+
+    if (!page) {
+        qDebug() << "Failed to load page: " << loader.errorString();
+        return;
+    }
+
+    ui->stackedWidget->addWidget(page);
+
+    int index = ui->stackedWidget->indexOf(page);
+    ui->stackedWidget->setCurrentIndex(index);
+
 
 }
 
@@ -350,4 +365,5 @@ void MainWindow::on_VideoView_rubberBandChanged(const QRect &viewportRect, const
 {
 
 }
+
 

@@ -11,7 +11,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets LinguistTools)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools)
-find_package(Qt6 REQUIRED COMPONENTS Concurrent)
+find_package(Qt6 REQUIRED COMPONENTS Concurrent UiTools)
 
 find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
@@ -36,6 +36,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         imagesubtraction.h imagesubtraction.cpp
         FlameProcessing.h
         FlameProcessing.cpp
+        test.ui
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET OpenCV_Integration APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
@@ -73,7 +74,7 @@ qt_add_translations(OpenCV_Integration
 install(FILES ${qm_files} DESTINATION ${CMAKE_SOURCE_DIR}/translations)
 
 
-target_link_libraries(OpenCV_Integration PRIVATE Qt${QT_VERSION_MAJOR}::Widgets ${OpenCV_LIBS} Qt6::Concurrent)
+target_link_libraries(OpenCV_Integration PRIVATE Qt${QT_VERSION_MAJOR}::Widgets ${OpenCV_LIBS} Qt6::Concurrent Qt6::UiTools)
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an
