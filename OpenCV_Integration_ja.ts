@@ -251,8 +251,53 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="test.ui" line="20"/>
-        <source>PushButton</source>
+        <location filename="test.ui" line="38"/>
+        <source>Use ROI</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="test.ui" line="127"/>
+        <source>Threshold Type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="test.ui" line="136"/>
+        <source>Binary Inverted</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="test.ui" line="143"/>
+        <source>Binary</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="test.ui" line="153"/>
+        <source>Threshold Truncated</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="test.ui" line="160"/>
+        <source>Threshold to Zero</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="test.ui" line="167"/>
+        <source>Threshold to Zero Inverted</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="test.ui" line="183"/>
+        <source>Run</source>
+        <translation type="unfinished">実行</translation>
+    </message>
+    <message>
+        <location filename="test.ui" line="204"/>
+        <source>Select Image</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="test.ui" line="233"/>
+        <source>Threshold</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
