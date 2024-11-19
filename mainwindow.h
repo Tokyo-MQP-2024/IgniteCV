@@ -32,10 +32,7 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 protected:
-    void closeEvent(QCloseEvent *event);
 private slots:
-    void startBtnPressed();
-    void on_actionOpen_triggered();
     void on_actionHome_triggered();
 
     void on_backgroundRemoval_clicked();

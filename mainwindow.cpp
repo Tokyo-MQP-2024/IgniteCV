@@ -18,12 +18,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
 {
     ui->setupUi(this);
-    ui->graphicsView->setScene(new QGraphicsScene(this));
-    ui->graphicsView->scene()->addItem(&pixmap);
-    ui->graphicsView->fitInView(&pixmap, Qt::KeepAspectRatioByExpanding);
-
-
-    connect(ui->pushButton, SIGNAL(clicked(bool)), this, SLOT(startBtnPressed()));
 
     // Disable bad buttons
     ui->backgroundRemoval->setDisabled(true);
@@ -45,71 +39,6 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::startBtnPressed() {
-    using namespace cv;
-    if(video.isOpened()) {
-        ui->pushButton->setText("Start");
-        video.release();
-        return;
-    }
-
-    bool isCamera;
-    int cameraIndex = ui->lineEdit->text().toInt(&isCamera);
-
-    // Maybe implement camera later
-    if(isCamera) {
-        QMessageBox::critical(this, "NO CAMERA YET", "CRY");
-        return;
-    }
-
-    if(!video.open(ui->lineEdit->text().trimmed().toStdString())) {
-        QMessageBox::critical(this, "Video Error", "Cannot find file path");
-        return;
-    }
-
-    ui->pushButton->setText("Stop");
-
-    Mat frame;
-    while(video.isOpened()) {
-        video >> frame;
-        if(!frame.empty()) {
-            copyMakeBorder(frame,
-                           frame,
-                           frame.rows/2,
-                           frame.rows/2,
-                           frame.cols/2,
-                           frame.cols/2,
-                           BORDER_REFLECT);
-
-            QImage qimg(frame.data,
-                        frame.cols,
-                        frame.rows,
-                        frame.step,
-                        QImage::Format_RGB888);
-            pixmap.setPixmap( QPixmap::fromImage(qimg.rgbSwapped()) );
-            ui->graphicsView->fitInView(&pixmap, Qt::KeepAspectRatio);
-        }
-        qApp->processEvents();
-    }
-    ui->pushButton->setText("Start");
-}
-
-void MainWindow::closeEvent(QCloseEvent *event) {
-    if(video.isOpened()) {
-        QMessageBox::warning(this, "Warning", "Stop the video before closing the application!");
-        event->ignore();
-    } else {
-        event->accept();
-    }
-}
-
-void MainWindow::on_actionOpen_triggered()
-{
-    // Create file dialog
-    QString fileName = QFileDialog::getOpenFileName(this, tr("Open A File"), "C://");
-    ui->lineEdit->setText(fileName);
-}
-
 // Page Navigation
 
 void MainWindow::on_actionHome_triggered() {
@@ -126,12 +55,11 @@ void MainWindow::on_averageImages_clicked() {
 
 void MainWindow::on_pushButton_5_clicked() {
     ui->stackedWidget->setCurrentWidget(calculateWidth);
-    //ui->stackedWidget->setCurrentIndex(3);
 }
 
 void MainWindow::on_FlameToolButton_clicked() {
     ui->ProcessVideoButton->setEnabled(false);
-    ui->stackedWidget->setCurrentIndex(4);
+    ui->stackedWidget->setCurrentIndex(3);
 }
 
 // BACKGROUND REMOVAL FUNCTIONS
@@ -148,7 +76,6 @@ void MainWindow::on_image1_clicked() {
     }
 }
 
-
 void MainWindow::on_image2_clicked() {
     if(ui->radioButton_3->isChecked()) {
         //QMessageBox::information(this, tr("Info"), tr("File"));
@@ -160,7 +87,6 @@ void MainWindow::on_image2_clicked() {
         QMessageBox::warning(this, tr("Warning"), tr("Please choose an option"));
     }
 }
-
 
 void MainWindow::on_run_clicked() {
     // NO ERROR CHECKING YET
@@ -215,7 +141,6 @@ void MainWindow::on_ProcessVideoButton_clicked()
 
     flame_process->parseVideo(videoFilePath.toStdString(), ui->VideoView);
 }
-
 
 // button to uplaod video for processing
 void MainWindow::on_VideoSelectButton_clicked()
