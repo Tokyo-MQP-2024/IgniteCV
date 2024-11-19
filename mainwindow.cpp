@@ -110,6 +110,7 @@ void MainWindow::on_actionOpen_triggered()
     ui->lineEdit->setText(fileName);
 }
 
+// Page Navigation
 
 void MainWindow::on_actionHome_triggered() {
     ui->stackedWidget->setCurrentIndex(0);
@@ -124,7 +125,8 @@ void MainWindow::on_averageImages_clicked() {
 }
 
 void MainWindow::on_pushButton_5_clicked() {
-    ui->stackedWidget->setCurrentIndex(3);
+    ui->stackedWidget->setCurrentWidget(calculateWidth);
+    //ui->stackedWidget->setCurrentIndex(3);
 }
 
 void MainWindow::on_FlameToolButton_clicked() {

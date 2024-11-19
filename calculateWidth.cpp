@@ -40,6 +40,16 @@ void CalculateWidth::on_pushButton_7_clicked() {
     QString fileName = ui->label_5->text();
     cv::Mat image = cv::imread(fileName.toStdString());
 
+    // If ROI selected
+    if(ui->checkBox->isChecked()) {
+        cv::Rect roi = cv::selectROI(image);
+        cv::Mat imCropped = image(roi);
+        imshow("ROI", imCropped);
+        cv::waitKey(0);
+
+        return;
+    }
+
     // Apply threshold from slider
     int sliderValue = ui->horizontalSlider->value();
     int threshType = 0;

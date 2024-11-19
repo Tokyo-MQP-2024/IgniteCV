@@ -14,32 +14,32 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="calculateWidth.ui" line="104"/>
+        <location filename="calculateWidth.ui" line="159"/>
         <source>Threshold Type</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="calculateWidth.ui" line="113"/>
+        <location filename="calculateWidth.ui" line="168"/>
         <source>Binary Inverted</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="calculateWidth.ui" line="120"/>
+        <location filename="calculateWidth.ui" line="175"/>
         <source>Binary</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="calculateWidth.ui" line="130"/>
+        <location filename="calculateWidth.ui" line="185"/>
         <source>Threshold Truncated</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="calculateWidth.ui" line="137"/>
+        <location filename="calculateWidth.ui" line="192"/>
         <source>Threshold to Zero</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="calculateWidth.ui" line="144"/>
+        <location filename="calculateWidth.ui" line="199"/>
         <source>Threshold to Zero Inverted</source>
         <translation type="unfinished"></translation>
     </message>
@@ -49,12 +49,12 @@
         <translation type="unfinished">実行</translation>
     </message>
     <message>
-        <location filename="calculateWidth.ui" line="159"/>
+        <location filename="calculateWidth.ui" line="97"/>
         <source>Threshold</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="calculateWidth.ui" line="180"/>
+        <location filename="calculateWidth.ui" line="118"/>
         <source>Select Image</source>
         <translation type="unfinished"></translation>
     </message>
@@ -78,8 +78,8 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="69"/>
-        <location filename="mainwindow.cpp" line="138"/>
-        <location filename="mainwindow.cpp" line="151"/>
+        <location filename="mainwindow.cpp" line="147"/>
+        <location filename="mainwindow.cpp" line="160"/>
         <source>Please choose an option</source>
         <translation>オプションを選択してください</translation>
     </message>
@@ -90,31 +90,30 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="123"/>
-        <location filename="mainwindow.cpp" line="149"/>
+        <location filename="mainwindow.cpp" line="158"/>
         <source>Auto</source>
         <translation>自動</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="94"/>
         <location filename="mainwindow.ui" line="213"/>
-        <location filename="mainwindow.ui" line="376"/>
         <source>Run</source>
         <translation>実行</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="494"/>
+        <location filename="mainwindow.ui" line="278"/>
         <source>File Path</source>
         <translation>ファイルパス</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="504"/>
+        <location filename="mainwindow.ui" line="288"/>
         <source>Start</source>
         <translation>スタート</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="113"/>
         <location filename="mainwindow.ui" line="160"/>
-        <location filename="mainwindow.ui" line="564"/>
+        <location filename="mainwindow.ui" line="348"/>
         <source>File</source>
         <translation>ファイル</translation>
     </message>
@@ -140,7 +139,7 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="170"/>
-        <location filename="mainwindow.cpp" line="136"/>
+        <location filename="mainwindow.cpp" line="145"/>
         <source>Folder</source>
         <translation>フォルダ</translation>
     </message>
@@ -155,127 +154,82 @@
         <translation>セーブ</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="388"/>
-        <source>Select Image</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="276"/>
-        <source>Threshold</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="307"/>
-        <source>Threshold Type</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
         <location filename="mainwindow.ui" line="83"/>
         <source>test</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="316"/>
-        <source>Binary</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="326"/>
-        <source>Binary Inverted</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="333"/>
-        <source>Threshold Truncated</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="340"/>
-        <source>Threshold to Zero</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="347"/>
-        <source>Threshold to Zero Inverted</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="409"/>
-        <source>Use ROI</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="519"/>
+        <location filename="mainwindow.ui" line="303"/>
         <source>TextLabel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="526"/>
+        <location filename="mainwindow.ui" line="310"/>
         <source>Open Video</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="533"/>
+        <location filename="mainwindow.ui" line="317"/>
         <source>Cancel Process</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="543"/>
+        <location filename="mainwindow.ui" line="327"/>
         <source>Run Video Processing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="573"/>
+        <location filename="mainwindow.ui" line="357"/>
         <source>toolBar</source>
         <translation>ツールバー</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="588"/>
+        <location filename="mainwindow.ui" line="372"/>
         <source>Open</source>
         <translation>開ける</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="596"/>
+        <location filename="mainwindow.ui" line="380"/>
         <source>Home</source>
         <translation>ホーム</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="599"/>
+        <location filename="mainwindow.ui" line="383"/>
         <source>Return to homepage</source>
         <translation>ホームページに戻る</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="102"/>
-        <location filename="mainwindow.cpp" line="133"/>
-        <location filename="mainwindow.cpp" line="146"/>
+        <location filename="mainwindow.cpp" line="109"/>
+        <location filename="mainwindow.cpp" line="142"/>
+        <location filename="mainwindow.cpp" line="155"/>
         <source>Open A File</source>
         <translation>ファイルを開く</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="136"/>
-        <location filename="mainwindow.cpp" line="149"/>
+        <location filename="mainwindow.cpp" line="145"/>
+        <location filename="mainwindow.cpp" line="158"/>
         <source>Info</source>
         <translation>お知らせ</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="138"/>
-        <location filename="mainwindow.cpp" line="151"/>
-        <location filename="mainwindow.cpp" line="163"/>
+        <location filename="mainwindow.cpp" line="147"/>
+        <location filename="mainwindow.cpp" line="160"/>
+        <location filename="mainwindow.cpp" line="172"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="163"/>
+        <location filename="mainwindow.cpp" line="172"/>
         <source>Please select images for subtraction</source>
         <translation>減算する画像を選択してください</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="185"/>
+        <location filename="mainwindow.cpp" line="194"/>
         <source>Open a Folder</source>
         <translation>フォルダを開く</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="305"/>
+        <location filename="mainwindow.cpp" line="223"/>
         <source>Open a File</source>
         <translation type="unfinished"></translation>
     </message>
@@ -299,6 +253,19 @@
         <location filename="main.cpp" line="24"/>
         <source>This is a test</source>
         <translation>テストです</translation>
+    </message>
+</context>
+<context>
+    <name>ScalingTool</name>
+    <message>
+        <location filename="scalingtool.ui" line="14"/>
+        <source>Form</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="scalingtool.ui" line="26"/>
+        <source>poop</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
