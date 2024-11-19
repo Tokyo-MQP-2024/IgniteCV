@@ -29,10 +29,17 @@ public:
 
     void scalingMouse(int event, int x, int y, int flags);
 
+    void imageScaling(cv::VideoCapture cap);
+
 private:
     bool stopProcess = false;
     QGraphicsScene *scene = new QGraphicsScene();
     int scaleClicks = 0;
+
+    int maskX = 0;
+    int maskY = 0;
+    int maskH = 0;
+    int maskW = 0;
 
     static void mouseCallback(int event, int x, int y, int flags, void* userdata);
 

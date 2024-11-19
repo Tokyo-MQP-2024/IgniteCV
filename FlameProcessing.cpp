@@ -66,6 +66,49 @@ bool FlameProcessing::checkMP4(std::string newFile) {
     return extension == ".mp4";
 }
 
+void FlameProcessing::imageScaling(cv::VideoCapture cap) {
+
+
+    cv::Mat image;
+    if (!cap.read(image)) {
+        std::cerr << "Error: Could not read first frame!\n";
+    }
+    cv::resize(image, image, cv::Size(), 0.5, 0.5); // Scale down by half
+    //cv::imshow("Frame", image);
+
+    //cv::setMouseCallback("Frame", FlameProcessing::mouseCallback, this);
+    cv::Rect roi;
+    roi = cv::selectROI(image);
+
+    cv::Mat imCropped;
+    try {
+        imCropped = image(roi);
+    } catch (const cv::Exception &e) {
+        //QMessageBox::warning(this, tr("OpenCV Error"), QString::fromStdString(e.what()));
+        return;
+    }
+    image = imCropped;
+
+
+
+
+
+    maskX = roi.x;
+    maskY = roi.y;
+    maskH = roi.height;
+    maskW = roi.width;
+
+    cv::destroyWindow("Window1");
+
+    //cap.release();
+    //cv::destroyAllWindows();
+
+   // cv::imshow("Frame", image);
+
+
+}
+
+
 void FlameProcessing::parseVideo(std::string videoFilePath, QGraphicsView *view) {
     view->setScene(scene);
 
@@ -114,26 +157,7 @@ void FlameProcessing::parseVideo(std::string videoFilePath, QGraphicsView *view)
         int currY = -1;
         int lastY = -1;
 
-
-
-
-        cv::Mat firstframe;
-        if (!cap.read(firstframe)) {
-            std::cerr << "Error: Could not read first frame!\n";
-        }
-        cv::resize(firstframe, firstframe, cv::Size(), 0.5, 0.5); // Scale down by half
-        cv::imshow("Frame", firstframe);
-
-
-        //cv::setMouseCallback("Frame", scalingMouse, NULL);
-        cv::setMouseCallback("Frame", FlameProcessing::mouseCallback, this);
-        //cv::setMouseCallback("Frame", [this](int event, int x, int y, int flags, void* userdata) {this->onMouse(event, x, y, flags, userdata);});
-        // Wait for two points to be clicked
-        while (scaleClicks < 2) {
-            if (cv::waitKey(1) == 27) { // Press 'ESC' to exit early
-                std::cout << "Exiting before two points were selected.\n";
-            }
-        }
+        imageScaling(cap);
 
 
         while (true) {
@@ -147,22 +171,34 @@ void FlameProcessing::parseVideo(std::string videoFilePath, QGraphicsView *view)
             // Capture each frame
             cap >> frame;
 
+
+
             // If the frame is empty, break the loop (end of video)
             if (frame.empty()) {
                 break;
             }
 
             cv::resize(frame, frame, cv::Size(), 0.5, 0.5); // Scale down by half
+            // Create a black mask
+            cv::Mat newFrame = cv::Mat::zeros(frame.size(), frame.type());
+            // Define the rectangle for the mask
+            cv::Rect box(maskX, maskY, maskW, maskH);
+
+            // Copy the contents of the rectangle from the frame to the mask
+            frame(box).copyTo(newFrame(box));
+
+            // Display the result
+            //cv::imshow("Masked Frame", tempMask);
 
 
-            bg_sub->apply(frame, mask);
+            bg_sub->apply(newFrame, mask);
 
 
             //cv::Mat fg;
             foreground.setTo(cv::Scalar(0, 0, 0));
             HSVFrame.setTo(cv::Scalar(0, 0, 0));
             dilateErodeMask.setTo(cv::Scalar(0,0,0));
-            frame.copyTo(foreground, mask);
+            newFrame.copyTo(foreground, mask);
 
 
 
@@ -247,15 +283,15 @@ void FlameProcessing::parseVideo(std::string videoFilePath, QGraphicsView *view)
 
 
             // Draw the point on the image
-            cv::rectangle(frame, tl,br,cv::Scalar(0,255,0),cv::FILLED);
-            cv::rectangle(frame, tl2,br2,cv::Scalar(0,200,0),cv::FILLED);
+            cv::rectangle(newFrame, tl,br,cv::Scalar(0,255,0),cv::FILLED);
+            cv::rectangle(newFrame, tl2,br2,cv::Scalar(0,200,0),cv::FILLED);
 
-            cv::drawContours(frame, contours, -1, cv::Scalar(255, 0, 0), cv::FILLED);
+            cv::drawContours(newFrame, contours, -1, cv::Scalar(255, 0, 0), cv::FILLED);
 
             if (frameCount % 5 == 0) { // Show every 5th frame
                 //cv::imshow("cleaned mask", frame);
                 view->scene()->clear();
-                QImage qimg = matToQImage(frame);
+                QImage qimg = matToQImage(newFrame);
 
                 // Create a QPixmap from the QImage and add it to the scene
 
