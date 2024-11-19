@@ -97,58 +97,56 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="42"/>
+        <location filename="mainwindow.ui" line="28"/>
         <source>Average Images</source>
         <translation>画像を平均化する</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="49"/>
+        <location filename="mainwindow.ui" line="69"/>
         <source>Background Removal</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="69"/>
-        <location filename="mainwindow.cpp" line="147"/>
-        <location filename="mainwindow.cpp" line="160"/>
+        <location filename="mainwindow.ui" line="62"/>
+        <location filename="mainwindow.cpp" line="75"/>
+        <location filename="mainwindow.cpp" line="87"/>
         <source>Please choose an option</source>
         <translation>オプションを選択してください</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="35"/>
+        <location filename="mainwindow.ui" line="55"/>
         <source>Calculate Cone Angle</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="123"/>
-        <location filename="mainwindow.cpp" line="158"/>
+        <location filename="mainwindow.ui" line="116"/>
+        <location filename="mainwindow.cpp" line="85"/>
         <source>Auto</source>
         <translation>自動</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="94"/>
-        <location filename="mainwindow.ui" line="213"/>
+        <location filename="mainwindow.ui" line="87"/>
+        <location filename="mainwindow.ui" line="206"/>
         <source>Run</source>
         <translation>実行</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="278"/>
         <source>File Path</source>
-        <translation>ファイルパス</translation>
+        <translation type="vanished">ファイルパス</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="288"/>
         <source>Start</source>
-        <translation>スタート</translation>
+        <translation type="vanished">スタート</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="113"/>
-        <location filename="mainwindow.ui" line="160"/>
-        <location filename="mainwindow.ui" line="348"/>
+        <location filename="mainwindow.ui" line="106"/>
+        <location filename="mainwindow.ui" line="153"/>
+        <location filename="mainwindow.ui" line="309"/>
         <source>File</source>
         <translation>ファイル</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="28"/>
+        <location filename="mainwindow.ui" line="35"/>
         <source>Calculate Width</source>
         <translation type="unfinished"></translation>
     </message>
@@ -158,108 +156,101 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="103"/>
+        <location filename="mainwindow.ui" line="96"/>
         <source>Background</source>
         <translation>バックグラウンド</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="150"/>
+        <location filename="mainwindow.ui" line="143"/>
         <source>Image</source>
         <translation>イメージ</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="170"/>
-        <location filename="mainwindow.cpp" line="145"/>
+        <location filename="mainwindow.ui" line="163"/>
+        <location filename="mainwindow.cpp" line="73"/>
         <source>Folder</source>
         <translation>フォルダ</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="222"/>
+        <location filename="mainwindow.ui" line="215"/>
         <source>Select Folder</source>
         <translation>フォルダを選択</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="238"/>
+        <location filename="mainwindow.ui" line="231"/>
         <source>Save</source>
         <translation>セーブ</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="83"/>
-        <source>test</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="303"/>
+        <location filename="mainwindow.ui" line="264"/>
         <source>TextLabel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="310"/>
+        <location filename="mainwindow.ui" line="271"/>
         <source>Open Video</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="317"/>
+        <location filename="mainwindow.ui" line="278"/>
         <source>Cancel Process</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="327"/>
+        <location filename="mainwindow.ui" line="288"/>
         <source>Run Video Processing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="357"/>
+        <location filename="mainwindow.ui" line="317"/>
         <source>toolBar</source>
         <translation>ツールバー</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="372"/>
         <source>Open</source>
-        <translation>開ける</translation>
+        <translation type="vanished">開ける</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="380"/>
+        <location filename="mainwindow.ui" line="332"/>
         <source>Home</source>
         <translation>ホーム</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="383"/>
+        <location filename="mainwindow.ui" line="335"/>
         <source>Return to homepage</source>
         <translation>ホームページに戻る</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="109"/>
-        <location filename="mainwindow.cpp" line="142"/>
-        <location filename="mainwindow.cpp" line="155"/>
+        <location filename="mainwindow.cpp" line="70"/>
+        <location filename="mainwindow.cpp" line="82"/>
         <source>Open A File</source>
         <translation>ファイルを開く</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="145"/>
-        <location filename="mainwindow.cpp" line="158"/>
+        <location filename="mainwindow.cpp" line="73"/>
+        <location filename="mainwindow.cpp" line="85"/>
         <source>Info</source>
         <translation>お知らせ</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="147"/>
-        <location filename="mainwindow.cpp" line="160"/>
-        <location filename="mainwindow.cpp" line="172"/>
+        <location filename="mainwindow.cpp" line="75"/>
+        <location filename="mainwindow.cpp" line="87"/>
+        <location filename="mainwindow.cpp" line="98"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="172"/>
+        <location filename="mainwindow.cpp" line="98"/>
         <source>Please select images for subtraction</source>
         <translation>減算する画像を選択してください</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="194"/>
+        <location filename="mainwindow.cpp" line="120"/>
         <source>Open a Folder</source>
         <translation>フォルダを開く</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="223"/>
+        <location filename="mainwindow.cpp" line="148"/>
         <source>Open a File</source>
         <translation type="unfinished"></translation>
     </message>
