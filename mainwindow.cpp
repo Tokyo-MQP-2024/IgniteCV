@@ -131,7 +131,7 @@ void MainWindow::on_pushButton_5_clicked() {
 
 void MainWindow::on_FlameToolButton_clicked() {
     ui->ProcessVideoButton->setEnabled(false);
-    ui->stackedWidget->setCurrentIndex(5);
+    ui->stackedWidget->setCurrentIndex(4);
 }
 
 // BACKGROUND REMOVAL FUNCTIONS

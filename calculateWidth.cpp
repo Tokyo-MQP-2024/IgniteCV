@@ -3,6 +3,7 @@
 #include "utils.h"
 
 #include <QFileDialog>
+#include <QMessageBox>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc.hpp>
@@ -41,13 +42,34 @@ void CalculateWidth::on_pushButton_7_clicked() {
     cv::Mat image = cv::imread(fileName.toStdString());
 
     // If ROI selected
-    if(ui->checkBox->isChecked()) {
-        cv::Rect roi = cv::selectROI(image);
-        cv::Mat imCropped = image(roi);
-        imshow("ROI", imCropped);
-        cv::waitKey(0);
+    if(ui->checkBox_2->isChecked()) {
+        // If manual mode is checked
+        cv::Rect roi;
+        if(ui->checkBox->isChecked()) {
+            roi.x = ui->spinBox->value();
+            roi.y = ui->spinBox_2->value();
+            roi.width = ui->spinBox_3->value();
+            roi.height = ui->spinBox_4->value();
+        } else {
+            roi = cv::selectROI(image);
+        }
+        cv::Mat imCropped;
+        try {
+            imCropped = image(roi);
+        } catch (const cv::Exception &e) {
+            QMessageBox::warning(this, tr("OpenCV Error"), QString::fromStdString(e.what()));
+            return;
+        }
 
-        return;
+        //imshow("ROI", imCropped);
+        //cv::waitKey(0);
+        image = imCropped;
+
+        // Populate number boxes
+        ui->spinBox->setValue(roi.x);
+        ui->spinBox_2->setValue(roi.y);
+        ui->spinBox_3->setValue(roi.width);
+        ui->spinBox_4->setValue(roi.height);
     }
 
     // Apply threshold from slider
@@ -129,18 +151,24 @@ void CalculateWidth::on_horizontalSlider_sliderMoved(int position) {
 // Checkbox for ROI
 void CalculateWidth::on_checkBox_checkStateChanged(const Qt::CheckState &arg1) {
     if(arg1 == Qt::Checked) {
-        for(int i = 0; i < ui->horizontalLayout_roi->count(); ++i) {
-            QWidget* widget = ui->horizontalLayout_roi->itemAt(i)->widget();
-            if(QSpinBox* spinBox = qobject_cast<QSpinBox*>(widget)) {
-                spinBox->setEnabled(true);
-            }
-        }
+        ui->spinBox->setEnabled(true);
+        ui->spinBox_2->setEnabled(true);
+        ui->spinBox_3->setEnabled(true);
+        ui->spinBox_4->setEnabled(true);
     } else {
-        for(int i = 0; i < ui->horizontalLayout_roi->count(); ++i) {
-            QWidget* widget = ui->horizontalLayout_roi->itemAt(i)->widget();
-            if(QSpinBox* spinBox = qobject_cast<QSpinBox*>(widget)) {
-                spinBox->setEnabled(false);
-            }
-        }
+        ui->spinBox->setEnabled(false);
+        ui->spinBox_2->setEnabled(false);
+        ui->spinBox_3->setEnabled(false);
+        ui->spinBox_4->setEnabled(false);
     }
 }
+
+void CalculateWidth::on_checkBox_2_checkStateChanged(const Qt::CheckState &arg1) {
+    if(arg1 == Qt::Checked) {
+        ui->checkBox->setEnabled(true);
+    } else {
+        ui->checkBox->setCheckState(Qt::Unchecked);
+        ui->checkBox->setEnabled(false);
+    }
+}
+

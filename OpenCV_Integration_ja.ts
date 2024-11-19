@@ -9,53 +9,83 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="calculateWidth.ui" line="25"/>
+        <location filename="calculateWidth.ui" line="22"/>
+        <source>Width</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="calculateWidth.ui" line="49"/>
         <source>Use ROI</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="calculateWidth.ui" line="159"/>
+        <location filename="calculateWidth.ui" line="59"/>
+        <source>Manual Mode</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="calculateWidth.ui" line="91"/>
+        <source>X</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="calculateWidth.ui" line="146"/>
+        <source>Y</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="calculateWidth.ui" line="193"/>
         <source>Threshold Type</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="calculateWidth.ui" line="168"/>
+        <location filename="calculateWidth.ui" line="202"/>
         <source>Binary Inverted</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="calculateWidth.ui" line="175"/>
+        <location filename="calculateWidth.ui" line="209"/>
         <source>Binary</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="calculateWidth.ui" line="185"/>
+        <location filename="calculateWidth.ui" line="219"/>
         <source>Threshold Truncated</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="calculateWidth.ui" line="192"/>
+        <location filename="calculateWidth.ui" line="226"/>
         <source>Threshold to Zero</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="calculateWidth.ui" line="199"/>
+        <location filename="calculateWidth.ui" line="233"/>
         <source>Threshold to Zero Inverted</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="calculateWidth.ui" line="215"/>
+        <location filename="calculateWidth.ui" line="249"/>
         <source>Run</source>
         <translation type="unfinished">実行</translation>
     </message>
     <message>
-        <location filename="calculateWidth.ui" line="97"/>
+        <location filename="calculateWidth.ui" line="258"/>
+        <source>Height</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="calculateWidth.ui" line="73"/>
         <source>Threshold</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="calculateWidth.ui" line="118"/>
         <source>Select Image</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="calculateWidth.cpp" line="60"/>
+        <source>OpenCV Error</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

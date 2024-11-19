@@ -20,6 +20,8 @@ private slots:
     void on_horizontalSlider_sliderMoved(int position);
     void on_pushButton_7_clicked();
     void on_pushButton_6_clicked();
+    void on_checkBox_2_checkStateChanged(const Qt::CheckState &arg1);
+
 private:
     Ui::CalculateWidth *ui;
 };
