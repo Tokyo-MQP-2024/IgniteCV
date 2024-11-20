@@ -29,10 +29,30 @@ public:
 
     void scalingMouse(int event, int x, int y, int flags);
 
+    void imageScaling(std::string videoFilePath);
+
+    void imageROISelect(cv::VideoCapture cap);
+
 private:
     bool stopProcess = false;
     QGraphicsScene *scene = new QGraphicsScene();
     int scaleClicks = 0;
+
+
+    int currX = 0;
+    int currY = 0;
+    int scalePointX = 0;
+    int scalePointY = 0;
+    bool fist_point_selected = false;
+
+    cv::Point currPos;
+
+
+
+    int maskX = 0;
+    int maskY = 0;
+    int maskH = 0;
+    int maskW = 0;
 
     static void mouseCallback(int event, int x, int y, int flags, void* userdata);
 
