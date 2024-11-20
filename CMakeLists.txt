@@ -104,3 +104,9 @@ if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(OpenCV_Integration)
 endif()
 
+qt_generate_deploy_app_script(
+    TARGET OpenCV_Integration
+    OUTPUT_SCRIPT deploy_script
+    NO_UNSUPPORTED_PLATFORM_ERROR
+)
+install(SCRIPT ${deploy_script})
