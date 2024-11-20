@@ -20,9 +20,19 @@ FlameProcessing::FlameProcessing() {
 
 void FlameProcessing::scalingMouse(int event, int x, int y, int flags) {
     if(event == 1){
-
         scaleClicks = scaleClicks + 1;
+        // currX = x;
+        // currY = y;
+        currPos.x = x;
+        currPos.y = y;
         std::cout<<event<<" "<<x<<" "<<y<<" clicks:"<<scaleClicks<<"\n";
+    }
+
+    else if(event == 0) {
+        // currX = x;
+        // currY = y;
+        currPos.x = x;
+        currPos.y = y;
     }
 }
 
@@ -66,45 +76,82 @@ bool FlameProcessing::checkMP4(std::string newFile) {
     return extension == ".mp4";
 }
 
-void FlameProcessing::imageScaling(cv::VideoCapture cap) {
-
-
+void FlameProcessing::imageROISelect(cv::VideoCapture cap) {
     cv::Mat image;
     if (!cap.read(image)) {
         std::cerr << "Error: Could not read first frame!\n";
     }
     cv::resize(image, image, cv::Size(), 0.5, 0.5); // Scale down by half
-    //cv::imshow("Frame", image);
-
-    //cv::setMouseCallback("Frame", FlameProcessing::mouseCallback, this);
     cv::Rect roi;
-    roi = cv::selectROI(image);
-
+    roi = cv::selectROI("Selected ROI", image);
     cv::Mat imCropped;
     try {
         imCropped = image(roi);
     } catch (const cv::Exception &e) {
-        //QMessageBox::warning(this, tr("OpenCV Error"), QString::fromStdString(e.what()));
         return;
     }
     image = imCropped;
-
-
-
-
-
     maskX = roi.x;
     maskY = roi.y;
     maskH = roi.height;
     maskW = roi.width;
 
-    cv::destroyWindow("Window1");
+    cv::destroyWindow("Selected ROI");
+}
 
-    //cap.release();
-    //cv::destroyAllWindows();
+void FlameProcessing::imageScaling(std::string videoFilePath) {
 
-   // cv::imshow("Frame", image);
+    cv::VideoCapture cap(videoFilePath);
+    cv::Mat firstframe;
+    if (!cap.read(firstframe)) {
+        std::cerr << "Error: Could not read first frame!\n";
+        return; // Exit if the frame cannot be read
+    }
 
+    if (firstframe.empty()) {
+        std::cerr << "Error: Retrieved frame is empty!\n";
+        return;
+    }
+
+    cv::resize(firstframe, firstframe, cv::Size(), 0.5, 0.5); // Scale down by half
+    cv::imshow("Manual Scaling", firstframe);
+    cv::setMouseCallback("Manual Scaling", FlameProcessing::mouseCallback, this);
+
+    cv::Point startingPos(-1,-1);
+
+    // Clone the image for dynamic updates
+    cv::Mat tempImage;
+    tempImage = firstframe.clone();
+
+    // Wait for two points to be clicked
+    while (scaleClicks < 2) {
+
+        //tempImage = firstframe.clone();
+        firstframe.copyTo(tempImage);
+
+        if(scaleClicks == 1 && fist_point_selected == false) {
+            startingPos.x = currPos.x;
+            startingPos.y = currPos.y;
+
+            fist_point_selected = true;
+
+
+        }
+
+        if (scaleClicks == 1) {
+            cv::line(tempImage, startingPos, currPos, cv::Scalar(0, 255, 0), 2);
+        }
+
+
+        if (cv::waitKey(1) == 27) { // Press 'ESC' to exit early
+            std::cout << "Exiting before two points were selected.\n";
+            break; // Exit the loop gracefully
+        }
+
+        cv::imshow("Manual Scaling", tempImage);
+    }
+
+    cv::destroyWindow("Manual Scaling"); // Destroy the window to release resources
 
 }
 
@@ -114,9 +161,6 @@ void FlameProcessing::parseVideo(std::string videoFilePath, QGraphicsView *view)
 
     auto const MASK_WINDOW = "Mask Settings";
     cv::namedWindow(MASK_WINDOW, cv::WINDOW_AUTOSIZE);
-    // Open the video file
-    //std::string videoFilePath = "C:/Users/chris/WPI/JapanMQPClone/JapanMQP/data/FireSafetyVideo.mp4";
-
 
     cv::VideoCapture cap(videoFilePath);
 
@@ -157,7 +201,8 @@ void FlameProcessing::parseVideo(std::string videoFilePath, QGraphicsView *view)
         int currY = -1;
         int lastY = -1;
 
-        imageScaling(cap);
+        imageScaling(videoFilePath);
+        imageROISelect(cap);
 
 
         while (true) {
@@ -170,7 +215,6 @@ void FlameProcessing::parseVideo(std::string videoFilePath, QGraphicsView *view)
 
             // Capture each frame
             cap >> frame;
-
 
 
             // If the frame is empty, break the loop (end of video)
@@ -192,7 +236,6 @@ void FlameProcessing::parseVideo(std::string videoFilePath, QGraphicsView *view)
 
 
             bg_sub->apply(newFrame, mask);
-
 
             //cv::Mat fg;
             foreground.setTo(cv::Scalar(0, 0, 0));

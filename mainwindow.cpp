@@ -28,8 +28,9 @@ MainWindow::MainWindow(QWidget *parent) :
 
 
     ui->stackedWidget->addWidget(scalingTool);
-    int index = ui->stackedWidget->indexOf(scalingTool);
-    ui->stackedWidget->setCurrentIndex(index);
+
+    //int index = ui->stackedWidget->indexOf(this);
+    ui->stackedWidget->setCurrentIndex(0);
 
 
 }
@@ -138,8 +139,11 @@ void MainWindow::on_ProcessVideoButton_clicked()
     //FlameProcessing::scaleClicks = 0;
     //flame_process->scaleClicks = 0;
 
+    int index = ui->stackedWidget->indexOf(scalingTool);
+    ui->stackedWidget->setCurrentIndex(index);
 
-    flame_process->parseVideo(videoFilePath.toStdString(), ui->VideoView);
+
+    //flame_process->parseVideo(videoFilePath.toStdString(), ui->VideoView);//ru the process func
 }
 
 // button to uplaod video for processing
@@ -153,10 +157,18 @@ void MainWindow::on_VideoSelectButton_clicked()
         ui->ProcessVideoButton->setEnabled(true);
         // TODO: display video on the graphics viewer
         // TODO: pass the file into parseVideo
-        videoFilePath = filePath;
+        //videoFilePath = filePath;
+        scalingTool->videoFilePath = filePathSTD;
+        scalingTool->flame_process = flame_process;
+        //ui->stackedWidget->addWidget(scalingTool);
+
     } else {
         ui->VideoLabel->setText("File must be .mp4");
     }
+
+
+
+
 }
 
 void MainWindow::on_CancelButton_clicked()
