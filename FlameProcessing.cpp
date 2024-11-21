@@ -18,19 +18,20 @@ FlameProcessing::FlameProcessing() {
 
 }
 
+void FlameProcessing::setIRLScale(double x, double y){
+    irlScaleX = x;
+    irlScaleY = y;
+}
+
 void FlameProcessing::scalingMouse(int event, int x, int y, int flags) {
     if(event == 1){
         scaleClicks = scaleClicks + 1;
-        // currX = x;
-        // currY = y;
         currPos.x = x;
         currPos.y = y;
         std::cout<<event<<" "<<x<<" "<<y<<" clicks:"<<scaleClicks<<"\n";
     }
 
     else if(event == 0) {
-        // currX = x;
-        // currY = y;
         currPos.x = x;
         currPos.y = y;
     }
@@ -76,7 +77,9 @@ bool FlameProcessing::checkMP4(std::string newFile) {
     return extension == ".mp4";
 }
 
-void FlameProcessing::imageROISelect(cv::VideoCapture cap) {
+void FlameProcessing::imageROISelect(std::string videoFilePath) {
+
+    cv::VideoCapture cap(videoFilePath);
     cv::Mat image;
     if (!cap.read(image)) {
         std::cerr << "Error: Could not read first frame!\n";
@@ -99,7 +102,7 @@ void FlameProcessing::imageROISelect(cv::VideoCapture cap) {
     cv::destroyWindow("Selected ROI");
 }
 
-void FlameProcessing::imageScaling(std::string videoFilePath) {
+void FlameProcessing::imageScaling(std::string videoFilePath, char axis) {
 
     cv::VideoCapture cap(videoFilePath);
     cv::Mat firstframe;
@@ -118,13 +121,14 @@ void FlameProcessing::imageScaling(std::string videoFilePath) {
     cv::setMouseCallback("Manual Scaling", FlameProcessing::mouseCallback, this);
 
     cv::Point startingPos(-1,-1);
+    cv::Point endingPos(-1,-1);
 
     // Clone the image for dynamic updates
     cv::Mat tempImage;
     tempImage = firstframe.clone();
 
     // Wait for two points to be clicked
-    while (scaleClicks < 2) {
+    while (true) {
 
         //tempImage = firstframe.clone();
         firstframe.copyTo(tempImage);
@@ -132,14 +136,23 @@ void FlameProcessing::imageScaling(std::string videoFilePath) {
         if(scaleClicks == 1 && fist_point_selected == false) {
             startingPos.x = currPos.x;
             startingPos.y = currPos.y;
-
             fist_point_selected = true;
-
-
         }
-
         if (scaleClicks == 1) {
             cv::line(tempImage, startingPos, currPos, cv::Scalar(0, 255, 0), 2);
+        }
+
+        if (scaleClicks == 2) {
+            endingPos.x = currPos.x;
+            endingPos.y = currPos.y;
+
+            if(axis == 'x') {
+
+            }
+
+            pixelsX = abs(startingPos.x-endingPos.x);
+
+            break;
         }
 
 
@@ -148,10 +161,17 @@ void FlameProcessing::imageScaling(std::string videoFilePath) {
             break; // Exit the loop gracefully
         }
 
+
+
         cv::imshow("Manual Scaling", tempImage);
     }
 
+    scaleClicks = 0;
+    fist_point_selected = false;
+
     cv::destroyWindow("Manual Scaling"); // Destroy the window to release resources
+
+    //parseVideo(videoFilePath, scene);
 
 }
 
@@ -201,8 +221,8 @@ void FlameProcessing::parseVideo(std::string videoFilePath, QGraphicsView *view)
         int currY = -1;
         int lastY = -1;
 
-        imageScaling(videoFilePath);
-        imageROISelect(cap);
+        imageScaling(videoFilePath, 'x');
+        imageROISelect(videoFilePath);
 
 
         while (true) {
@@ -231,13 +251,10 @@ void FlameProcessing::parseVideo(std::string videoFilePath, QGraphicsView *view)
             // Copy the contents of the rectangle from the frame to the mask
             frame(box).copyTo(newFrame(box));
 
-            // Display the result
-            //cv::imshow("Masked Frame", tempMask);
-
 
             bg_sub->apply(newFrame, mask);
 
-            //cv::Mat fg;
+
             foreground.setTo(cv::Scalar(0, 0, 0));
             HSVFrame.setTo(cv::Scalar(0, 0, 0));
             dilateErodeMask.setTo(cv::Scalar(0,0,0));

@@ -30,8 +30,38 @@ private slots:
 
     void on_pushButton_clicked();
 
+
+
+    void on_scaleX_textEdited(const QString &arg1);
+
+    void on_comboBox_currentIndexChanged(int index);
+
+    void on_ROIButton_clicked();
+
+    void on_scaleYButton_clicked();
+
+    void on_ScaleYEdit_textEdited(const QString &arg1);
+
+    void on_ScaleXEdit_editingFinished();
+
+    void on_ScaleYEdit_editingFinished();
+
+    void on_BeginButton_clicked();
+
+    void on_manualButton2_clicked();
+
+    void on_AutoButton2_clicked();
+
 private:
     Ui::ScalingTool *ui;
+
+    double manual_scaleX;
+    double manual_scaleY;
+
+    bool scaleXDone = false;
+    bool scaleYDone = false;
+    bool editXDone = false;
+    bool editYDone = false;
 
 
 

@@ -157,7 +157,7 @@ void MainWindow::on_VideoSelectButton_clicked()
         ui->ProcessVideoButton->setEnabled(true);
         // TODO: display video on the graphics viewer
         // TODO: pass the file into parseVideo
-        //videoFilePath = filePath;
+        videoFilePath = filePath;
         scalingTool->videoFilePath = filePathSTD;
         scalingTool->flame_process = flame_process;
         //ui->stackedWidget->addWidget(scalingTool);
