@@ -32,10 +32,10 @@ MainWindow::MainWindow(QWidget *parent) :
     //int index = ui->stackedWidget->indexOf(this);
     ui->stackedWidget->setCurrentIndex(0);
 
-    cv::Mat image = cv::imread("C:/Users/Darren/Documents/WPI/MQP/QT/falme2.png", cv::IMREAD_COLOR);
-    std::vector<cv::Vec3f> circles;
-    detectCircles(image, circles);
-    cv::imshow("SKJKFKSD", image);
+    // cv::Mat image = cv::imread("C:/Users/Darren/Documents/WPI/MQP/QT/falme2.png", cv::IMREAD_COLOR);
+    // std::vector<cv::Vec3f> circles;
+    // detectCircles(image, circles);
+    // cv::imshow("SKJKFKSD", image);
 
 }
 
@@ -63,8 +63,10 @@ void MainWindow::on_pushButton_5_clicked() {
 }
 
 void MainWindow::on_FlameToolButton_clicked() {
-    ui->ProcessVideoButton->setEnabled(false);
-    ui->stackedWidget->setCurrentIndex(3);
+    // ui->ProcessVideoButton->setEnabled(false);
+    // ui->stackedWidget->setCurrentIndex(3);
+    int index = ui->stackedWidget->indexOf(scalingTool);
+    ui->stackedWidget->setCurrentIndex(index);
 }
 
 // BACKGROUND REMOVAL FUNCTIONS

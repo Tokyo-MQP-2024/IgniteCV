@@ -310,7 +310,7 @@ void detectCircles(cv::Mat &image, std::vector<cv::Vec3f> &circles) {
     cv::cvtColor(image, gray, cv::COLOR_BGR2GRAY);
 
     // Blur - may not be necessary. Test
-    cv::medianBlur(gray, gray, 21);
+    cv::medianBlur(gray, gray, 21);  //add ui (must be odd)
 
     cv::HoughCircles(gray, circles, cv::HOUGH_GRADIENT, 1,
                      gray.rows/16, // change this to detect circles with different distances to each other
@@ -330,3 +330,5 @@ void detectCircles(cv::Mat &image, std::vector<cv::Vec3f> &circles) {
     }
 
 }
+
+

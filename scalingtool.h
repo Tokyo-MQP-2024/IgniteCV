@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include "FlameProcessing.h"
+#include "utils.h"
 
 
 //#include "mainwindow.h"
@@ -51,6 +52,8 @@ private slots:
     void on_manualButton2_clicked();
 
     void on_AutoButton2_clicked();
+
+    void on_pushButton_2_clicked();
 
 private:
     Ui::ScalingTool *ui;

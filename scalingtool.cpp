@@ -11,7 +11,7 @@ ScalingTool::ScalingTool(QWidget *parent)
     manual_scaleY = 0.0;
     ui->ROIButton->setDisabled(true);
     ui->BeginButton->setDisabled(true);
-    ui->stackedWidget->setCurrentIndex(3);
+    ui->stackedWidget->setCurrentIndex(0);
 
 }
 
@@ -144,5 +144,50 @@ void ScalingTool::on_manualButton2_clicked()
 void ScalingTool::on_AutoButton2_clicked()
 {
     ui->EditPanel->setCurrentIndex(1);
+}
+
+
+
+// FILE UPLOAD FUNCTION
+void ScalingTool::on_pushButton_2_clicked()
+{
+    QString filePath = QFileDialog::getOpenFileName(this, tr("Open a File"), "C://");
+    std::string filePathSTD = filePath.toStdString();
+    flame_process = new FlameProcessing(); // create new instance of flame process
+    if(flame_process->checkMP4(filePathSTD)) {
+        ui->FileLabel->setText(filePath);
+        videoFilePath = filePathSTD;
+        QGraphicsScene *scene = new QGraphicsScene();
+
+        ui->FileViewWindow->setScene(scene);
+        cv::VideoCapture cap(videoFilePath);
+        cv::Mat frame1;
+        cap >> frame1;
+        ui->FileViewWindow->scene()->clear();
+        QImage qimg = matToQImage(frame1);
+        QPixmap pixmap = QPixmap::fromImage(qimg);
+
+        // Fit the pixmap inside the view window
+        //view.fitInView(item, Qt::KeepAspectRatio);
+        QGraphicsPixmapItem *item = scene->addPixmap(pixmap);
+        ui->FileViewWindow->fitInView(item, Qt::KeepAspectRatio);
+
+        // Create a QPixmap from the QImage and add it to the scene
+
+        //scene->addPixmap(QPixmap::fromImage(qimg));
+        //ui->ProcessVideoButton->setEnabled(true);
+        // TODO: display video on the graphics viewer
+        // TODO: pass the file into parseVideo
+        //videoFilePath = filePath;
+        //scalingTool->videoFilePath = filePathSTD;
+        //flame_process = flame_process;
+        //ui->stackedWidget->addWidget(scalingTool);
+
+    } else {
+        ui->FileLabel->setText("File must be .mp4");
+    }
+
+
+
 }
 
