@@ -35,8 +35,9 @@ MainWindow::MainWindow(QWidget *parent) :
     cv::Mat image = cv::imread("C:/Users/Darren/Documents/WPI/MQP/QT/falme2.png", cv::IMREAD_COLOR);
     std::vector<cv::Vec3f> circles;
     detectCircles(image, circles);
+    //cv::imshow("SKJKFKSD", image);
+    createGridlines(image, circles);
     cv::imshow("SKJKFKSD", image);
-
 }
 
 MainWindow::~MainWindow()
