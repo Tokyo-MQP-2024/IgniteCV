@@ -299,3 +299,34 @@ void imageWidthOverlay(cv::Mat &image) {
 
     //cv::imshow("Result", image);
 }
+
+
+// ------------------- FLAME TOOL FUNCTIONS --------------------------
+
+// Edits image and circles vector in place.
+void detectCircles(cv::Mat &image, std::vector<cv::Vec3f> &circles) {
+    // Convert to gray
+    cv::Mat gray;
+    cv::cvtColor(image, gray, cv::COLOR_BGR2GRAY);
+
+    // Blur - may not be necessary. Test
+    cv::medianBlur(gray, gray, 21);
+
+    cv::HoughCircles(gray, circles, cv::HOUGH_GRADIENT, 1,
+                     gray.rows/16, // change this to detect circles with different distances to each other
+                     50, 1, 1, 20 // change last two params (min_radius and max_radius) to detect larger circles
+                     );
+
+    // Loop through array and draw circle
+    for(size_t i = 0; i < circles.size(); i++) {
+        cv::Vec3i c = circles[i];
+        cv::Point center = cv::Point(c[0], c[1]);
+
+        // Circle center
+        cv::circle(image, center, 1, cv::Scalar(0, 100, 100), 3, cv::LINE_AA);
+        // Circle outline
+        int radius = c[2];
+        circle(image, center, radius, cv::Scalar(255, 0, 255), 3, cv::LINE_AA);
+    }
+
+}
