@@ -305,6 +305,7 @@ void imageWidthOverlay(cv::Mat &image) {
 
 // Edits image and circles vector in place.
 void detectCircles(cv::Mat &image, std::vector<cv::Vec3f> &circles) {
+
     // Convert to gray
     cv::Mat gray;
     cv::cvtColor(image, gray, cv::COLOR_BGR2GRAY);
@@ -331,4 +332,49 @@ void detectCircles(cv::Mat &image, std::vector<cv::Vec3f> &circles) {
 
 }
 
+void createGridlines(cv::Mat &image, std::vector<cv::Vec3f> &circles) {
+    // Sort circle vector by x values
+    std::sort(circles.begin(), circles.end(), [](const cv::Vec3i &a, const cv::Vec3i &b) {
+        return a[0] < b[0];
+    });
 
+    for (const auto& v : circles) {
+        std::cout << "(" << v[0] << ", " << v[1] << ", " << v[2] << ")" << std::endl;
+    }
+
+    // Average x values of circles within threshold
+    int threshold = 10;
+    float prev = -1;
+    std::vector<double> averages;
+    double columnSum = 0;
+    int columnCount = 0;
+
+    for (const auto& c : circles) {
+        float value = c[0];
+        if(prev == -1 || (value - prev) < threshold) {
+            columnSum += value;
+            columnCount += 1;
+        } else {
+            if(columnCount == 0) {
+                prev = -1;
+                continue;
+            }
+            double average = columnSum / columnCount;
+            std::cout << average << std::endl;
+            averages.push_back(average);
+            columnSum = 0;
+            columnCount = 0;
+        }
+        prev = value;
+    }
+
+    // Draw vertical lines between the averages
+    for(int i = 0; i < averages.size() - 1; i++) {
+        double lineX = (averages[i] + averages[i + 1]) / 2.0;
+        cv::Point startPoint(lineX, 0);
+        cv::Point endPoint(lineX, image.rows);
+
+        cv::line(image, startPoint, endPoint, cv::Scalar(0, 255, 0), 2);
+    }
+
+}

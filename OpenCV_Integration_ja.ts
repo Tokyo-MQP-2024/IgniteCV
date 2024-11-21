@@ -84,7 +84,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="calculateWidth.cpp" line="60"/>
+        <location filename="calculateWidth.cpp" line="82"/>
         <source>OpenCV Error</source>
         <translation type="unfinished"></translation>
     </message>
@@ -108,8 +108,8 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="62"/>
-        <location filename="mainwindow.cpp" line="75"/>
-        <location filename="mainwindow.cpp" line="87"/>
+        <location filename="mainwindow.cpp" line="81"/>
+        <location filename="mainwindow.cpp" line="93"/>
         <source>Please choose an option</source>
         <translation>オプションを選択してください</translation>
     </message>
@@ -120,7 +120,7 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="116"/>
-        <location filename="mainwindow.cpp" line="85"/>
+        <location filename="mainwindow.cpp" line="91"/>
         <source>Auto</source>
         <translation>自動</translation>
     </message>
@@ -167,7 +167,7 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="163"/>
-        <location filename="mainwindow.cpp" line="73"/>
+        <location filename="mainwindow.cpp" line="79"/>
         <source>Folder</source>
         <translation>フォルダ</translation>
     </message>
@@ -221,36 +221,36 @@
         <translation>ホームページに戻る</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="70"/>
-        <location filename="mainwindow.cpp" line="82"/>
+        <location filename="mainwindow.cpp" line="76"/>
+        <location filename="mainwindow.cpp" line="88"/>
         <source>Open A File</source>
         <translation>ファイルを開く</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="73"/>
-        <location filename="mainwindow.cpp" line="85"/>
+        <location filename="mainwindow.cpp" line="79"/>
+        <location filename="mainwindow.cpp" line="91"/>
         <source>Info</source>
         <translation>お知らせ</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="75"/>
-        <location filename="mainwindow.cpp" line="87"/>
-        <location filename="mainwindow.cpp" line="98"/>
+        <location filename="mainwindow.cpp" line="81"/>
+        <location filename="mainwindow.cpp" line="93"/>
+        <location filename="mainwindow.cpp" line="104"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="98"/>
+        <location filename="mainwindow.cpp" line="104"/>
         <source>Please select images for subtraction</source>
         <translation>減算する画像を選択してください</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="120"/>
+        <location filename="mainwindow.cpp" line="126"/>
         <source>Open a Folder</source>
         <translation>フォルダを開く</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="148"/>
+        <location filename="mainwindow.cpp" line="157"/>
         <source>Open a File</source>
         <translation type="unfinished"></translation>
     </message>
@@ -284,8 +284,79 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.ui" line="26"/>
-        <source>poop</source>
+        <location filename="scalingtool.ui" line="34"/>
+        <source>Scale Y Axis</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="scalingtool.ui" line="42"/>
+        <location filename="scalingtool.ui" line="68"/>
+        <source>cm</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="scalingtool.ui" line="47"/>
+        <location filename="scalingtool.ui" line="73"/>
+        <source>mm</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="scalingtool.ui" line="52"/>
+        <location filename="scalingtool.ui" line="78"/>
+        <source>in</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="scalingtool.ui" line="60"/>
+        <source>Scale X Axis</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="scalingtool.ui" line="102"/>
+        <source>Select Region of Interest</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="scalingtool.ui" line="109"/>
+        <source>Begin</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="scalingtool.ui" line="120"/>
+        <location filename="scalingtool.ui" line="138"/>
+        <source>Auto Scale</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="scalingtool.ui" line="131"/>
+        <location filename="scalingtool.ui" line="202"/>
+        <source>Manual Scale</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="scalingtool.ui" line="149"/>
+        <source>Burned Area</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="scalingtool.ui" line="156"/>
+        <source>Speed Tracking</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="scalingtool.ui" line="166"/>
+        <location filename="scalingtool.ui" line="173"/>
+        <source>PushButton</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="scalingtool.ui" line="184"/>
+        <source>Auto detect to be implemented</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="scalingtool.ui" line="195"/>
+        <source>Auto Detect Scale</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
