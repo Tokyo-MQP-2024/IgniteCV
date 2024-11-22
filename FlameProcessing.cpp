@@ -6,7 +6,7 @@
 // #include <string>
 // #include <opencv2/opencv.hpp>
 // #include "opencv2/highgui.hpp"
-#include "FlameProcessing.h"
+
 #include "utils.h"
 #include <qgraphicsview.h>
 

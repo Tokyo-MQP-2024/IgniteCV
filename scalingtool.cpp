@@ -13,6 +13,7 @@ ScalingTool::ScalingTool(QWidget *parent)
     ui->BeginButton->setDisabled(true);
     ui->stackedWidget->setCurrentIndex(0);
 
+
 }
 
 ScalingTool::~ScalingTool()
@@ -130,7 +131,7 @@ void ScalingTool::on_ScaleYEdit_editingFinished()
 void ScalingTool::on_BeginButton_clicked()
 {
     //flame_process->parseVideo()
-    ui->stackedWidget->setCurrentIndex(1);
+    ui->EditPanel->setCurrentIndex(1);
 }
 
 
@@ -157,31 +158,28 @@ void ScalingTool::on_pushButton_2_clicked()
     if(flame_process->checkMP4(filePathSTD)) {
         ui->FileLabel->setText(filePath);
         videoFilePath = filePathSTD;
-        QGraphicsScene *scene = new QGraphicsScene();
-
-        ui->FileViewWindow->setScene(scene);
+        // QGraphicsScene *scene = new QGraphicsScene();
+        // ui->FileViewWindow->setScene(scene);
         cv::VideoCapture cap(videoFilePath);
         cv::Mat frame1;
         cap >> frame1;
-        ui->FileViewWindow->scene()->clear();
-        QImage qimg = matToQImage(frame1);
-        QPixmap pixmap = QPixmap::fromImage(qimg);
+        // ui->FileViewWindow->scene()->clear();
+        // QImage qimg = matToQImage(frame1);
+        // QPixmap pixmap = QPixmap::fromImage(qimg);
+
 
         // Fit the pixmap inside the view window
         //view.fitInView(item, Qt::KeepAspectRatio);
-        QGraphicsPixmapItem *item = scene->addPixmap(pixmap);
-        ui->FileViewWindow->fitInView(item, Qt::KeepAspectRatio);
+        //QGraphicsPixmapItem *item = scene->addPixmap(pixmap);
 
-        // Create a QPixmap from the QImage and add it to the scene
 
-        //scene->addPixmap(QPixmap::fromImage(qimg));
-        //ui->ProcessVideoButton->setEnabled(true);
-        // TODO: display video on the graphics viewer
-        // TODO: pass the file into parseVideo
-        //videoFilePath = filePath;
-        //scalingTool->videoFilePath = filePathSTD;
-        //flame_process = flame_process;
-        //ui->stackedWidget->addWidget(scalingTool);
+        //ui->FileViewWindow->fitInView(item, Qt::KeepAspectRatio);
+        globalCap.open(videoFilePath);
+        graphicsViewHelper(ui->FileViewWindow, flame_process, frame1);
+
+
+        int totalFrames = static_cast<int>(cap.get(cv::CAP_PROP_FRAME_COUNT));
+        ui->VideoScroll->setRange(0, totalFrames - 1);
 
     } else {
         ui->FileLabel->setText("File must be .mp4");
@@ -189,5 +187,45 @@ void ScalingTool::on_pushButton_2_clicked()
 
 
 
+}
+
+
+void ScalingTool::on_VideoScroll_actionTriggered(int action)
+{
+    //std::cout << action <<"\n";
+}
+
+
+void ScalingTool::on_VideoScroll_valueChanged(int value)
+{
+    globalCap.set(cv::CAP_PROP_POS_FRAMES, value);
+    cv::Mat frame;
+    currSelectFrame = frame;
+    if (globalCap.read(frame)) {
+        graphicsViewHelper(ui->FileViewWindow, flame_process, frame);
+    }
+
+}
+
+
+
+// Circle detection button
+void ScalingTool::on_pushButton_7_clicked()
+{
+    std::cout << "DETETCING CIRCLES\n";
+    std::vector<cv::Vec3f> circles;
+    detectCircles(currSelectFrame, circles);
+    cv::imshow("cirles", currSelectFrame);
+}
+
+
+// Open circle detect edit panel
+void ScalingTool::on_pushButton_4_clicked()
+{
+    std::cout << "DETETCING CIRCLES\n";
+    std::vector<cv::Vec3f> circles;
+    detectCircles(currSelectFrame, circles);
+    std::cout << "did it make it here\n";
+    cv::imshow("cirles", currSelectFrame);
 }
 

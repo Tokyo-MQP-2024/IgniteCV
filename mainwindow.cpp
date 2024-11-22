@@ -32,12 +32,12 @@ MainWindow::MainWindow(QWidget *parent) :
     //int index = ui->stackedWidget->indexOf(this);
     ui->stackedWidget->setCurrentIndex(0);
 
-    cv::Mat image = cv::imread("C:/Users/Darren/Documents/WPI/MQP/QT/falme2.png", cv::IMREAD_COLOR);
-    std::vector<cv::Vec3f> circles;
-    detectCircles(image, circles);
-    //cv::imshow("SKJKFKSD", image);
-    createGridlines(image, circles);
-    cv::imshow("SKJKFKSD", image);
+    // cv::Mat image = cv::imread("C:/Users/Darren/Documents/WPI/MQP/QT/falme2.png", cv::IMREAD_COLOR);
+    // std::vector<cv::Vec3f> circles;
+    // detectCircles(image, circles);
+    // //cv::imshow("SKJKFKSD", image);
+    // createGridlines(image, circles);
+    // cv::imshow("SKJKFKSD", image);
 }
 
 MainWindow::~MainWindow()

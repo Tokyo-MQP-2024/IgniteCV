@@ -2,7 +2,7 @@
 #define SCALINGTOOL_H
 
 #include <QWidget>
-#include "FlameProcessing.h"
+
 #include "utils.h"
 
 
@@ -55,6 +55,14 @@ private slots:
 
     void on_pushButton_2_clicked();
 
+    void on_VideoScroll_actionTriggered(int action);
+
+    void on_VideoScroll_valueChanged(int value);
+
+    void on_pushButton_7_clicked();
+
+    void on_pushButton_4_clicked();
+
 private:
     Ui::ScalingTool *ui;
 
@@ -65,6 +73,11 @@ private:
     bool scaleYDone = false;
     bool editXDone = false;
     bool editYDone = false;
+
+    cv::VideoCapture globalCap;
+    cv::Mat currSelectFrame;
+
+
 
 
 

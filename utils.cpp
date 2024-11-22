@@ -8,6 +8,7 @@
 #include <QFileInfoList>
 #include <QImage>
 #include <QList>
+
 #include <QtConcurrent/QtConcurrent>
 #include <opencv2/opencv.hpp>
 #include <algorithm>
@@ -376,5 +377,25 @@ void createGridlines(cv::Mat &image, std::vector<cv::Vec3f> &circles) {
 
         cv::line(image, startPoint, endPoint, cv::Scalar(0, 255, 0), 2);
     }
+
+}
+
+
+void graphicsViewHelper(QGraphicsView *view, FlameProcessing *fp, cv::Mat f) {
+
+    //std::string filePathSTD = filePath.toStdString();
+    //ui->FileLabel->setText(filePath);
+    //videoFilePath = filePathSTD;
+    //view = new QGraphicsView();
+    QGraphicsScene *scene = new QGraphicsScene();
+    view->setScene(scene);
+    //cv::VideoCapture cap(videoFilePath);
+    //cv::Mat frame1;
+    //cap >> frame1;
+    view->scene()->clear();
+    QImage qimg = matToQImage(f);
+    QPixmap pixmap = QPixmap::fromImage(qimg);
+    QGraphicsPixmapItem *item = scene->addPixmap(pixmap);
+    view->fitInView(item, Qt::KeepAspectRatio);
 
 }
