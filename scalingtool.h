@@ -67,6 +67,12 @@ private slots:
 
     void applyROIMask(cv::Mat &frame);
 
+    void adjustLevels(cv::Mat image);
+
+    void on_BlackSlider_valueChanged(int value);
+
+    void on_WhiteSlider_valueChanged(int value);
+
 private:
     Ui::ScalingTool *ui;
 
@@ -91,6 +97,9 @@ private:
     int maskW = -1;
 
     bool roiSelected = false;
+
+    int clipBlack = 0;
+    int clipWhite = 255;
 
 
 

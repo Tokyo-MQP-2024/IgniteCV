@@ -13,6 +13,14 @@ ScalingTool::ScalingTool(QWidget *parent)
     ui->BeginButton->setDisabled(true);
     ui->stackedWidget->setCurrentIndex(0);
 
+    //other init stuff
+    ui->BlackSlider->setMinimum(0);
+    ui->BlackSlider->setMaximum(255);
+    ui->WhiteSlider->setMinimum(0);
+    ui->WhiteSlider->setMaximum(255);
+    ui->WhiteSlider->setValue(255);
+    //ui->WhiteVal->setText();
+
 
 }
 
@@ -123,8 +131,9 @@ void ScalingTool::imageROISelect(std::string vf) {
         return;
     }
     image = imCropped;
+    croppedFrame = imCropped;
 
-    //cv::imshow("NEW IMG", image);
+    cv::imshow("NEW IMG", croppedFrame);
     maskX = roi.x*2;
     maskY = roi.y*2;
     maskH = roi.height*2;
@@ -213,17 +222,7 @@ void ScalingTool::on_pushButton_2_clicked()
         cap >> frame1;
 
         frame1.copyTo(currSelectFrame);
-        // ui->FileViewWindow->scene()->clear();
-        // QImage qimg = matToQImage(frame1);
-        // QPixmap pixmap = QPixmap::fromImage(qimg);
 
-
-        // Fit the pixmap inside the view window
-        //view.fitInView(item, Qt::KeepAspectRatio);
-        //QGraphicsPixmapItem *item = scene->addPixmap(pixmap);
-
-
-        //ui->FileViewWindow->fitInView(item, Qt::KeepAspectRatio);
         globalCap.open(videoFilePath);
 
         graphicsViewHelper(ui->FileViewWindow, flame_process, frame1);
@@ -262,21 +261,21 @@ void ScalingTool::on_VideoScroll_valueChanged(int value)
         }
 
         frame.copyTo(currSelectFrame);
-
     }
 
 }
 
 
 
-// Circle detection button
+// Circle detection button (Deprecated function)
 void ScalingTool::on_pushButton_7_clicked()
 {
     std::cout << "DETETCING CIRCLES\n";
     std::vector<cv::Vec3f> circles;
-    detectCircles(currSelectFrame, circles);
+    cv::imshow("TEST", croppedFrame);
+    detectCircles(croppedFrame, circles);
 
-    cv::imshow("cirles", currSelectFrame);
+    cv::imshow("cirles", croppedFrame);
 }
 
 
@@ -285,11 +284,75 @@ void ScalingTool::on_pushButton_4_clicked()
 {
     std::cout << "DETETCING CIRCLES\n";
     std::vector<cv::Vec3f> circles;
-    //cv::imshow("test", currSelectFrame);
+    detectCircles(croppedFrame, circles);
+    cv::imshow("cirles", croppedFrame);
+}
 
-    detectCircles(currSelectFrame, circles);
-    // std::cout << "did it make it here\n";
-    cv::resize(currSelectFrame, currSelectFrame, cv::Size(), 0.5, 0.5); // Scale down by half
-    cv::imshow("cirles", currSelectFrame);
+
+
+void ScalingTool::adjustLevels(cv::Mat image) {
+    // Ensure valid level values
+    // clipBlack = std::clamp(clipBlack, 0, 255);
+    // clipWhite = std::clamp(clipWhite, 0, 255);
+
+    if (clipBlack >= clipWhite) {
+        std::cerr << "Error: Black level must be less than white level!" << std::endl;
+        return;
+    }
+
+    // Convert to grayscale
+    cv::Mat gray;
+    cv::cvtColor(image, gray, cv::COLOR_BGR2GRAY);
+
+    // Loop through each pixel
+    for (int row = 0; row < gray.rows; ++row) {
+        for (int col = 0; col < gray.cols; ++col) {
+            // Access pixel value
+            uchar& pixel = gray.at<uchar>(row, col);
+            // clip the pixel to black if it is below black thresh
+            if(pixel < clipBlack) {
+                pixel = 0;
+            }
+            else if(pixel > clipWhite) { // else clip white
+                pixel = 255;
+            }
+
+        }
+    }
+
+    graphicsViewHelper(ui->FileViewWindow, flame_process, gray);
+
+    //image = gray;
+
+
+
+
+}
+
+
+
+
+void ScalingTool::on_BlackSlider_valueChanged(int value)
+{
+    std::cout << "herehehrhhf\n";
+
+    clipBlack = value;
+    if(!croppedFrame.empty()) {
+        adjustLevels(croppedFrame);
+        //graphicsViewHelper(ui->FileViewWindow, flame_process, croppedFrame);
+    }
+
+
+}
+
+
+void ScalingTool::on_WhiteSlider_valueChanged(int value)
+{
+    clipWhite = value;
+    if(!croppedFrame.empty()) {
+        adjustLevels(croppedFrame);
+        //graphicsViewHelper(ui->FileViewWindow, flame_process, croppedFrame);
+    }
+    //graphicsViewHelper(ui->FileViewWindow, flame_process, croppedFrame);
 }
 

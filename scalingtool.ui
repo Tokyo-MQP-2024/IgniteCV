@@ -185,10 +185,52 @@
                <string>Speed Tracking</string>
               </attribute>
               <layout class="QGridLayout" name="gridLayout_10">
-               <item row="0" column="0">
+               <item row="2" column="2">
+                <widget class="QLabel" name="WhiteVal">
+                 <property name="text">
+                  <string>TextLabel</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="2">
+                <widget class="QLabel" name="BlackVal">
+                 <property name="text">
+                  <string>TextLabel</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QSlider" name="BlackSlider">
+                 <property name="orientation">
+                  <enum>Qt::Orientation::Horizontal</enum>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="1">
                 <widget class="QPushButton" name="pushButton_4">
                  <property name="text">
                   <string>Detect Circles</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="1">
+                <widget class="QSlider" name="WhiteSlider">
+                 <property name="orientation">
+                  <enum>Qt::Orientation::Horizontal</enum>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QLabel" name="label_3">
+                 <property name="text">
+                  <string>Clip Black</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QLabel" name="label_4">
+                 <property name="text">
+                  <string>Clip White</string>
                  </property>
                 </widget>
                </item>
