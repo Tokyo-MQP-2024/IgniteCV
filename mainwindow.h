@@ -13,6 +13,7 @@
 // For file dialog
 #include <QFileDialog>
 
+#include "frequencydetection.h"
 #include "opencv2/opencv.hpp"
 
 #include "calculateWidth.h"
@@ -69,10 +70,13 @@ private slots:
     void on_VideoView_rubberBandChanged(const QRect &viewportRect, const QPointF &fromScenePoint, const QPointF &toScenePoint);
 
     //void on_checkBox_checkStateChanged(const Qt::CheckState &arg1);
+    void on_pushButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     CalculateWidth *calculateWidth;
     ScalingTool *scalingTool;
+    FrequencyDetection *frequencyDetection;
     QGraphicsPixmapItem pixmap;
     cv::VideoCapture video;
     QString videoFilePath;

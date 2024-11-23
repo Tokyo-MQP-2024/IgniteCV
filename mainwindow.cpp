@@ -14,8 +14,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
     calculateWidth(new CalculateWidth),
-    scalingTool(new ScalingTool)
-
+    scalingTool(new ScalingTool),
+    frequencyDetection(new FrequencyDetection)
 {
     ui->setupUi(this);
 
@@ -24,10 +24,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->ProcessVideoButton->setEnabled(false);
 
     ui->stackedWidget->addWidget(calculateWidth);
-
-
-
     ui->stackedWidget->addWidget(scalingTool);
+    ui->stackedWidget->addWidget(frequencyDetection);
 
     //int index = ui->stackedWidget->indexOf(this);
     ui->stackedWidget->setCurrentIndex(0);
@@ -61,6 +59,10 @@ void MainWindow::on_averageImages_clicked() {
 
 void MainWindow::on_pushButton_5_clicked() {
     ui->stackedWidget->setCurrentWidget(calculateWidth);
+}
+
+void MainWindow::on_pushButton_clicked() {
+    ui->stackedWidget->setCurrentWidget(frequencyDetection);
 }
 
 void MainWindow::on_FlameToolButton_clicked() {
@@ -191,5 +193,8 @@ void MainWindow::on_VideoView_rubberBandChanged(const QRect &viewportRect, const
 {
 
 }
+
+
+
 
 

@@ -38,6 +38,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         FlameProcessing.cpp
         calculateWidth.h calculateWidth.cpp calculateWidth.ui
         scalingtool.h scalingtool.cpp scalingtool.ui
+        frequencydetection.h frequencydetection.cpp frequencydetection.ui
+        qgraphicsviewresize.h qgraphicsviewresize.cpp
 
 
 

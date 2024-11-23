@@ -387,8 +387,6 @@ void createGridlines(cv::Mat &image, std::vector<cv::Vec3f> &circles) {
     }
 
 }
-
-
 void graphicsViewHelper(QGraphicsView *view, FlameProcessing *fp, cv::Mat f) {
 
     //TOD: rm fp
