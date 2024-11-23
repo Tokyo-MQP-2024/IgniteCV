@@ -92,25 +92,25 @@
 <context>
     <name>FrequencyDetection</name>
     <message>
-        <location filename="frequencydetection.cpp" line="21"/>
+        <location filename="frequencydetection.cpp" line="24"/>
         <source>Open a Folder</source>
         <translation type="unfinished">フォルダを開く</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="44"/>
-        <location filename="frequencydetection.cpp" line="51"/>
-        <location filename="frequencydetection.cpp" line="65"/>
+        <location filename="frequencydetection.cpp" line="50"/>
+        <location filename="frequencydetection.cpp" line="57"/>
+        <location filename="frequencydetection.cpp" line="71"/>
         <source>Warning</source>
         <translation type="unfinished">警告</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="44"/>
-        <location filename="frequencydetection.cpp" line="51"/>
+        <location filename="frequencydetection.cpp" line="50"/>
+        <location filename="frequencydetection.cpp" line="57"/>
         <source>Invalid file path. Please try again</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="65"/>
+        <location filename="frequencydetection.cpp" line="71"/>
         <source>No images in folder. Please select another folder</source>
         <translation type="unfinished"></translation>
     </message>
@@ -316,6 +316,8 @@
     </message>
     <message>
         <location filename="scalingtool.ui" line="41"/>
+        <location filename="scalingtool.ui" line="191"/>
+        <location filename="scalingtool.ui" line="198"/>
         <source>TextLabel</source>
         <translation type="unfinished"></translation>
     </message>
@@ -369,54 +371,64 @@
     </message>
     <message>
         <location filename="scalingtool.ui" line="34"/>
-        <location filename="scalingtool.ui" line="279"/>
+        <location filename="scalingtool.ui" line="321"/>
         <source>Manual Scale</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.ui" line="226"/>
+        <location filename="scalingtool.ui" line="268"/>
         <source>Burned Area</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="scalingtool.ui" line="185"/>
-        <location filename="scalingtool.ui" line="233"/>
+        <location filename="scalingtool.ui" line="275"/>
         <source>Speed Tracking</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.ui" line="191"/>
+        <location filename="scalingtool.ui" line="212"/>
         <source>Detect Circles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.ui" line="199"/>
+        <location filename="scalingtool.ui" line="226"/>
+        <source>Clip Black</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="scalingtool.ui" line="233"/>
+        <source>Clip White</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="scalingtool.ui" line="241"/>
         <source>Area Tracking</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.ui" line="211"/>
+        <location filename="scalingtool.ui" line="253"/>
         <source>Run Circle Detection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.ui" line="243"/>
-        <location filename="scalingtool.ui" line="250"/>
+        <location filename="scalingtool.ui" line="285"/>
+        <location filename="scalingtool.ui" line="292"/>
         <source>PushButton</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.ui" line="261"/>
+        <location filename="scalingtool.ui" line="303"/>
         <source>Auto detect to be implemented</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.ui" line="272"/>
+        <location filename="scalingtool.ui" line="314"/>
         <source>Auto Detect Scale</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.cpp" line="203"/>
+        <location filename="scalingtool.cpp" line="212"/>
         <source>Open a File</source>
         <translation type="unfinished"></translation>
     </message>
@@ -430,17 +442,57 @@
     </message>
     <message>
         <location filename="frequencydetection.ui" line="22"/>
+        <source>Frame</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="frequencydetection.ui" line="53"/>
+        <source>Threshold</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="frequencydetection.ui" line="114"/>
+        <source>Threshold Type</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="frequencydetection.ui" line="123"/>
+        <source>None</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="frequencydetection.ui" line="133"/>
+        <source>Binary Inverted</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="frequencydetection.ui" line="140"/>
+        <source>Binary</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="frequencydetection.ui" line="150"/>
+        <source>Threshold Truncated</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="frequencydetection.ui" line="157"/>
+        <source>Threshold to Zero</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="frequencydetection.ui" line="164"/>
+        <source>Threshold to Zero Inverted</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="frequencydetection.ui" line="176"/>
         <source>Select Folder</source>
         <translation type="unfinished">フォルダを選択</translation>
     </message>
     <message>
-        <location filename="frequencydetection.ui" line="32"/>
+        <location filename="frequencydetection.ui" line="186"/>
         <source>Set</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="frequencydetection.ui" line="43"/>
-        <source>Select Frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
