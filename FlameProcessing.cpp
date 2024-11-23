@@ -78,7 +78,6 @@ bool FlameProcessing::checkMP4(std::string newFile) {
 }
 
 void FlameProcessing::imageROISelect(std::string videoFilePath) {
-
     cv::VideoCapture cap(videoFilePath);
     cv::Mat image;
     if (!cap.read(image)) {
@@ -232,54 +231,40 @@ void FlameProcessing::parseVideo(std::string videoFilePath, QGraphicsView *view)
             }
 
             accumulatedTime = accumulatedTime + timePerFrame;
-
             // Capture each frame
             cap >> frame;
-
-
             // If the frame is empty, break the loop (end of video)
             if (frame.empty()) {
                 break;
             }
-
             cv::resize(frame, frame, cv::Size(), 0.5, 0.5); // Scale down by half
             // Create a black mask
             cv::Mat newFrame = cv::Mat::zeros(frame.size(), frame.type());
             // Define the rectangle for the mask
             cv::Rect box(maskX, maskY, maskW, maskH);
-
             // Copy the contents of the rectangle from the frame to the mask
             frame(box).copyTo(newFrame(box));
-
-
+            // apply mask
             bg_sub->apply(newFrame, mask);
 
-
+            // reinit image processing masks
             foreground.setTo(cv::Scalar(0, 0, 0));
             HSVFrame.setTo(cv::Scalar(0, 0, 0));
             dilateErodeMask.setTo(cv::Scalar(0,0,0));
             newFrame.copyTo(foreground, mask);
 
-
-
+            // convert foreground to HSV
             cv::cvtColor(foreground, HSVFrame, cv::COLOR_BGR2HSV);
-
 
             // Create an HSV mask for flame colors
             cv::inRange(HSVFrame, cv::Scalar(minHue, minSat, minVal), cv::Scalar(maxHue, maxSat, maxVal), hsvMask);
 
-
-
-            // cv::erode(hsvMask, dilateErodeMask, kernel, cv::Point(-1, -1), 1);
+            // dilate the flame
             cv::dilate(hsvMask, dMask, kernel, cv::Point(-1, -1), 2);
-
 
             std::vector<std::vector<cv::Point>> contours;
             std::vector<std::vector<cv::Point>> filteredContours;
             cv::findContours(dMask, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
-
-            //std::cout << "Number of contours found: " << contours.size() << std::endl;
-
 
             for (const auto& contour : contours) {
 
@@ -311,10 +296,6 @@ void FlameProcessing::parseVideo(std::string videoFilePath, QGraphicsView *view)
                     highestY = top_y;
                     lastY = top_y;
                 }
-
-
-
-
             }
 
             //std::cout << "NEXT" << "\n";

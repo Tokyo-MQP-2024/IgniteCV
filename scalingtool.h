@@ -63,6 +63,10 @@ private slots:
 
     void on_pushButton_4_clicked();
 
+    void imageROISelect(std::string videoFilePath);
+
+    void applyROIMask(cv::Mat &frame);
+
 private:
     Ui::ScalingTool *ui;
 
@@ -75,7 +79,18 @@ private:
     bool editYDone = false;
 
     cv::VideoCapture globalCap;
+
+
+
     cv::Mat currSelectFrame;
+    cv::Mat croppedFrame;
+
+    int maskX = -1;
+    int maskY = -1;
+    int maskH = -1;
+    int maskW = -1;
+
+    bool roiSelected = false;
 
 
 

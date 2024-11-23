@@ -308,16 +308,22 @@ void imageWidthOverlay(cv::Mat &image) {
 void detectCircles(cv::Mat &image, std::vector<cv::Vec3f> &circles) {
 
     // Convert to gray
+    std::cout << "made it to function call\n";
     cv::Mat gray;
     cv::cvtColor(image, gray, cv::COLOR_BGR2GRAY);
 
+    std::cout << "converted to gray\n";
+
     // Blur - may not be necessary. Test
     cv::medianBlur(gray, gray, 21);  //add ui (must be odd)
+    std::cout << "median blurr\n";
 
     cv::HoughCircles(gray, circles, cv::HOUGH_GRADIENT, 1,
                      gray.rows/16, // change this to detect circles with different distances to each other
                      50, 1, 1, 20 // change last two params (min_radius and max_radius) to detect larger circles
                      );
+
+    std::cout << "circle detection\n";
 
     // Loop through array and draw circle
     for(size_t i = 0; i < circles.size(); i++) {
@@ -329,6 +335,8 @@ void detectCircles(cv::Mat &image, std::vector<cv::Vec3f> &circles) {
         // Circle outline
         int radius = c[2];
         circle(image, center, radius, cv::Scalar(255, 0, 255), 3, cv::LINE_AA);
+
+        //std::cout << "drawing circles\n";
     }
 
 }
@@ -382,6 +390,9 @@ void createGridlines(cv::Mat &image, std::vector<cv::Vec3f> &circles) {
 
 
 void graphicsViewHelper(QGraphicsView *view, FlameProcessing *fp, cv::Mat f) {
+
+    //TOD: rm fp
+
 
     //std::string filePathSTD = filePath.toStdString();
     //ui->FileLabel->setText(filePath);

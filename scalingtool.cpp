@@ -101,10 +101,58 @@ void ScalingTool::on_ROIButton_clicked()
 
     flame_process->setIRLScale(manual_scaleX, manual_scaleY);
 
-    flame_process->imageROISelect(videoFilePath);
+    imageROISelect(videoFilePath);
 
     ui->BeginButton->setDisabled(false);
 
+}
+
+void ScalingTool::imageROISelect(std::string vf) {
+    cv::VideoCapture cap(vf);
+    cv::Mat image;
+    if (!cap.read(image)) {
+        std::cerr << "Error: Could not read first frame!\n";
+    }
+    cv::resize(image, image, cv::Size(), 0.5, 0.5); // Scale down by half
+    cv::Rect roi;
+    roi = cv::selectROI("Selected ROI", image);
+    cv::Mat imCropped;
+    try {
+        imCropped = image(roi);
+    } catch (const cv::Exception &e) {
+        return;
+    }
+    image = imCropped;
+
+    //cv::imshow("NEW IMG", image);
+    maskX = roi.x*2;
+    maskY = roi.y*2;
+    maskH = roi.height*2;
+    maskW = roi.width*2;
+
+    roiSelected = true;
+
+    cv::Mat frame;
+    if (globalCap.read(frame)) {
+        applyROIMask(frame);
+        frame.copyTo(currSelectFrame);
+    }
+    graphicsViewHelper(ui->FileViewWindow, flame_process, frame);
+
+
+
+    cv::destroyWindow("Selected ROI");
+}
+
+void ScalingTool::applyROIMask(cv::Mat &frame) {
+    // Define the rectangle for the mask
+    cv::Rect box(maskX, maskY, maskW, maskH);
+    // Create a temporary frame to hold the masked region
+    cv::Mat tempFrame = cv::Mat::zeros(frame.size(), frame.type());
+    // Copy the contents of the rectangle from the original frame to the temporary frame
+    frame(box).copyTo(tempFrame(box));
+    // Update the original frame with the masked frame
+    tempFrame.copyTo(frame);
 }
 
 
@@ -163,6 +211,8 @@ void ScalingTool::on_pushButton_2_clicked()
         cv::VideoCapture cap(videoFilePath);
         cv::Mat frame1;
         cap >> frame1;
+
+        frame1.copyTo(currSelectFrame);
         // ui->FileViewWindow->scene()->clear();
         // QImage qimg = matToQImage(frame1);
         // QPixmap pixmap = QPixmap::fromImage(qimg);
@@ -175,6 +225,7 @@ void ScalingTool::on_pushButton_2_clicked()
 
         //ui->FileViewWindow->fitInView(item, Qt::KeepAspectRatio);
         globalCap.open(videoFilePath);
+
         graphicsViewHelper(ui->FileViewWindow, flame_process, frame1);
 
 
@@ -200,9 +251,18 @@ void ScalingTool::on_VideoScroll_valueChanged(int value)
 {
     globalCap.set(cv::CAP_PROP_POS_FRAMES, value);
     cv::Mat frame;
-    currSelectFrame = frame;
+
     if (globalCap.read(frame)) {
-        graphicsViewHelper(ui->FileViewWindow, flame_process, frame);
+        if(roiSelected) {
+            applyROIMask(frame);
+            graphicsViewHelper(ui->FileViewWindow, flame_process, frame);
+
+        } else {
+            graphicsViewHelper(ui->FileViewWindow, flame_process, frame);
+        }
+
+        frame.copyTo(currSelectFrame);
+
     }
 
 }
@@ -215,6 +275,7 @@ void ScalingTool::on_pushButton_7_clicked()
     std::cout << "DETETCING CIRCLES\n";
     std::vector<cv::Vec3f> circles;
     detectCircles(currSelectFrame, circles);
+
     cv::imshow("cirles", currSelectFrame);
 }
 
@@ -224,8 +285,11 @@ void ScalingTool::on_pushButton_4_clicked()
 {
     std::cout << "DETETCING CIRCLES\n";
     std::vector<cv::Vec3f> circles;
+    //cv::imshow("test", currSelectFrame);
+
     detectCircles(currSelectFrame, circles);
-    std::cout << "did it make it here\n";
+    // std::cout << "did it make it here\n";
+    cv::resize(currSelectFrame, currSelectFrame, cv::Size(), 0.5, 0.5); // Scale down by half
     cv::imshow("cirles", currSelectFrame);
 }
 
