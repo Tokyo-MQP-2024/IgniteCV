@@ -297,30 +297,47 @@ void ScalingTool::adjustLevels(cv::Mat image) {
 
     if (clipBlack >= clipWhite) {
         std::cerr << "Error: Black level must be less than white level!" << std::endl;
-        return;
-    }
 
-    // Convert to grayscale
-    cv::Mat gray;
-    cv::cvtColor(image, gray, cv::COLOR_BGR2GRAY);
+    } else {
 
-    // Loop through each pixel
-    for (int row = 0; row < gray.rows; ++row) {
-        for (int col = 0; col < gray.cols; ++col) {
-            // Access pixel value
-            uchar& pixel = gray.at<uchar>(row, col);
-            // clip the pixel to black if it is below black thresh
-            if(pixel < clipBlack) {
-                pixel = 0;
+        // Convert to grayscale
+        // cv::Mat gray;
+        // cv::cvtColor(image, gray, cv::COLOR_BGR2GRAY);
+
+        // Loop through each pixel
+        for (int row = 0; row < image.rows; ++row) {
+            for (int col = 0; col < image.cols; ++col) {
+                // // Access pixel value
+                // uchar& pixel = gray.at<uchar>(row, col);
+                // // clip the pixel to black if it is below black thresh
+                // if(pixel < clipBlack) {
+                //     pixel = 0;
+                // }
+                // else if(pixel > clipWhite) { // else clip white
+                //     pixel = 255;
+                // }
+
+                // Access each color channel for the pixel (BGR format)
+                cv::Vec3b& pixel = image.at<cv::Vec3b>(row, col);
+
+                // Adjust each channel: Blue, Green, Red
+                for (int channel = 0; channel < 3; ++channel) {
+                    uchar& colorValue = pixel[channel];
+
+                    // Clip the color value to black or white based on thresholds
+                    if (colorValue < clipBlack) {
+                        colorValue = 0; // Clip to black
+                    }
+                    else if (colorValue > clipWhite) {
+                        colorValue = 255; // Clip to white
+                    }
+                }
+
             }
-            else if(pixel > clipWhite) { // else clip white
-                pixel = 255;
-            }
-
         }
-    }
 
-    graphicsViewHelper(ui->FileViewWindow, flame_process, gray);
+        graphicsViewHelper(ui->FileViewWindow, flame_process, image);
+    }
 
     //image = gray;
 
