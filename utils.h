@@ -17,5 +17,4 @@ void detectCircles(cv::Mat &image, std::vector<cv::Vec3f> &circles);
 void createGridlines(cv::Mat &image, std::vector<cv::Vec3f> &circles);
 void graphicsViewHelper(QGraphicsView *view, FlameProcessing *fp, cv::Mat f);
 void computeFFT(const std::vector<double> &inputSignal, std::vector<double> &amplitudeSpectrum);
-
 #endif // UTILS_H

@@ -92,25 +92,25 @@
 <context>
     <name>FrequencyDetection</name>
     <message>
-        <location filename="frequencydetection.cpp" line="25"/>
+        <location filename="frequencydetection.cpp" line="27"/>
         <source>Open a Folder</source>
         <translation type="unfinished">フォルダを開く</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="51"/>
-        <location filename="frequencydetection.cpp" line="58"/>
-        <location filename="frequencydetection.cpp" line="72"/>
+        <location filename="frequencydetection.cpp" line="55"/>
+        <location filename="frequencydetection.cpp" line="62"/>
+        <location filename="frequencydetection.cpp" line="76"/>
         <source>Warning</source>
         <translation type="unfinished">警告</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="51"/>
-        <location filename="frequencydetection.cpp" line="58"/>
+        <location filename="frequencydetection.cpp" line="55"/>
+        <location filename="frequencydetection.cpp" line="62"/>
         <source>Invalid file path. Please try again</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="72"/>
+        <location filename="frequencydetection.cpp" line="76"/>
         <source>No images in folder. Please select another folder</source>
         <translation type="unfinished"></translation>
     </message>
@@ -441,67 +441,72 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="frequencydetection.ui" line="93"/>
+        <location filename="frequencydetection.ui" line="151"/>
         <source>Frame</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="frequencydetection.ui" line="28"/>
+        <location filename="frequencydetection.ui" line="99"/>
         <source>Threshold</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="frequencydetection.ui" line="69"/>
+        <location filename="frequencydetection.ui" line="127"/>
         <source>Frames Per Second</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="frequencydetection.ui" line="141"/>
+        <location filename="frequencydetection.ui" line="35"/>
         <source>Threshold Type</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="frequencydetection.ui" line="150"/>
+        <location filename="frequencydetection.ui" line="44"/>
         <source>None</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="frequencydetection.ui" line="160"/>
+        <location filename="frequencydetection.ui" line="54"/>
         <source>Binary Inverted</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="frequencydetection.ui" line="170"/>
-        <source>Binary</source>
+        <location filename="frequencydetection.ui" line="209"/>
+        <source>Limits</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="frequencydetection.ui" line="183"/>
-        <source>Threshold Truncated</source>
+        <location filename="frequencydetection.ui" line="222"/>
+        <source>Lower Limit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="frequencydetection.ui" line="193"/>
-        <source>Threshold to Zero</source>
+        <location filename="frequencydetection.ui" line="236"/>
+        <source>Upper Limit</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="frequencydetection.ui" line="203"/>
-        <source>Threshold to Zero Inverted</source>
+        <location filename="frequencydetection.ui" line="243"/>
+        <source>Show Lines</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="frequencydetection.ui" line="215"/>
+        <location filename="frequencydetection.ui" line="190"/>
         <source>Select Folder</source>
         <translation type="unfinished">フォルダを選択</translation>
     </message>
     <message>
-        <location filename="frequencydetection.ui" line="225"/>
+        <location filename="frequencydetection.ui" line="200"/>
         <source>Set</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="frequencydetection.ui" line="234"/>
+        <location filename="frequencydetection.ui" line="179"/>
+        <source>Export to CSV</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="frequencydetection.ui" line="77"/>
         <source>Run</source>
         <translation type="unfinished">実行</translation>
     </message>
