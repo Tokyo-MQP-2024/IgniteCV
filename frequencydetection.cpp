@@ -8,6 +8,7 @@
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/imgproc.hpp>
 
+
 FrequencyDetection::FrequencyDetection(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::frequencyDetection) {
@@ -150,5 +151,65 @@ void FrequencyDetection::on_thresholdSlider_valueChanged(int value){
     ui->graphicsView->scene()->clear();
     ui->graphicsView->scene()->addPixmap(QPixmap::fromImage(toDisplay));
     ui->graphicsView->fitInView(ui->graphicsView->scene()->sceneRect(), Qt::KeepAspectRatio);
+}
+
+
+void FrequencyDetection::on_runButton_clicked() {
+    // Lock UI elements to prevent errors
+    // Clear areas variable
+    areas.clear();
+
+    // Loop through frames and count area of white pixels inside ROI
+    for(const QString &item : imageFiles) {
+        // Open file
+        cv::Mat image = cv::imread(ui->lineEdit->text().toStdString() + "/" + item.toStdString());
+
+        // Convert to grayscale
+        cv::Mat gray;
+        cv::cvtColor(image, gray, cv::COLOR_BGR2GRAY);
+
+        // Apply thresholding (should be binary inverted probably)
+        cv::Mat binary = gray;
+        applyThreshold(binary);
+
+        // Focus on bottom region (make this more intuitive later)
+        int height = binary.rows;
+        int width = binary.cols;
+        cv::Mat bottomRegion = binary(cv::Range(height * 0.7, height), cv::Range(0, width));
+
+        // Count the number of white pixels (area)
+        int area = cv::countNonZero(bottomRegion);
+        areas.push_back(area);
+
+        // Display the current frame with the highlighted bottom region
+        cv::rectangle(image, cv::Point(0, height * 0.7), cv::Point(width, height), cv::Scalar(0, 255, 0), 2);
+        cv::imshow("Stream Analysis", image);
+
+        // Press 'q' to exit early
+        if (cv::waitKey(10) == 'q') break;
+    }
+
+    cv::destroyAllWindows();
+
+    // Compute FFT of area data
+    std::vector<double> amplitudeSpectrum;
+    computeFFT(areas, amplitudeSpectrum);
+
+    // Find the dominant frequency
+    int N = amplitudeSpectrum.size();
+    double maxAmplitude = 0.0;
+    int dominantIndex = 0;
+
+    for (int i = 1; i < N / 2; ++i) { // Use N/2 because of symmetry in FFT output
+        if (amplitudeSpectrum[i] > maxAmplitude) {
+            maxAmplitude = amplitudeSpectrum[i];
+            dominantIndex = i;
+        }
+    }
+
+    // Assuming a frame rate of 30 FPS for calculation (adjust as necessary)
+    double fps = ui->spinBox_3->value();
+    double frequency = (dominantIndex * fps) / N;
+    std::cout << "Approximate Oscillation Frequency: " << frequency << " Hz" << std::endl;
 }
 

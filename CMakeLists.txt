@@ -14,7 +14,10 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools)
 find_package(Qt6 REQUIRED COMPONENTS Concurrent UiTools)
 
 find_package(OpenCV REQUIRED)
-include_directories(${OpenCV_INCLUDE_DIRS})
+
+include_directories(${CMAKE_SOURCE_DIR}/fftw-3.3.5-dll64)
+link_directories(${CMAKE_SOURCE_DIR}/fftw-3.3.5-dll64)
+
 qt_standard_project_setup(I18N_TRANSLATED_LANGUAGES ja)
 
 set(TS_FILES OpenCV_Integration_en_US.ts)
@@ -80,7 +83,7 @@ qt_add_translations(OpenCV_Integration
 install(FILES ${qm_files} DESTINATION ${CMAKE_SOURCE_DIR}/translations)
 
 
-target_link_libraries(OpenCV_Integration PRIVATE Qt${QT_VERSION_MAJOR}::Widgets ${OpenCV_LIBS} Qt6::Concurrent Qt6::UiTools)
+target_link_libraries(OpenCV_Integration PRIVATE Qt${QT_VERSION_MAJOR}::Widgets ${OpenCV_LIBS} Qt6::Concurrent Qt6::UiTools -llibfftw3-3)
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an
