@@ -1,6 +1,7 @@
 #ifndef FREQUENCYDETECTION_H
 #define FREQUENCYDETECTION_H
 
+#include <QProgressDialog>
 #include <QWidget>
 #include <opencv2/core.hpp>
 
@@ -23,31 +24,36 @@ private slots:
     void on_thresholdSlider_valueChanged(int value);
     void on_runButton_clicked();
 
-    void on_horizontalSlider_2_valueChanged(int value);
+    void on_horizontalSliderUpperLimit_valueChanged(int value);
 
-    void on_horizontalSlider_3_valueChanged(int value);
+    void on_horizontalSliderLowerLimit_valueChanged(int value);
 
     void on_checkBox_2_checkStateChanged(const Qt::CheckState &arg1);
 
 private:
     Ui::frequencyDetection *ui;
+    QProgressDialog *progressDialog = nullptr;
 
     // MEMBERS
-    // Stores areas of bottom region over time
-    std::vector<double> areas;
+
+    // Stores m_areas of bottom region over time
+    std::vector<double> m_areas;
 
     // Stores number of frames (images) in folder
-    int numFrames;
+    int m_numFrames;
 
     // Store list of image files in folder
-    QStringList imageFiles;
+    QStringList m_imageFiles;
 
     // Upper and lower bounds for image processing
-    int upper;
-    int lower;
+    int m_upper;
+    int m_lower;
+
+    QString m_fileName;
 
 
     //FUNCTIONS
+
     // Processes image. [TO BE REMOVED]
     cv::Mat processImage(cv::Mat &image);
 
@@ -61,6 +67,9 @@ private:
     void applyLines(cv::Mat &image);
 
     double countWhitePixels(const QString &item);
+
+    // For use in QtConcurrent
+    void handleComputationCompletion();
 
 
 
