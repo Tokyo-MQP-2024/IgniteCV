@@ -408,3 +408,33 @@ void graphicsViewHelper(QGraphicsView *view, FlameProcessing *fp, cv::Mat f) {
     view->fitInView(item, Qt::KeepAspectRatio);
 
 }
+
+// Fast Fourier Transform for frequency detection
+void computeFFT(const std::vector<double> &inputSignal, std::vector<double> &amplitudeSpectrum) {
+    int N = inputSignal.size();
+
+    // Allocate input and output arrays for FFTW
+    fftw_complex *in = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
+    fftw_complex *out = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
+    fftw_plan plan = fftw_plan_dft_1d(N, in, out, FFTW_FORWARD, FFTW_ESTIMATE);
+
+    // Copy input signal into the input array
+    for (int i = 0; i < N; ++i) {
+        in[i][0] = inputSignal[i]; // Real part
+        in[i][1] = 0.0;            // Imaginary part (0 since we're starting with real data)
+    }
+
+    // Execute FFT
+    fftw_execute(plan);
+
+    // Compute the amplitude spectrum (magnitude of FFT output)
+    amplitudeSpectrum.resize(N);
+    for (int i = 0; i < N; ++i) {
+        amplitudeSpectrum[i] = sqrt(out[i][0] * out[i][0] + out[i][1] * out[i][1]); // sqrt(Re^2 + Im^2)
+    }
+
+    // Cleanup
+    fftw_destroy_plan(plan);
+    fftw_free(in);
+    fftw_free(out);
+}
