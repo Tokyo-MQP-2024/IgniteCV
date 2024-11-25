@@ -5,6 +5,14 @@
 
 #include "utils.h"
 
+#include <QtCharts/QChartView>
+#include <QtCharts/QChart>
+#include <QtCharts/QLineSeries>
+#include <QtCharts/QBarSet>
+#include <QtCharts/QBarSeries>
+#include <QtCharts/QBarCategoryAxis>
+#include <QtCharts/QValueAxis>
+
 
 //#include "mainwindow.h"
 //#include "FlameProcessing.h"
@@ -100,6 +108,8 @@ private:
 
     int clipBlack = 0;
     int clipWhite = 255;
+
+    cv::Mat levelsIMG;
 
 
 

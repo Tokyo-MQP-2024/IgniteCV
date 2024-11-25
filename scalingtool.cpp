@@ -2,6 +2,8 @@
 #include "ui_scalingtool.h"
 #include "mainwindow.h"
 
+
+
 ScalingTool::ScalingTool(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::ScalingTool)
@@ -9,7 +11,7 @@ ScalingTool::ScalingTool(QWidget *parent)
     ui->setupUi(this);
     manual_scaleX = 0.0;
     manual_scaleY = 0.0;
-    ui->ROIButton->setDisabled(true);
+    ui->ROIButton->setDisabled(false); //change later
     ui->BeginButton->setDisabled(true);
     ui->stackedWidget->setCurrentIndex(0);
 
@@ -89,23 +91,7 @@ void ScalingTool::on_ROIButton_clicked()
     manual_scaleX = ui->ScaleXEdit->text().toDouble();
     manual_scaleY = ui->ScaleYEdit->text().toDouble();
 
-    // if index = 0: keep scale as is
-    // if(ui->xComboBox->currentIndex() == 1) {
-    //     manual_scaleX = manual_scaleX/10;
-    //     manual_scaleY = manual_scaleY/10;
-    // }
 
-    // else if(ui->xComboBox->currentIndex() == 2) {
-    //     manual_scaleX = manual_scaleX*2.54;
-    //     manual_scaleY = manual_scaleY*2.54;
-    // }
-
-
-    // QString sx = QString::number(manual_scaleX);
-    // QString sy = QString::number(manual_scaleY);
-
-    // ui->ScaleXEdit->setText(sx);
-    // ui->ScaleYEdit->setText(sy);
 
     flame_process->setIRLScale(manual_scaleX, manual_scaleY);
 
@@ -121,10 +107,23 @@ void ScalingTool::imageROISelect(std::string vf) {
     if (!cap.read(image)) {
         std::cerr << "Error: Could not read first frame!\n";
     }
-    cv::resize(image, image, cv::Size(), 0.5, 0.5); // Scale down by half
+    //cv::resize(image, image, cv::Size(), 0.5, 0.5); // Scale down by half
     cv::Rect roi;
-    roi = cv::selectROI("Selected ROI", image);
+
+    // // Resize the window for displaying the image
+    // cv::namedWindow("Select ROI", cv::WINDOW_NORMAL);
+    // cv::resizeWindow("Select ROI", 800, 600); // Resize the window (example: 800x600)
+
+    cv::Mat imgCopy;
+    image.copyTo(imgCopy);
+    cv::resize(imgCopy,  imgCopy, cv::Size(), 0.5, 0.5); // Scale down by half
+
+    roi = cv::selectROI("Selected ROI", imgCopy);
     cv::Mat imCropped;
+    roi.x = roi.x*2;
+    roi.y = roi.y*2;
+    roi.height = roi.height*2;
+    roi.width = roi.width*2;
     try {
         imCropped = image(roi);
     } catch (const cv::Exception &e) {
@@ -133,11 +132,14 @@ void ScalingTool::imageROISelect(std::string vf) {
     image = imCropped;
     croppedFrame = imCropped;
 
-    cv::imshow("NEW IMG", croppedFrame);
-    maskX = roi.x*2;
-    maskY = roi.y*2;
-    maskH = roi.height*2;
-    maskW = roi.width*2;
+    // maskX = roi.x*2;
+    // maskY = roi.y*2;
+    // maskH = roi.height*2;
+    // maskW = roi.width*2;
+    maskX = roi.x;
+    maskY = roi.y;
+    maskH = roi.height;
+    maskW = roi.width;
 
     roiSelected = true;
 
@@ -282,47 +284,71 @@ void ScalingTool::on_pushButton_7_clicked()
 // Open circle detect edit panel
 void ScalingTool::on_pushButton_4_clicked()
 {
+    cv::Mat newImg;
+    levelsIMG.copyTo(newImg);
+
     std::cout << "DETETCING CIRCLES\n";
     std::vector<cv::Vec3f> circles;
-    detectCircles(croppedFrame, circles);
-    cv::imshow("cirles", croppedFrame);
+    detectCircles(newImg, circles);
+
+    createGridlines(newImg, circles);
+    cv::imshow("grid", newImg);
 }
 
 
 
 void ScalingTool::adjustLevels(cv::Mat image) {
-    // Ensure valid level values
-    // clipBlack = std::clamp(clipBlack, 0, 255);
-    // clipWhite = std::clamp(clipWhite, 0, 255);
+
+    double gamma = 1.0;
+
+    image.copyTo(levelsIMG);
+
+
+
+
+    // Create a chart
+    //QChart *chart = new QChart();
+
+    // Set the title for the chart
+    //chart->setTitle("RGB Histogram");
+
 
     if (clipBlack >= clipWhite) {
         std::cerr << "Error: Black level must be less than white level!" << std::endl;
-        return;
-    }
 
-    // Convert to grayscale
-    cv::Mat gray;
-    cv::cvtColor(image, gray, cv::COLOR_BGR2GRAY);
+    } else {
 
-    // Loop through each pixel
-    for (int row = 0; row < gray.rows; ++row) {
-        for (int col = 0; col < gray.cols; ++col) {
-            // Access pixel value
-            uchar& pixel = gray.at<uchar>(row, col);
-            // clip the pixel to black if it is below black thresh
-            if(pixel < clipBlack) {
-                pixel = 0;
+
+
+        // Loop through each pixel
+        for (int row = 0; row < levelsIMG.rows; ++row) {
+            for (int col = 0; col < levelsIMG.cols; ++col) {
+
+                // Access each color channel for the pixel (BGR format)
+                cv::Vec3b& pixel = levelsIMG.at<cv::Vec3b>(row, col);
+
+                // Adjust each channel: Blue, Green, Red
+                for (int channel = 0; channel < 3; ++channel) {
+                    uchar& colorValue = pixel[channel];
+
+                    // Normalize to [0, 1]
+                    float normalized = (colorValue - clipBlack) / static_cast<float>(clipWhite - clipBlack);
+                    normalized = std::clamp(normalized, 0.0f, 1.0f); // Clamp to [0, 1]
+
+                    // Apply gamma correction
+                    float corrected = std::pow(normalized, 1.0 / gamma);
+
+                    // Scale back to [0, 255]
+                    colorValue = static_cast<uchar>(corrected * 255.0f);
+                }
+
             }
-            else if(pixel > clipWhite) { // else clip white
-                pixel = 255;
-            }
-
         }
+
+        graphicsViewHelper(ui->FileViewWindow, flame_process, levelsIMG);
     }
 
-    graphicsViewHelper(ui->FileViewWindow, flame_process, gray);
 
-    //image = gray;
 
 
 
