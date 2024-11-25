@@ -319,8 +319,8 @@ void detectCircles(cv::Mat &image, std::vector<cv::Vec3f> &circles) {
     std::cout << "median blurr\n";
 
     cv::HoughCircles(gray, circles, cv::HOUGH_GRADIENT, 1,
-                     gray.rows/16, // change this to detect circles with different distances to each other
-                     50, 1, 1, 20 // change last two params (min_radius and max_radius) to detect larger circles
+                    gray.rows/16, // change this to detect circles with different distances to each other
+                     10, 1, 1, 20 // change last two params (min_radius and max_radius) to detect larger circles
                      );
 
     std::cout << "circle detection\n";

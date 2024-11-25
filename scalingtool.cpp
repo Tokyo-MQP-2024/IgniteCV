@@ -2,6 +2,8 @@
 #include "ui_scalingtool.h"
 #include "mainwindow.h"
 
+
+
 ScalingTool::ScalingTool(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::ScalingTool)
@@ -9,7 +11,7 @@ ScalingTool::ScalingTool(QWidget *parent)
     ui->setupUi(this);
     manual_scaleX = 0.0;
     manual_scaleY = 0.0;
-    ui->ROIButton->setDisabled(true);
+    ui->ROIButton->setDisabled(false); //change later
     ui->BeginButton->setDisabled(true);
     ui->stackedWidget->setCurrentIndex(0);
 
@@ -282,64 +284,67 @@ void ScalingTool::on_pushButton_7_clicked()
 // Open circle detect edit panel
 void ScalingTool::on_pushButton_4_clicked()
 {
+    cv::Mat newImg;
+    levelsIMG.copyTo(newImg);
+
     std::cout << "DETETCING CIRCLES\n";
     std::vector<cv::Vec3f> circles;
-    detectCircles(croppedFrame, circles);
-    cv::imshow("cirles", croppedFrame);
+    detectCircles(newImg, circles);
+    cv::imshow("cirles", newImg);
 }
 
 
 
 void ScalingTool::adjustLevels(cv::Mat image) {
-    // Ensure valid level values
-    // clipBlack = std::clamp(clipBlack, 0, 255);
-    // clipWhite = std::clamp(clipWhite, 0, 255);
+
+    double gamma = 1.0;
+
+    image.copyTo(levelsIMG);
+
+
+    // Create a chart
+    //QChart *chart = new QChart();
+
+    // Set the title for the chart
+    //chart->setTitle("RGB Histogram");
+
 
     if (clipBlack >= clipWhite) {
         std::cerr << "Error: Black level must be less than white level!" << std::endl;
 
     } else {
 
-        // Convert to grayscale
-        // cv::Mat gray;
-        // cv::cvtColor(image, gray, cv::COLOR_BGR2GRAY);
+
 
         // Loop through each pixel
-        for (int row = 0; row < image.rows; ++row) {
-            for (int col = 0; col < image.cols; ++col) {
-                // // Access pixel value
-                // uchar& pixel = gray.at<uchar>(row, col);
-                // // clip the pixel to black if it is below black thresh
-                // if(pixel < clipBlack) {
-                //     pixel = 0;
-                // }
-                // else if(pixel > clipWhite) { // else clip white
-                //     pixel = 255;
-                // }
+        for (int row = 0; row < levelsIMG.rows; ++row) {
+            for (int col = 0; col < levelsIMG.cols; ++col) {
 
                 // Access each color channel for the pixel (BGR format)
-                cv::Vec3b& pixel = image.at<cv::Vec3b>(row, col);
+                cv::Vec3b& pixel = levelsIMG.at<cv::Vec3b>(row, col);
 
                 // Adjust each channel: Blue, Green, Red
                 for (int channel = 0; channel < 3; ++channel) {
                     uchar& colorValue = pixel[channel];
 
-                    // Clip the color value to black or white based on thresholds
-                    if (colorValue < clipBlack) {
-                        colorValue = 0; // Clip to black
-                    }
-                    else if (colorValue > clipWhite) {
-                        colorValue = 255; // Clip to white
-                    }
+                    // Normalize to [0, 1]
+                    float normalized = (colorValue - clipBlack) / static_cast<float>(clipWhite - clipBlack);
+                    normalized = std::clamp(normalized, 0.0f, 1.0f); // Clamp to [0, 1]
+
+                    // Apply gamma correction
+                    float corrected = std::pow(normalized, 1.0 / gamma);
+
+                    // Scale back to [0, 255]
+                    colorValue = static_cast<uchar>(corrected * 255.0f);
                 }
 
             }
         }
 
-        graphicsViewHelper(ui->FileViewWindow, flame_process, image);
+        graphicsViewHelper(ui->FileViewWindow, flame_process, levelsIMG);
     }
 
-    //image = gray;
+
 
 
 
