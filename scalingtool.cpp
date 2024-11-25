@@ -91,23 +91,7 @@ void ScalingTool::on_ROIButton_clicked()
     manual_scaleX = ui->ScaleXEdit->text().toDouble();
     manual_scaleY = ui->ScaleYEdit->text().toDouble();
 
-    // if index = 0: keep scale as is
-    // if(ui->xComboBox->currentIndex() == 1) {
-    //     manual_scaleX = manual_scaleX/10;
-    //     manual_scaleY = manual_scaleY/10;
-    // }
 
-    // else if(ui->xComboBox->currentIndex() == 2) {
-    //     manual_scaleX = manual_scaleX*2.54;
-    //     manual_scaleY = manual_scaleY*2.54;
-    // }
-
-
-    // QString sx = QString::number(manual_scaleX);
-    // QString sy = QString::number(manual_scaleY);
-
-    // ui->ScaleXEdit->setText(sx);
-    // ui->ScaleYEdit->setText(sy);
 
     flame_process->setIRLScale(manual_scaleX, manual_scaleY);
 
@@ -123,10 +107,23 @@ void ScalingTool::imageROISelect(std::string vf) {
     if (!cap.read(image)) {
         std::cerr << "Error: Could not read first frame!\n";
     }
-    cv::resize(image, image, cv::Size(), 0.5, 0.5); // Scale down by half
+    //cv::resize(image, image, cv::Size(), 0.5, 0.5); // Scale down by half
     cv::Rect roi;
-    roi = cv::selectROI("Selected ROI", image);
+
+    // // Resize the window for displaying the image
+    // cv::namedWindow("Select ROI", cv::WINDOW_NORMAL);
+    // cv::resizeWindow("Select ROI", 800, 600); // Resize the window (example: 800x600)
+
+    cv::Mat imgCopy;
+    image.copyTo(imgCopy);
+    cv::resize(imgCopy,  imgCopy, cv::Size(), 0.5, 0.5); // Scale down by half
+
+    roi = cv::selectROI("Selected ROI", imgCopy);
     cv::Mat imCropped;
+    roi.x = roi.x*2;
+    roi.y = roi.y*2;
+    roi.height = roi.height*2;
+    roi.width = roi.width*2;
     try {
         imCropped = image(roi);
     } catch (const cv::Exception &e) {
@@ -135,11 +132,14 @@ void ScalingTool::imageROISelect(std::string vf) {
     image = imCropped;
     croppedFrame = imCropped;
 
-    cv::imshow("NEW IMG", croppedFrame);
-    maskX = roi.x*2;
-    maskY = roi.y*2;
-    maskH = roi.height*2;
-    maskW = roi.width*2;
+    // maskX = roi.x*2;
+    // maskY = roi.y*2;
+    // maskH = roi.height*2;
+    // maskW = roi.width*2;
+    maskX = roi.x;
+    maskY = roi.y;
+    maskH = roi.height;
+    maskW = roi.width;
 
     roiSelected = true;
 
@@ -290,7 +290,9 @@ void ScalingTool::on_pushButton_4_clicked()
     std::cout << "DETETCING CIRCLES\n";
     std::vector<cv::Vec3f> circles;
     detectCircles(newImg, circles);
-    cv::imshow("cirles", newImg);
+
+    createGridlines(newImg, circles);
+    cv::imshow("grid", newImg);
 }
 
 
@@ -300,6 +302,8 @@ void ScalingTool::adjustLevels(cv::Mat image) {
     double gamma = 1.0;
 
     image.copyTo(levelsIMG);
+
+
 
 
     // Create a chart
