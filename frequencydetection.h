@@ -33,6 +33,7 @@ private slots:
 private:
     Ui::frequencyDetection *ui;
     QProgressDialog *progressDialog = nullptr;
+    void changeEvent(QEvent* event);
 
     // MEMBERS
 

@@ -85,7 +85,7 @@
         <translation>画像を選択</translation>
     </message>
     <message>
-        <location filename="calculateWidth.cpp" line="82"/>
+        <location filename="calculateWidth.cpp" line="91"/>
         <source>OpenCV Error</source>
         <translation>OpenCVエラー</translation>
     </message>
@@ -93,77 +93,77 @@
 <context>
     <name>FrequencyDetection</name>
     <message>
-        <location filename="frequencydetection.cpp" line="29"/>
+        <location filename="frequencydetection.cpp" line="37"/>
         <source>Open a Folder</source>
         <translation>フォルダを開く</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="57"/>
-        <location filename="frequencydetection.cpp" line="64"/>
-        <location filename="frequencydetection.cpp" line="78"/>
-        <location filename="frequencydetection.cpp" line="248"/>
-        <location filename="frequencydetection.cpp" line="255"/>
-        <location filename="frequencydetection.cpp" line="261"/>
-        <location filename="frequencydetection.cpp" line="277"/>
+        <location filename="frequencydetection.cpp" line="65"/>
+        <location filename="frequencydetection.cpp" line="72"/>
+        <location filename="frequencydetection.cpp" line="86"/>
+        <location filename="frequencydetection.cpp" line="256"/>
+        <location filename="frequencydetection.cpp" line="263"/>
+        <location filename="frequencydetection.cpp" line="269"/>
+        <location filename="frequencydetection.cpp" line="285"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="57"/>
-        <location filename="frequencydetection.cpp" line="64"/>
-        <location filename="frequencydetection.cpp" line="248"/>
-        <location filename="frequencydetection.cpp" line="255"/>
+        <location filename="frequencydetection.cpp" line="65"/>
+        <location filename="frequencydetection.cpp" line="72"/>
+        <location filename="frequencydetection.cpp" line="256"/>
+        <location filename="frequencydetection.cpp" line="263"/>
         <source>Invalid file path. Please try again</source>
         <translation>ファイルパスが無効です。もう一度お試しください</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="78"/>
+        <location filename="frequencydetection.cpp" line="86"/>
         <source>No images in folder. Please select another folder</source>
         <translation>フォルダ内に画像がありません。別のフォルダを選択してください</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="213"/>
+        <location filename="frequencydetection.cpp" line="221"/>
         <source>Notice</source>
         <translation>お知らせ</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="213"/>
+        <location filename="frequencydetection.cpp" line="221"/>
         <source>Processing incomplete or cancelled by user</source>
         <translation>処理は完了またはユーザーによってキャンセルされました</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="240"/>
+        <location filename="frequencydetection.cpp" line="248"/>
         <source>Frequency Result</source>
         <translation>周波数結果</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="289"/>
+        <location filename="frequencydetection.cpp" line="297"/>
         <source>Processing images</source>
         <oldsource>Processing images...</oldsource>
         <translation>画像を処理中</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="289"/>
+        <location filename="frequencydetection.cpp" line="297"/>
         <source>Cancel</source>
         <translation>キャンセル</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="261"/>
+        <location filename="frequencydetection.cpp" line="269"/>
         <source>Upper limit must be above lower limit</source>
         <translation>上限は下限より上になければなりません</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="277"/>
+        <location filename="frequencydetection.cpp" line="285"/>
         <source>No file selected. Please choose a file to save.</source>
         <translation>ファイルが選択されていません。保存するファイルを選択してください。</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="282"/>
+        <location filename="frequencydetection.cpp" line="290"/>
         <source>Error</source>
         <translation>エラー</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="282"/>
+        <location filename="frequencydetection.cpp" line="290"/>
         <source>The file could not be opened for writing. Please check the file path and permissions.</source>
         <translation>ファイルを書き込み用に開けませんでした。ファイル パスと権限を確認してください。</translation>
     </message>
@@ -187,8 +187,8 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="63"/>
-        <location filename="mainwindow.cpp" line="85"/>
-        <location filename="mainwindow.cpp" line="97"/>
+        <location filename="mainwindow.cpp" line="178"/>
+        <location filename="mainwindow.cpp" line="190"/>
         <source>Please choose an option</source>
         <translation>オプションを選択してください</translation>
     </message>
@@ -199,7 +199,7 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="123"/>
-        <location filename="mainwindow.cpp" line="95"/>
+        <location filename="mainwindow.cpp" line="188"/>
         <source>Auto</source>
         <translation>自動</translation>
     </message>
@@ -243,7 +243,7 @@
     </message>
     <message>
         <location filename="mainwindow.ui" line="170"/>
-        <location filename="mainwindow.cpp" line="83"/>
+        <location filename="mainwindow.cpp" line="176"/>
         <source>Folder</source>
         <translation>フォルダ</translation>
     </message>
@@ -278,51 +278,61 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="324"/>
+        <location filename="mainwindow.ui" line="321"/>
+        <source>Language</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.ui" line="330"/>
         <source>toolBar</source>
         <translation>ツールバー</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="339"/>
+        <location filename="mainwindow.ui" line="345"/>
         <source>Home</source>
         <translation>ホーム</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="342"/>
+        <location filename="mainwindow.ui" line="348"/>
         <source>Return to homepage</source>
         <translation>ホームページに戻る</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="80"/>
-        <location filename="mainwindow.cpp" line="92"/>
+        <location filename="mainwindow.cpp" line="113"/>
+        <source>Current Language changed to %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="173"/>
+        <location filename="mainwindow.cpp" line="185"/>
         <source>Open A File</source>
         <translation>ファイルを開く</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="83"/>
-        <location filename="mainwindow.cpp" line="95"/>
+        <location filename="mainwindow.cpp" line="176"/>
+        <location filename="mainwindow.cpp" line="188"/>
         <source>Info</source>
         <translation>お知らせ</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="85"/>
-        <location filename="mainwindow.cpp" line="97"/>
-        <location filename="mainwindow.cpp" line="108"/>
+        <location filename="mainwindow.cpp" line="178"/>
+        <location filename="mainwindow.cpp" line="190"/>
+        <location filename="mainwindow.cpp" line="201"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="108"/>
+        <location filename="mainwindow.cpp" line="201"/>
         <source>Please select images for subtraction</source>
         <translation>減算する画像を選択してください</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="130"/>
+        <location filename="mainwindow.cpp" line="223"/>
         <source>Open a Folder</source>
         <translation>フォルダを開く</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="161"/>
+        <location filename="mainwindow.cpp" line="254"/>
         <source>Open a File</source>
         <translation type="unfinished"></translation>
     </message>
@@ -349,8 +359,8 @@
     </message>
     <message>
         <location filename="scalingtool.ui" line="41"/>
-        <location filename="scalingtool.ui" line="191"/>
         <location filename="scalingtool.ui" line="198"/>
+        <location filename="scalingtool.ui" line="225"/>
         <source>TextLabel</source>
         <translation type="unfinished"></translation>
     </message>
@@ -404,64 +414,64 @@
     </message>
     <message>
         <location filename="scalingtool.ui" line="34"/>
-        <location filename="scalingtool.ui" line="321"/>
+        <location filename="scalingtool.ui" line="341"/>
         <source>Manual Scale</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.ui" line="268"/>
+        <location filename="scalingtool.ui" line="288"/>
         <source>Burned Area</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="scalingtool.ui" line="185"/>
-        <location filename="scalingtool.ui" line="275"/>
+        <location filename="scalingtool.ui" line="295"/>
         <source>Speed Tracking</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.ui" line="212"/>
+        <location filename="scalingtool.ui" line="246"/>
         <source>Detect Circles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.ui" line="226"/>
+        <location filename="scalingtool.ui" line="253"/>
         <source>Clip Black</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.ui" line="233"/>
+        <location filename="scalingtool.ui" line="232"/>
         <source>Clip White</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.ui" line="241"/>
+        <location filename="scalingtool.ui" line="261"/>
         <source>Area Tracking</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.ui" line="253"/>
+        <location filename="scalingtool.ui" line="273"/>
         <source>Run Circle Detection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.ui" line="285"/>
-        <location filename="scalingtool.ui" line="292"/>
+        <location filename="scalingtool.ui" line="305"/>
+        <location filename="scalingtool.ui" line="312"/>
         <source>PushButton</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.ui" line="303"/>
+        <location filename="scalingtool.ui" line="323"/>
         <source>Auto detect to be implemented</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.ui" line="314"/>
+        <location filename="scalingtool.ui" line="334"/>
         <source>Auto Detect Scale</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.cpp" line="214"/>
+        <location filename="scalingtool.cpp" line="216"/>
         <source>Open a File</source>
         <translation type="unfinished"></translation>
     </message>

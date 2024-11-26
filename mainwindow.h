@@ -14,7 +14,7 @@
 #include <QFileDialog>
 
 #include "frequencydetection.h"
-#include "opencv2/opencv.hpp"
+#include <QTranslator>
 
 #include "calculateWidth.h"
 #include "scalingtool.h"
@@ -34,42 +34,26 @@ public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 protected:
+    // this event is called, when a new translator is loaded or the system language is changed
+    void changeEvent(QEvent*);
+protected slots:
+    // this slot is called by the language menu actions
+    void slotLanguageChanged(QAction* action);
 private slots:
     void on_actionHome_triggered();
-
     void on_backgroundRemoval_clicked();
-
     void on_image1_clicked();
-
     void on_image2_clicked();
-
     void on_run_clicked();
-
     void on_pushButton_2_clicked();
-
     void on_averageImages_clicked();
-
     void on_pushButton_4_clicked();
-
     void on_pushButton_5_clicked();
-
-    //void on_pushButton_6_clicked();
-
-    //void on_pushButton_7_clicked();
-
-    //void on_horizontalSlider_sliderMoved(int position);
-
     void on_FlameToolButton_clicked();
-
     void on_ProcessVideoButton_clicked();
-
     void on_VideoSelectButton_clicked();
-
     void on_CancelButton_clicked();
-
     void on_VideoView_rubberBandChanged(const QRect &viewportRect, const QPointF &fromScenePoint, const QPointF &toScenePoint);
-
-    //void on_checkBox_checkStateChanged(const Qt::CheckState &arg1);
     void on_pushButton_clicked();
 
 private:
@@ -81,5 +65,16 @@ private:
     cv::VideoCapture video;
     QString videoFilePath;
     FlameProcessing *flame_process;
+
+    // Language
+    // loads a language by the given language shortcur (e.g. de, en)
+    void loadLanguage(const QString& rLanguage);
+
+    // creates the language menu dynamically from the content of m_langPath
+    void createLanguageMenu(void);
+    QTranslator m_translator; // contains the translations for this application
+    QTranslator m_translatorQt; // contains the translations for qt
+    QString m_currLang; // contains the currently loaded language
+    QString m_langPath; // Path of language files. This is always fixed to /translations.
 };
 #endif // MAINWINDOW_H

@@ -24,6 +24,14 @@ FrequencyDetection::~FrequencyDetection() {
     delete ui;
 }
 
+void FrequencyDetection::changeEvent(QEvent* event) {
+    if (event->type() == QEvent::LanguageChange) {
+        // Update the UI elements to the new language
+        ui->retranslateUi(this);
+    }
+    QWidget::changeEvent(event);
+}
+
 // Select Folder
 void FrequencyDetection::on_pushButton_clicked() {
     QString folderPath = QFileDialog::getExistingDirectory(this, tr("Open a Folder"));

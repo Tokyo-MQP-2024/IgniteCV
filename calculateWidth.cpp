@@ -24,6 +24,15 @@ CalculateWidth::~CalculateWidth()
     delete ui;
 }
 
+// For retranslating
+void CalculateWidth::changeEvent(QEvent* event) {
+    if (event->type() == QEvent::LanguageChange) {
+        // Update the UI elements to the new language
+        ui->retranslateUi(this);
+    }
+    QWidget::changeEvent(event);
+}
+
 // Open Image for width calculation
 void CalculateWidth::on_pushButton_6_clicked() {
     QString fileName = QFileDialog::getOpenFileName(this, "Open A File", "C://");
