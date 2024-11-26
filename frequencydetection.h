@@ -28,7 +28,7 @@ private slots:
 
     void on_horizontalSliderLowerLimit_valueChanged(int value);
 
-    void on_checkBox_2_checkStateChanged(const Qt::CheckState &arg1);
+    void on_checkBoxApplyLimits_checkStateChanged(const Qt::CheckState &arg1);
 
 private:
     Ui::frequencyDetection *ui;
@@ -52,11 +52,14 @@ private:
 
     QString m_fileName;
 
+    // Store width and height of first image to check for discrepancies
+    int m_width;
+    int m_height;
 
     //FUNCTIONS
 
-    // Processes image. [TO BE REMOVED]
-    cv::Mat processImage(cv::Mat &image);
+    // Refresh image in QGraphicsView
+    void refreshImage();
 
     // Applies threshold based on settings from UI
     void applyThreshold(cv::Mat &image);

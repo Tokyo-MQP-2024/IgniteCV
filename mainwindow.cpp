@@ -153,10 +153,7 @@ void MainWindow::on_pushButton_clicked() {
 }
 
 void MainWindow::on_FlameToolButton_clicked() {
-    // ui->ProcessVideoButton->setEnabled(false);
-    // ui->stackedWidget->setCurrentIndex(3);
-    int index = ui->stackedWidget->indexOf(scalingTool);
-    ui->stackedWidget->setCurrentIndex(index);
+    ui->stackedWidget->setCurrentWidget(scalingTool);
 }
 
 // IMAGE AVERAGING PAGE FUNCTIONS

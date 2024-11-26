@@ -85,7 +85,17 @@
         <translation>画像を選択</translation>
     </message>
     <message>
-        <location filename="calculateWidth.cpp" line="91"/>
+        <location filename="calculateWidth.cpp" line="54"/>
+        <source>Error</source>
+        <translation type="unfinished">エラー</translation>
+    </message>
+    <message>
+        <location filename="calculateWidth.cpp" line="54"/>
+        <source>Failed to load the image. Please check the file path and format.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="calculateWidth.cpp" line="95"/>
         <source>OpenCV Error</source>
         <translation>OpenCVエラー</translation>
     </message>
@@ -93,14 +103,14 @@
 <context>
     <name>FrequencyDetection</name>
     <message>
-        <location filename="frequencydetection.cpp" line="37"/>
+        <location filename="frequencydetection.cpp" line="38"/>
         <source>Open a Folder</source>
         <translation>フォルダを開く</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="65"/>
-        <location filename="frequencydetection.cpp" line="72"/>
+        <location filename="frequencydetection.cpp" line="79"/>
         <location filename="frequencydetection.cpp" line="86"/>
+        <location filename="frequencydetection.cpp" line="100"/>
         <location filename="frequencydetection.cpp" line="256"/>
         <location filename="frequencydetection.cpp" line="263"/>
         <location filename="frequencydetection.cpp" line="269"/>
@@ -109,15 +119,15 @@
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="65"/>
-        <location filename="frequencydetection.cpp" line="72"/>
+        <location filename="frequencydetection.cpp" line="79"/>
+        <location filename="frequencydetection.cpp" line="86"/>
         <location filename="frequencydetection.cpp" line="256"/>
         <location filename="frequencydetection.cpp" line="263"/>
         <source>Invalid file path. Please try again</source>
         <translation>ファイルパスが無効です。もう一度お試しください</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="86"/>
+        <location filename="frequencydetection.cpp" line="100"/>
         <source>No images in folder. Please select another folder</source>
         <translation>フォルダ内に画像がありません。別のフォルダを選択してください</translation>
     </message>
@@ -137,13 +147,13 @@
         <translation>周波数結果</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="297"/>
+        <location filename="frequencydetection.cpp" line="296"/>
         <source>Processing images</source>
         <oldsource>Processing images...</oldsource>
         <translation>画像を処理中</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="297"/>
+        <location filename="frequencydetection.cpp" line="296"/>
         <source>Cancel</source>
         <translation>キャンセル</translation>
     </message>
@@ -176,12 +186,12 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="62"/>
+        <location filename="mainwindow.ui" line="42"/>
         <source>Average Images</source>
         <translation>画像を平均化する</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="48"/>
+        <location filename="mainwindow.ui" line="69"/>
         <source>Please choose an option</source>
         <translation>オプションを選択してください</translation>
     </message>
@@ -196,17 +206,17 @@
         <translation>ファイル</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="55"/>
+        <location filename="mainwindow.ui" line="35"/>
         <source>Calculate Width</source>
         <translation>幅を計算する</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="69"/>
+        <location filename="mainwindow.ui" line="28"/>
         <source>Flame Tool</source>
         <translation>炎分析</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="28"/>
+        <location filename="mainwindow.ui" line="49"/>
         <source>Frequency Detection</source>
         <translation>周波数検出</translation>
     </message>
@@ -266,12 +276,12 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="165"/>
+        <location filename="mainwindow.cpp" line="162"/>
         <source>Open a Folder</source>
         <translation>フォルダを開く</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="196"/>
+        <location filename="mainwindow.cpp" line="193"/>
         <source>Open a File</source>
         <translation type="unfinished"></translation>
     </message>

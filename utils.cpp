@@ -288,10 +288,19 @@ void imageWidthOverlay(cv::Mat &image) {
         double dimB = dB;
 
         // Draw the object sizes on the image
+        // Black outline
+        cv::putText(image, cv::format("%.1fpx", dimA),
+                    cv::Point(static_cast<int>(tltr.x - 15), static_cast<int>(tltr.y - 10)),
+                    cv::FONT_HERSHEY_SIMPLEX, 0.65, cv::Scalar(0, 0, 0), 3);
+        // White inner text
         cv::putText(image, cv::format("%.1fpx", dimA),
                     cv::Point(static_cast<int>(tltr.x - 15), static_cast<int>(tltr.y - 10)),
                     cv::FONT_HERSHEY_SIMPLEX, 0.65, cv::Scalar(255, 255, 255), 1);
-
+        // Black outline
+        cv::putText(image, cv::format("%.1fpx", dimB),
+                    cv::Point(static_cast<int>(trbr.x + 10), static_cast<int>(trbr.y)),
+                    cv::FONT_HERSHEY_SIMPLEX, 0.65, cv::Scalar(0, 0, 0), 3);
+        // White inner text
         cv::putText(image, cv::format("%.1fpx", dimB),
                     cv::Point(static_cast<int>(trbr.x + 10), static_cast<int>(trbr.y)),
                     cv::FONT_HERSHEY_SIMPLEX, 0.65, cv::Scalar(255, 255, 255), 1);
