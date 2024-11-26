@@ -216,7 +216,7 @@
       <item>
        <widget class="QRadioButton" name="radioButton_threshtrunc">
         <property name="text">
-         <string>Threshold Truncated</string>
+         <string>Truncate</string>
         </property>
        </widget>
       </item>

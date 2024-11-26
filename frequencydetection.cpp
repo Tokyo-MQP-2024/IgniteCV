@@ -9,6 +9,7 @@
 #include <opencv2/imgproc.hpp>
 #include <qtconcurrentmap.h>
 #include <QFutureWatcher>
+#include <QDialog>
 
 
 
@@ -50,7 +51,7 @@ void FrequencyDetection::on_horizontalSlider_valueChanged(int value) {
 }
 
 // Set button (set image and display first frame
-void FrequencyDetection::on_pushButton_2_clicked() {
+void FrequencyDetection::on_pushButtonSet_clicked() {
     QString folderPath = ui->lineEdit->text();
     if(folderPath == "") {
         QMessageBox::warning(this, tr("Warning"), tr("Invalid file path. Please try again"));
@@ -196,10 +197,10 @@ double FrequencyDetection::countWhitePixels(const QString &item) {
     cv::Mat bottomRegion;
     if(ui->checkBox_2->isChecked()) {
         bottomRegion = binary(cv::Range(ui->horizontalSliderUpperLimit->value(), ui->horizontalSliderLowerLimit->value()), cv::Range(0, binary.cols));
-    } else {
+    } else { // Use entire image
         int height = binary.rows;
         int width = binary.cols;
-        bottomRegion = binary(cv::Range(height * 0.7, height), cv::Range(0, width));
+        bottomRegion = binary(cv::Range(0, height), cv::Range(0, width));
     }
 
     // Count the number of white pixels (area)
@@ -210,6 +211,7 @@ double FrequencyDetection::countWhitePixels(const QString &item) {
 void FrequencyDetection::handleComputationCompletion() {
     if(m_areas.size() < m_imageFiles.size()) {
         QMessageBox::information(this, tr("Notice"), tr("Processing incomplete or cancelled by user"));
+        m_areas.clear();
         return;
     }
     if(ui->checkBox->isChecked())
@@ -233,23 +235,26 @@ void FrequencyDetection::handleComputationCompletion() {
     // Calculate with fps
     double fps = ui->spinBoxFPS->value();
     double frequency = (dominantIndex * fps) / N;
-    std::cout << "Approximate Oscillation Frequency: " << frequency << " Hz" << std::endl;
+    //std::cout << "Approximate Oscillation Frequency: " << frequency << " Hz" << std::endl;
+    QString message = QString("Approximate Oscillation Frequency: %1 Hz").arg(frequency);
+    QMessageBox::information(this, tr("Frequency Result"), message);
+
 }
 
 void FrequencyDetection::on_runButton_clicked() {
-    // Initialize the progress bar
-    // ui->progressBar->setRange(0, imageFiles.size());
-    // ui->progressBar->setValue(0);
+    // Check for empty files
+    QString folderPath = ui->lineEdit->text();
+    if(folderPath == "") {
+        QMessageBox::warning(this, tr("Warning"), tr("Invalid file path. Please try again"));
+        return;
+    }
+    QDir dir(folderPath);
 
-    // Create the progress dialog with a cancel button
-    progressDialog = new QProgressDialog(tr("Processing images..."), tr("Cancel"), 0, m_imageFiles.size(), this);
-    progressDialog->setWindowModality(Qt::WindowModal); // Modal dialog to block interaction with the main window
-    progressDialog->setMinimumDuration(0); // Show instantly
-    progressDialog->setAutoClose(true);    // Close automatically when done
-    progressDialog->setAutoReset(true);    // Reset automatically when done
-
-    // Lock UI elements to prevent errors
-    ui->runButton->setEnabled(false);
+    // Return if folder is invalid
+    if(!dir.exists()) {
+        QMessageBox::warning(this, tr("Warning"), tr("Invalid file path. Please try again"));
+        return;
+    }
 
     // Check if limits are reasonable
     if(ui->checkBox_2->isChecked() && ui->horizontalSliderUpperLimit->value() >= ui->horizontalSliderLowerLimit->value()) {
@@ -258,7 +263,7 @@ void FrequencyDetection::on_runButton_clicked() {
         return;
     }
 
-    if(ui->checkBox_2->isChecked()) {
+    if(ui->checkBox->isChecked()) {
         // Show the Save File Dialog and get the file path
         m_fileName = QFileDialog::getSaveFileName(
             nullptr,
@@ -278,6 +283,17 @@ void FrequencyDetection::on_runButton_clicked() {
             return;
         }
     }
+
+
+    // Create the progress dialog with a cancel button
+    progressDialog = new QProgressDialog(tr("Processing images"), tr("Cancel"), 0, m_imageFiles.size(), this);
+    progressDialog->setWindowModality(Qt::WindowModal); // Modal dialog to block interaction with the main window
+    progressDialog->setMinimumDuration(0); // Show instantly
+    progressDialog->setAutoClose(true);    // Close automatically when done
+    progressDialog->setAutoReset(true);    // Reset automatically when done
+
+    // Lock UI elements to prevent errors
+    ui->runButton->setEnabled(false);
 
     // Clear areas variable
     m_areas.clear();

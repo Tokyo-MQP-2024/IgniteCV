@@ -54,7 +54,7 @@
       <widget class="QLineEdit" name="lineEdit"/>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_2">
+      <widget class="QPushButton" name="pushButtonSet">
        <property name="text">
         <string>Set</string>
        </property>

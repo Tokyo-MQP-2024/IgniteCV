@@ -74,15 +74,17 @@ endif()
 
 # Language stuff
 # configure_file(${QM_FILES} ${CMAKE_SOURCE_DIR} COPYONLY)
-#qt_collect_translation_source_targets(TARGETS)
-#qt_add_lupdate(
+# qt_collect_translation_source_targets(TARGETS)
+# qt_add_lupdate(
 #    TS_FILES ${TS_FILES}
 #   SOURCES ${TARGETS}
-#)
+# )
 
 
-qt_add_translations(OpenCV_Integration
-    QM_FILES_OUTPUT_VARIABLE qm_files)
+qt6_add_translations(OpenCV_Integration
+    QM_FILES_OUTPUT_VARIABLE qm_files
+    LUPDATE_OPTIONS "-noobsolete"
+)
 install(FILES ${qm_files} DESTINATION ${CMAKE_SOURCE_DIR}/translations)
 
 
