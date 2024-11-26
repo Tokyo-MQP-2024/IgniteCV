@@ -176,163 +176,102 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="56"/>
+        <location filename="mainwindow.ui" line="62"/>
         <source>Average Images</source>
         <translation>画像を平均化する</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="35"/>
-        <source>Background Removal</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="63"/>
-        <location filename="mainwindow.cpp" line="178"/>
-        <location filename="mainwindow.cpp" line="190"/>
+        <location filename="mainwindow.ui" line="48"/>
         <source>Please choose an option</source>
         <translation>オプションを選択してください</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="42"/>
-        <source>Calculate Cone Angle</source>
-        <translation></translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="123"/>
-        <location filename="mainwindow.cpp" line="188"/>
-        <source>Auto</source>
-        <translation>自動</translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="94"/>
-        <location filename="mainwindow.ui" line="213"/>
+        <location filename="mainwindow.ui" line="80"/>
         <source>Run</source>
         <translation>実行</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="113"/>
-        <location filename="mainwindow.ui" line="160"/>
-        <location filename="mainwindow.ui" line="316"/>
+        <location filename="mainwindow.ui" line="183"/>
         <source>File</source>
         <translation>ファイル</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="49"/>
+        <location filename="mainwindow.ui" line="55"/>
         <source>Calculate Width</source>
         <translation>幅を計算する</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="28"/>
+        <location filename="mainwindow.ui" line="69"/>
         <source>Flame Tool</source>
         <translation>炎分析</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="83"/>
+        <location filename="mainwindow.ui" line="28"/>
         <source>Frequency Detection</source>
         <translation>周波数検出</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="103"/>
-        <source>Background</source>
-        <translation>バックグラウンド</translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="150"/>
-        <source>Image</source>
-        <translation>イメージ</translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="170"/>
-        <location filename="mainwindow.cpp" line="176"/>
-        <source>Folder</source>
-        <translation>フォルダ</translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="222"/>
+        <location filename="mainwindow.ui" line="89"/>
         <source>Select Folder</source>
         <translation>フォルダを選択</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="238"/>
+        <location filename="mainwindow.ui" line="105"/>
         <source>Save</source>
         <translation>セーブ</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="271"/>
+        <location filename="mainwindow.ui" line="138"/>
         <source>TextLabel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="278"/>
+        <location filename="mainwindow.ui" line="145"/>
         <source>Open Video</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="285"/>
+        <location filename="mainwindow.ui" line="152"/>
         <source>Cancel Process</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="295"/>
+        <location filename="mainwindow.ui" line="162"/>
         <source>Run Video Processing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="321"/>
+        <location filename="mainwindow.ui" line="188"/>
         <source>Language</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="330"/>
+        <location filename="mainwindow.ui" line="197"/>
         <source>toolBar</source>
         <translation>ツールバー</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="345"/>
+        <location filename="mainwindow.ui" line="212"/>
         <source>Home</source>
         <translation>ホーム</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="348"/>
+        <location filename="mainwindow.ui" line="215"/>
         <source>Return to homepage</source>
         <translation>ホームページに戻る</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="113"/>
+        <location filename="mainwindow.cpp" line="111"/>
         <source>Current Language changed to %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="173"/>
-        <location filename="mainwindow.cpp" line="185"/>
-        <source>Open A File</source>
-        <translation>ファイルを開く</translation>
-    </message>
-    <message>
-        <location filename="mainwindow.cpp" line="176"/>
-        <location filename="mainwindow.cpp" line="188"/>
-        <source>Info</source>
-        <translation>お知らせ</translation>
-    </message>
-    <message>
-        <location filename="mainwindow.cpp" line="178"/>
-        <location filename="mainwindow.cpp" line="190"/>
-        <location filename="mainwindow.cpp" line="201"/>
-        <source>Warning</source>
-        <translation>警告</translation>
-    </message>
-    <message>
-        <location filename="mainwindow.cpp" line="201"/>
-        <source>Please select images for subtraction</source>
-        <translation>減算する画像を選択してください</translation>
-    </message>
-    <message>
-        <location filename="mainwindow.cpp" line="223"/>
+        <location filename="mainwindow.cpp" line="165"/>
         <source>Open a Folder</source>
         <translation>フォルダを開く</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="254"/>
+        <location filename="mainwindow.cpp" line="196"/>
         <source>Open a File</source>
         <translation type="unfinished"></translation>
     </message>
@@ -340,12 +279,12 @@
 <context>
     <name>QFileDevice</name>
     <message>
-        <location filename="utils.cpp" line="80"/>
+        <location filename="utils.cpp" line="81"/>
         <source>Skipping invalid or incompatible file:</source>
         <translation>無効または互換性のないファイルをスキップします：</translation>
     </message>
     <message>
-        <location filename="utils.cpp" line="100"/>
+        <location filename="utils.cpp" line="101"/>
         <source>No valid images could be processed for averaging.</source>
         <translation>平均化のために有効な画像を処理できませんでした。</translation>
     </message>
@@ -360,7 +299,10 @@
     <message>
         <location filename="scalingtool.ui" line="41"/>
         <location filename="scalingtool.ui" line="198"/>
-        <location filename="scalingtool.ui" line="225"/>
+        <location filename="scalingtool.ui" line="232"/>
+        <location filename="scalingtool.ui" line="309"/>
+        <location filename="scalingtool.ui" line="316"/>
+        <location filename="scalingtool.ui" line="323"/>
         <source>TextLabel</source>
         <translation type="unfinished"></translation>
     </message>
@@ -414,64 +356,84 @@
     </message>
     <message>
         <location filename="scalingtool.ui" line="34"/>
-        <location filename="scalingtool.ui" line="341"/>
+        <location filename="scalingtool.ui" line="411"/>
         <source>Manual Scale</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.ui" line="288"/>
+        <location filename="scalingtool.ui" line="358"/>
         <source>Burned Area</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="scalingtool.ui" line="185"/>
-        <location filename="scalingtool.ui" line="295"/>
+        <location filename="scalingtool.ui" line="365"/>
         <source>Speed Tracking</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.ui" line="246"/>
+        <location filename="scalingtool.ui" line="260"/>
         <source>Detect Circles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.ui" line="253"/>
+        <location filename="scalingtool.ui" line="274"/>
         <source>Clip Black</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.ui" line="232"/>
+        <location filename="scalingtool.ui" line="246"/>
         <source>Clip White</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.ui" line="261"/>
+        <location filename="scalingtool.ui" line="205"/>
+        <source>max radius</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="scalingtool.ui" line="281"/>
+        <source>min radius</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="scalingtool.ui" line="288"/>
+        <source>Canny Threshold</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="scalingtool.ui" line="302"/>
+        <source>Accumulator </source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="scalingtool.ui" line="331"/>
         <source>Area Tracking</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.ui" line="273"/>
+        <location filename="scalingtool.ui" line="343"/>
         <source>Run Circle Detection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.ui" line="305"/>
-        <location filename="scalingtool.ui" line="312"/>
+        <location filename="scalingtool.ui" line="375"/>
+        <location filename="scalingtool.ui" line="382"/>
         <source>PushButton</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.ui" line="323"/>
+        <location filename="scalingtool.ui" line="393"/>
         <source>Auto detect to be implemented</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.ui" line="334"/>
+        <location filename="scalingtool.ui" line="404"/>
         <source>Auto Detect Scale</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.cpp" line="216"/>
+        <location filename="scalingtool.cpp" line="228"/>
         <source>Open a File</source>
         <translation type="unfinished"></translation>
     </message>

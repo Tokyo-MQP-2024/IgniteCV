@@ -41,10 +41,6 @@ protected slots:
     void slotLanguageChanged(QAction* action);
 private slots:
     void on_actionHome_triggered();
-    void on_backgroundRemoval_clicked();
-    void on_image1_clicked();
-    void on_image2_clicked();
-    void on_run_clicked();
     void on_pushButton_2_clicked();
     void on_averageImages_clicked();
     void on_pushButton_4_clicked();

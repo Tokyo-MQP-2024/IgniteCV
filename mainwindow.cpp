@@ -1,6 +1,5 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "imagesubtraction.h"
 #include <QFuture>
 #include <QThreadPool>
 #include <opencv2/core/core.hpp>
@@ -21,7 +20,6 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     // Disable bad buttons
-    ui->backgroundRemoval->setDisabled(true);
     ui->ProcessVideoButton->setEnabled(false);
 
     ui->stackedWidget->addWidget(calculateWidth);
@@ -142,12 +140,8 @@ void MainWindow::on_actionHome_triggered() {
     ui->stackedWidget->setCurrentIndex(0);
 }
 
-void MainWindow::on_backgroundRemoval_clicked() {
-    ui->stackedWidget->setCurrentIndex(1);
-}
-
 void MainWindow::on_averageImages_clicked() {
-    ui->stackedWidget->setCurrentIndex(2);
+    ui->stackedWidget->setCurrentIndex(1);
 }
 
 void MainWindow::on_pushButton_5_clicked() {
@@ -163,58 +157,6 @@ void MainWindow::on_FlameToolButton_clicked() {
     // ui->stackedWidget->setCurrentIndex(3);
     int index = ui->stackedWidget->indexOf(scalingTool);
     ui->stackedWidget->setCurrentIndex(index);
-}
-
-// BACKGROUND REMOVAL FUNCTIONS
-
-void MainWindow::on_image1_clicked() {
-    if(ui->radioButton->isChecked()) {
-        //QMessageBox::information(this, tr("Info"), tr("File"));
-        QString fileName = QFileDialog::getOpenFileName(this, tr("Open A File"), "C://");
-        ui->label_2->setText(fileName);
-    } else if(ui->radioButton_2->isChecked()) {
-        QMessageBox::information(this, tr("Info"), tr("Folder"));
-    } else {
-        QMessageBox::warning(this, tr("Warning"), tr("Please choose an option"));
-    }
-}
-
-void MainWindow::on_image2_clicked() {
-    if(ui->radioButton_3->isChecked()) {
-        //QMessageBox::information(this, tr("Info"), tr("File"));
-        QString fileName = QFileDialog::getOpenFileName(this, tr("Open A File"), "C://");
-        ui->label_3->setText(fileName);
-    } else if(ui->radioButton_4->isChecked()) {
-        QMessageBox::information(this, tr("Info"), tr("Auto"));
-    } else {
-        QMessageBox::warning(this, tr("Warning"), tr("Please choose an option"));
-    }
-}
-
-void MainWindow::on_run_clicked() {
-    // NO ERROR CHECKING YET
-    //cv::Mat im1 = cv::imread("original.tif");
-    //cv::Mat im2 = cv::imread("background.tif");
-    std::string image1 = ui->label_2->text().toStdString();
-    std::string image2 = ui->label_3->text().toStdString();
-    if(image1 == "" || image2 == "") {
-        QMessageBox::warning(this, tr("Warning"), tr("Please select images for subtraction"));
-        return;
-    }
-
-    cv::Mat im1 = cv::imread(image1);
-    cv::Mat im2 = cv::imread(image2);
-
-    cv::Mat diff;
-
-    // Multithreading is a bit useless here but I'm planning on extending
-    // the ImageSubtraction class to accept videos & batch images
-    QMutex mutex;
-    ImageSubtraction *subtraction = new ImageSubtraction(im1, im2, &diff, &mutex);
-    QThreadPool::globalInstance()->start(subtraction);
-
-    QThreadPool::globalInstance()->waitForDone();
-    cv::imshow("My iamg", diff);
 }
 
 // IMAGE AVERAGING PAGE FUNCTIONS

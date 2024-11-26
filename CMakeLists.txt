@@ -37,7 +37,7 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ${PROJECT_SOURCES}
         utils.cpp
         utils.h
-        imagesubtraction.h imagesubtraction.cpp
+
         FlameProcessing.h
         FlameProcessing.cpp
         calculateWidth.h calculateWidth.cpp calculateWidth.ui
