@@ -21,6 +21,8 @@ ScalingTool::ScalingTool(QWidget *parent)
     ui->WhiteSlider->setMinimum(0);
     ui->WhiteSlider->setMaximum(255);
     ui->WhiteSlider->setValue(255);
+
+    //setupHistogram();
     //ui->WhiteVal->setText();
 
 
@@ -360,9 +362,10 @@ void ScalingTool::adjustLevels(cv::Mat image) {
 
 void ScalingTool::on_BlackSlider_valueChanged(int value)
 {
-    std::cout << "herehehrhhf\n";
 
     clipBlack = value;
+    QString valSTR = QString::number(value);
+    ui->BlackVal->setText(valSTR);
     if(!croppedFrame.empty()) {
         adjustLevels(croppedFrame);
         //graphicsViewHelper(ui->FileViewWindow, flame_process, croppedFrame);
@@ -381,4 +384,35 @@ void ScalingTool::on_WhiteSlider_valueChanged(int value)
     }
     //graphicsViewHelper(ui->FileViewWindow, flame_process, croppedFrame);
 }
+
+
+// void ScalingTool::setupHistogram()
+// {
+//     // Example data for the histogram
+//     QVector<double> bins = {1, 2, 3, 4, 5};      // X-axis bins
+//     QVector<double> frequencies = {5, 15, 25, 10, 8}; // Y-axis values
+
+//     // Create a QCPBars object
+//     QCPBars *histogram = new QCPBars(ui->customPlot->xAxis, ui->customPlot->yAxis);
+//     histogram->setWidth(0.5);                   // Bar width
+//     histogram->setBrush(QBrush(Qt::blue));     // Bar color
+//     histogram->setPen(QPen(Qt::black));        // Border color
+
+//     // Set data
+//     histogram->setData(bins, frequencies);
+
+//     // Customize axes
+//     ui->customPlot->xAxis->setLabel("Bins");
+//     ui->customPlot->yAxis->setLabel("Frequency");
+
+//     // Automatically scale axes to fit the histogram
+//     ui->customPlot->xAxis->setRange(bins.first() - 1, bins.last() + 1); // Add padding
+//     ui->customPlot->yAxis->setRange(0, *std::max_element(frequencies.begin(), frequencies.end()) * 1.1); // Add 10% padding
+
+//     // Enable dynamic rescaling when data changes
+//     ui->customPlot->rescaleAxes();
+
+//     // Replot
+//     ui->customPlot->replot();
+// }
 

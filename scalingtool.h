@@ -2,6 +2,7 @@
 #define SCALINGTOOL_H
 
 #include <QWidget>
+//#include "qcustomplot.h"
 
 #include "utils.h"
 
@@ -80,6 +81,8 @@ private slots:
     void on_BlackSlider_valueChanged(int value);
 
     void on_WhiteSlider_valueChanged(int value);
+
+    //void setupHistogram();
 
 private:
     Ui::ScalingTool *ui;

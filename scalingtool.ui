@@ -185,10 +185,10 @@
                <string>Speed Tracking</string>
               </attribute>
               <layout class="QGridLayout" name="gridLayout_10">
-               <item row="2" column="2">
-                <widget class="QLabel" name="WhiteVal">
-                 <property name="text">
-                  <string>TextLabel</string>
+               <item row="1" column="1">
+                <widget class="QSlider" name="BlackSlider">
+                 <property name="orientation">
+                  <enum>Qt::Orientation::Horizontal</enum>
                  </property>
                 </widget>
                </item>
@@ -199,17 +199,37 @@
                  </property>
                 </widget>
                </item>
-               <item row="1" column="1">
-                <widget class="QSlider" name="BlackSlider">
+               <item row="3" column="1">
+                <widget class="QSlider" name="horizontalSlider">
                  <property name="orientation">
                   <enum>Qt::Orientation::Horizontal</enum>
                  </property>
                 </widget>
                </item>
-               <item row="3" column="1">
-                <widget class="QPushButton" name="pushButton_4">
+               <item row="5" column="1">
+                <spacer name="verticalSpacer_2">
+                 <property name="orientation">
+                  <enum>Qt::Orientation::Vertical</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>20</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item row="2" column="2">
+                <widget class="QLabel" name="WhiteVal">
                  <property name="text">
-                  <string>Detect Circles</string>
+                  <string>TextLabel</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="0">
+                <widget class="QLabel" name="label_4">
+                 <property name="text">
+                  <string>Clip White</string>
                  </property>
                 </widget>
                </item>
@@ -220,17 +240,17 @@
                  </property>
                 </widget>
                </item>
+               <item row="4" column="1">
+                <widget class="QPushButton" name="pushButton_4">
+                 <property name="text">
+                  <string>Detect Circles</string>
+                 </property>
+                </widget>
+               </item>
                <item row="1" column="0">
                 <widget class="QLabel" name="label_3">
                  <property name="text">
                   <string>Clip Black</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="0">
-                <widget class="QLabel" name="label_4">
-                 <property name="text">
-                  <string>Clip White</string>
                  </property>
                 </widget>
                </item>
