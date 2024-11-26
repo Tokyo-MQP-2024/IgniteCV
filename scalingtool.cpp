@@ -21,6 +21,18 @@ ScalingTool::ScalingTool(QWidget *parent)
     ui->WhiteSlider->setMinimum(0);
     ui->WhiteSlider->setMaximum(255);
     ui->WhiteSlider->setValue(255);
+    updateNumericalLabel(ui->WhiteVal, 255);
+
+    ui->Accumulator->setMaximum(15);
+    ui->CannySlider->setValue(canny);
+    ui->CannySlider->setMaximum(255);
+    ui->MinRadSlider->setValue(minRad);
+    ui->MaxRadSlider->setValue(maxRad);
+
+    updateNumericalLabel(ui->CannyLabel, canny);
+    updateNumericalLabel(ui->minLabel, minRad);
+    updateNumericalLabel(ui->MaxLabel, maxRad);
+
 
     //setupHistogram();
     //ui->WhiteVal->setText();
@@ -277,7 +289,7 @@ void ScalingTool::on_pushButton_7_clicked()
     std::cout << "DETETCING CIRCLES\n";
     std::vector<cv::Vec3f> circles;
     cv::imshow("TEST", croppedFrame);
-    detectCircles(croppedFrame, circles);
+    //detectCircles(croppedFrame, circles);
 
     cv::imshow("cirles", croppedFrame);
 }
@@ -291,10 +303,11 @@ void ScalingTool::on_pushButton_4_clicked()
 
     std::cout << "DETETCING CIRCLES\n";
     std::vector<cv::Vec3f> circles;
-    detectCircles(newImg, circles);
+    detectCircles(newImg, circles, minRad, maxRad, canny, accumulator);
 
     createGridlines(newImg, circles);
-    cv::imshow("grid", newImg);
+    graphicsViewHelper(ui->FileViewWindow, flame_process, newImg);
+
 }
 
 
@@ -378,6 +391,7 @@ void ScalingTool::on_BlackSlider_valueChanged(int value)
 void ScalingTool::on_WhiteSlider_valueChanged(int value)
 {
     clipWhite = value;
+    updateNumericalLabel(ui->WhiteVal, value);
     if(!croppedFrame.empty()) {
         adjustLevels(croppedFrame);
         //graphicsViewHelper(ui->FileViewWindow, flame_process, croppedFrame);
@@ -415,4 +429,33 @@ void ScalingTool::on_WhiteSlider_valueChanged(int value)
 //     // Replot
 //     ui->customPlot->replot();
 // }
+
+
+void ScalingTool::on_MinRadSlider_valueChanged(int value)
+{
+    minRad = value;
+    updateNumericalLabel(ui->minLabel, value);
+}
+
+
+void ScalingTool::on_MaxRadSlider_valueChanged(int value)
+{
+    maxRad = value;
+    updateNumericalLabel(ui->MaxLabel, value);
+}
+
+
+void ScalingTool::on_CannySlider_valueChanged(int value)
+{
+    canny = value;
+    updateNumericalLabel(ui->CannyLabel, value);
+}
+
+
+void ScalingTool::on_Accumulator_valueChanged(int value)
+{
+    accumulator = value;
+    //updateNumericalLabel(ui, value);
+
+}
 

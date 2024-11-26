@@ -9,6 +9,7 @@
 #include <QImage>
 #include <QList>
 
+
 #include <QtConcurrent/QtConcurrent>
 #include <opencv2/opencv.hpp>
 #include <algorithm>
@@ -305,13 +306,13 @@ void imageWidthOverlay(cv::Mat &image) {
 // ------------------- FLAME TOOL FUNCTIONS --------------------------
 
 // Edits image and circles vector in place.
-void detectCircles(cv::Mat &image, std::vector<cv::Vec3f> &circles) {
+void detectCircles(cv::Mat &image, std::vector<cv::Vec3f> &circles, int min, int max, int canny, int accum) {
 
     // Convert to gray
     std::cout << "made it to function call\n";
     cv::Mat gray;
     cv::cvtColor(image, gray, cv::COLOR_BGR2GRAY);
-    cv::imshow("gray", gray);
+    //cv::imshow("gray", gray);
 
     std::cout << "converted to gray\n";
 
@@ -320,8 +321,8 @@ void detectCircles(cv::Mat &image, std::vector<cv::Vec3f> &circles) {
     std::cout << "median blurr\n";
 
     cv::HoughCircles(gray, circles, cv::HOUGH_GRADIENT, 1,
-                    gray.rows/20, // change this to detect circles with different distances to each other
-                     10, 5, 5, 11 // change last two params (min_radius and max_radius) to detect larger circles
+                    gray.rows/19, // change this to detect circles with different distances to each other
+                     canny, accum, min, max // change last two params (min_radius and max_radius) to detect larger circles
                      );
 
     std::cout << "circle detection\n";
@@ -438,4 +439,11 @@ void computeFFT(const std::vector<double> &inputSignal, std::vector<double> &amp
     fftw_destroy_plan(plan);
     fftw_free(in);
     fftw_free(out);
+}
+
+
+void updateNumericalLabel(QLabel *label, int val) {
+
+    QString valSTR = QString::number(val);
+    label->setText(valSTR);
 }
