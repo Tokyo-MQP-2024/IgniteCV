@@ -20,7 +20,7 @@ public:
 private slots:
     void on_pushButton_clicked();
     void on_horizontalSlider_valueChanged(int value);
-    void on_pushButton_2_clicked();
+    void on_pushButtonSet_clicked();
     void on_thresholdSlider_valueChanged(int value);
     void on_runButton_clicked();
 

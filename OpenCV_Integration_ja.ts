@@ -6,139 +6,166 @@
     <message>
         <location filename="calculateWidth.ui" line="14"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="calculateWidth.ui" line="22"/>
         <source>Width</source>
-        <translation type="unfinished"></translation>
+        <translation>幅</translation>
     </message>
     <message>
         <location filename="calculateWidth.ui" line="49"/>
         <source>Use ROI</source>
-        <translation type="unfinished"></translation>
+        <translation>関心領域</translation>
     </message>
     <message>
         <location filename="calculateWidth.ui" line="59"/>
         <source>Manual Mode</source>
-        <translation type="unfinished"></translation>
+        <translation>手動モード</translation>
     </message>
     <message>
         <location filename="calculateWidth.ui" line="91"/>
         <source>X</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="calculateWidth.ui" line="146"/>
         <source>Y</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="calculateWidth.ui" line="193"/>
         <source>Threshold Type</source>
-        <translation type="unfinished"></translation>
+        <translation>しきい値タイプ</translation>
     </message>
     <message>
         <location filename="calculateWidth.ui" line="202"/>
         <source>Binary Inverted</source>
-        <translation type="unfinished"></translation>
+        <translation>バイナリ反転</translation>
     </message>
     <message>
         <location filename="calculateWidth.ui" line="209"/>
         <source>Binary</source>
-        <translation type="unfinished"></translation>
+        <translation>バイナリ</translation>
     </message>
     <message>
         <location filename="calculateWidth.ui" line="219"/>
-        <source>Threshold Truncated</source>
-        <translation type="unfinished"></translation>
+        <source>Truncate</source>
+        <oldsource>Threshold Truncated</oldsource>
+        <translation>上位省略表記</translation>
     </message>
     <message>
         <location filename="calculateWidth.ui" line="226"/>
         <source>Threshold to Zero</source>
-        <translation type="unfinished"></translation>
+        <translation>閾値をゼロにする</translation>
     </message>
     <message>
         <location filename="calculateWidth.ui" line="233"/>
         <source>Threshold to Zero Inverted</source>
-        <translation type="unfinished"></translation>
+        <translation>閾値がゼロに反転</translation>
     </message>
     <message>
         <location filename="calculateWidth.ui" line="249"/>
         <source>Run</source>
-        <translation type="unfinished">実行</translation>
+        <translation>実行</translation>
     </message>
     <message>
         <location filename="calculateWidth.ui" line="258"/>
         <source>Height</source>
-        <translation type="unfinished"></translation>
+        <translation>高さ</translation>
     </message>
     <message>
         <location filename="calculateWidth.ui" line="73"/>
         <source>Threshold</source>
-        <translation type="unfinished"></translation>
+        <translation>しきい値</translation>
     </message>
     <message>
         <location filename="calculateWidth.ui" line="118"/>
         <source>Select Image</source>
-        <translation type="unfinished"></translation>
+        <translation>画像を選択</translation>
     </message>
     <message>
         <location filename="calculateWidth.cpp" line="82"/>
         <source>OpenCV Error</source>
-        <translation type="unfinished"></translation>
+        <translation>OpenCVエラー</translation>
     </message>
 </context>
 <context>
     <name>FrequencyDetection</name>
     <message>
-        <location filename="frequencydetection.cpp" line="28"/>
+        <location filename="frequencydetection.cpp" line="29"/>
         <source>Open a Folder</source>
-        <translation type="unfinished">フォルダを開く</translation>
+        <translation>フォルダを開く</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="56"/>
-        <location filename="frequencydetection.cpp" line="63"/>
-        <location filename="frequencydetection.cpp" line="77"/>
-        <location filename="frequencydetection.cpp" line="256"/>
+        <location filename="frequencydetection.cpp" line="57"/>
+        <location filename="frequencydetection.cpp" line="64"/>
+        <location filename="frequencydetection.cpp" line="78"/>
+        <location filename="frequencydetection.cpp" line="248"/>
+        <location filename="frequencydetection.cpp" line="255"/>
+        <location filename="frequencydetection.cpp" line="261"/>
+        <location filename="frequencydetection.cpp" line="277"/>
         <source>Warning</source>
-        <translation type="unfinished">警告</translation>
+        <translation>警告</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="56"/>
-        <location filename="frequencydetection.cpp" line="63"/>
+        <location filename="frequencydetection.cpp" line="57"/>
+        <location filename="frequencydetection.cpp" line="64"/>
+        <location filename="frequencydetection.cpp" line="248"/>
+        <location filename="frequencydetection.cpp" line="255"/>
         <source>Invalid file path. Please try again</source>
-        <translation type="unfinished"></translation>
+        <translation>ファイルパスが無効です。もう一度お試しください</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="77"/>
+        <location filename="frequencydetection.cpp" line="78"/>
         <source>No images in folder. Please select another folder</source>
-        <translation type="unfinished"></translation>
+        <translation>フォルダ内に画像がありません。別のフォルダを選択してください</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="212"/>
+        <location filename="frequencydetection.cpp" line="213"/>
         <source>Notice</source>
-        <translation type="unfinished"></translation>
+        <translation>お知らせ</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="212"/>
+        <location filename="frequencydetection.cpp" line="213"/>
         <source>Processing incomplete or cancelled by user</source>
-        <translation type="unfinished"></translation>
+        <translation>処理は完了またはユーザーによってキャンセルされました</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="245"/>
-        <source>Processing images...</source>
-        <translation type="unfinished"></translation>
+        <location filename="frequencydetection.cpp" line="240"/>
+        <source>Frequency Result</source>
+        <translation>周波数結果</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="245"/>
+        <location filename="frequencydetection.cpp" line="289"/>
+        <source>Processing images</source>
+        <oldsource>Processing images...</oldsource>
+        <translation>画像を処理中</translation>
+    </message>
+    <message>
+        <location filename="frequencydetection.cpp" line="289"/>
         <source>Cancel</source>
-        <translation type="unfinished"></translation>
+        <translation>キャンセル</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="256"/>
+        <location filename="frequencydetection.cpp" line="261"/>
         <source>Upper limit must be above lower limit</source>
-        <translation type="unfinished"></translation>
+        <translation>上限は下限より上になければなりません</translation>
+    </message>
+    <message>
+        <location filename="frequencydetection.cpp" line="277"/>
+        <source>No file selected. Please choose a file to save.</source>
+        <translation>ファイルが選択されていません。保存するファイルを選択してください。</translation>
+    </message>
+    <message>
+        <location filename="frequencydetection.cpp" line="282"/>
+        <source>Error</source>
+        <translation>エラー</translation>
+    </message>
+    <message>
+        <location filename="frequencydetection.cpp" line="282"/>
+        <source>The file could not be opened for writing. Please check the file path and permissions.</source>
+        <translation>ファイルを書き込み用に開けませんでした。ファイル パスと権限を確認してください。</translation>
     </message>
 </context>
 <context>
@@ -183,14 +210,6 @@
         <translation>実行</translation>
     </message>
     <message>
-        <source>File Path</source>
-        <translation type="vanished">ファイルパス</translation>
-    </message>
-    <message>
-        <source>Start</source>
-        <translation type="vanished">スタート</translation>
-    </message>
-    <message>
         <location filename="mainwindow.ui" line="113"/>
         <location filename="mainwindow.ui" line="160"/>
         <location filename="mainwindow.ui" line="316"/>
@@ -200,17 +219,17 @@
     <message>
         <location filename="mainwindow.ui" line="49"/>
         <source>Calculate Width</source>
-        <translation type="unfinished"></translation>
+        <translation>幅を計算する</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="28"/>
         <source>Flame Tool</source>
-        <translation type="unfinished"></translation>
+        <translation>炎分析</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="83"/>
         <source>Frequency Detection</source>
-        <translation type="unfinished"></translation>
+        <translation>周波数検出</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="103"/>
@@ -262,10 +281,6 @@
         <location filename="mainwindow.ui" line="324"/>
         <source>toolBar</source>
         <translation>ツールバー</translation>
-    </message>
-    <message>
-        <source>Open</source>
-        <translation type="vanished">開ける</translation>
     </message>
     <message>
         <location filename="mainwindow.ui" line="339"/>
@@ -323,14 +338,6 @@
         <location filename="utils.cpp" line="100"/>
         <source>No valid images could be processed for averaging.</source>
         <translation>平均化のために有効な画像を処理できませんでした。</translation>
-    </message>
-</context>
-<context>
-    <name>QObject</name>
-    <message>
-        <location filename="main.cpp" line="24"/>
-        <source>This is a test</source>
-        <translation>テストです</translation>
     </message>
 </context>
 <context>
@@ -454,7 +461,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.cpp" line="212"/>
+        <location filename="scalingtool.cpp" line="214"/>
         <source>Open a File</source>
         <translation type="unfinished"></translation>
     </message>
@@ -464,88 +471,77 @@
     <message>
         <location filename="frequencydetection.ui" line="17"/>
         <source>Form</source>
-        <translation type="unfinished"></translation>
+        <translation></translation>
     </message>
     <message>
         <location filename="frequencydetection.ui" line="70"/>
         <source>Frame</source>
-        <translation type="unfinished"></translation>
+        <translation>フレーム</translation>
     </message>
     <message>
         <location filename="frequencydetection.ui" line="125"/>
         <source>Threshold</source>
-        <translation type="unfinished"></translation>
+        <translation>しきい値</translation>
     </message>
     <message>
         <location filename="frequencydetection.ui" line="25"/>
         <source>Frames Per Second</source>
-        <translation type="unfinished"></translation>
+        <translation>フレーム/秒</translation>
     </message>
     <message>
         <location filename="frequencydetection.ui" line="163"/>
         <source>Threshold Type</source>
-        <translation type="unfinished"></translation>
+        <translation>しきい値タイプ</translation>
     </message>
     <message>
         <location filename="frequencydetection.ui" line="172"/>
         <source>None</source>
-        <translation type="unfinished"></translation>
+        <translation>なし</translation>
     </message>
     <message>
         <location filename="frequencydetection.ui" line="182"/>
         <source>Binary Inverted</source>
-        <translation type="unfinished"></translation>
+        <translation>バイナリ反転</translation>
     </message>
     <message>
         <location filename="frequencydetection.ui" line="192"/>
         <source>Limits</source>
-        <translation type="unfinished"></translation>
+        <translation>制限</translation>
     </message>
     <message>
         <location filename="frequencydetection.ui" line="222"/>
         <source>Lower Limit</source>
-        <translation type="unfinished"></translation>
+        <translation>下限</translation>
     </message>
     <message>
         <location filename="frequencydetection.ui" line="205"/>
         <source>Upper Limit</source>
-        <translation type="unfinished"></translation>
+        <translation>上限</translation>
     </message>
     <message>
         <location filename="frequencydetection.ui" line="198"/>
         <source>Apply Limits</source>
-        <translation type="unfinished"></translation>
+        <translation>制限を適用する</translation>
     </message>
     <message>
         <location filename="frequencydetection.ui" line="49"/>
         <source>Select Folder</source>
-        <translation type="unfinished">フォルダを選択</translation>
+        <translation>フォルダを選択</translation>
     </message>
     <message>
         <location filename="frequencydetection.ui" line="59"/>
         <source>Set</source>
-        <translation type="unfinished"></translation>
+        <translation>設定</translation>
     </message>
     <message>
         <location filename="frequencydetection.ui" line="111"/>
         <source>Export to CSV</source>
-        <translation type="unfinished"></translation>
+        <translation>CSVにエクスポート</translation>
     </message>
     <message>
         <location filename="frequencydetection.ui" line="248"/>
         <source>Run</source>
-        <translation type="unfinished">実行</translation>
-    </message>
-    <message>
-        <source>Open a Folder</source>
-        <translation type="obsolete">フォルダを開く</translation>
-    </message>
-</context>
-<context>
-    <name>test</name>
-    <message>
-        <source>Run</source>
-        <translation type="obsolete">実行</translation>
+        <translation>実行</translation>
     </message>
 </context>
 </TS>
