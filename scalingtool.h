@@ -84,6 +84,16 @@ private slots:
 
     //void setupHistogram();
 
+    void on_MinRadSlider_valueChanged(int value);
+
+    void on_MaxRadSlider_valueChanged(int value);
+
+    void on_CannySlider_valueChanged(int value);
+
+    void on_Accumulator_valueChanged(int value);
+
+
+
 private:
     Ui::ScalingTool *ui;
 
@@ -113,6 +123,13 @@ private:
     int clipWhite = 255;
 
     cv::Mat levelsIMG;
+
+    int minRad = 7;
+    int maxRad = 11;
+    int canny = 10;
+    int accumulator = 5;
+
+
 
 
 
