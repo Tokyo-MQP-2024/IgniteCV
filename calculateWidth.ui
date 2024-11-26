@@ -129,7 +129,7 @@
     </layout>
    </item>
    <item row="0" column="3" rowspan="17">
-    <widget class="QGraphicsView" name="graphicsView_2">
+    <widget class="qgraphicsviewresize" name="graphicsView_2">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
        <horstretch>0</horstretch>
@@ -216,7 +216,7 @@
       <item>
        <widget class="QRadioButton" name="radioButton_threshtrunc">
         <property name="text">
-         <string>Threshold Truncated</string>
+         <string>Truncate</string>
         </property>
        </widget>
       </item>
@@ -282,6 +282,13 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>qgraphicsviewresize</class>
+   <extends>QGraphicsView</extends>
+   <header>../../../../qgraphicsviewresize.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

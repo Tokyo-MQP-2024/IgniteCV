@@ -24,6 +24,15 @@ CalculateWidth::~CalculateWidth()
     delete ui;
 }
 
+// For retranslating
+void CalculateWidth::changeEvent(QEvent* event) {
+    if (event->type() == QEvent::LanguageChange) {
+        // Update the UI elements to the new language
+        ui->retranslateUi(this);
+    }
+    QWidget::changeEvent(event);
+}
+
 // Open Image for width calculation
 void CalculateWidth::on_pushButton_6_clicked() {
     QString fileName = QFileDialog::getOpenFileName(this, "Open A File", "C://");
@@ -40,6 +49,28 @@ void CalculateWidth::on_pushButton_6_clicked() {
 void CalculateWidth::on_pushButton_7_clicked() {
     QString fileName = ui->label_5->text();
     cv::Mat image = cv::imread(fileName.toStdString());
+
+
+    // Apply threshold from slider
+    int sliderValue = ui->horizontalSlider->value();
+    int threshType = 0;
+
+    // Manually check radio buttons
+    if(ui->radioButton_binary->isChecked()) {
+        threshType = 0;
+    } else if(ui->radioButton_bininverted->isChecked()) {
+        threshType = 1;
+    } else if(ui->radioButton_threshtrunc->isChecked()) {
+        threshType = 2;
+    } else if(ui->radioButton_thresh0->isChecked()) {
+        threshType = 3;
+    } else if(ui->radioButton_thresh0inv->isChecked()) {
+        threshType = 4;
+    } else {
+        qErrnoWarning("ERROR: TYPE NOT DEFINED");
+    }
+
+    cv::threshold(image, image, sliderValue, 255, threshType);
 
     // If ROI selected
     if(ui->checkBox_2->isChecked()) {
@@ -71,27 +102,6 @@ void CalculateWidth::on_pushButton_7_clicked() {
         ui->spinBox_3->setValue(roi.width);
         ui->spinBox_4->setValue(roi.height);
     }
-
-    // Apply threshold from slider
-    int sliderValue = ui->horizontalSlider->value();
-    int threshType = 0;
-
-    // Manually check radio buttons
-    if(ui->radioButton_binary->isChecked()) {
-        threshType = 0;
-    } else if(ui->radioButton_bininverted->isChecked()) {
-        threshType = 1;
-    } else if(ui->radioButton_threshtrunc->isChecked()) {
-        threshType = 2;
-    } else if(ui->radioButton_thresh0->isChecked()) {
-        threshType = 3;
-    } else if(ui->radioButton_thresh0inv->isChecked()) {
-        threshType = 4;
-    } else {
-        qErrnoWarning("ERROR: TYPE NOT DEFINED");
-    }
-
-    cv::threshold(image, image, sliderValue, 255, threshType);
 
     //QImage screen(ui->graphicsView_2->viewport()->size(), QImage::Format_RGB32);
     //QPainter painter(&screen);

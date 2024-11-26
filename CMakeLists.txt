@@ -11,10 +11,14 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets LinguistTools)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools)
-find_package(Qt6 REQUIRED COMPONENTS Concurrent UiTools)
+find_package(Qt6 REQUIRED COMPONENTS Concurrent UiTools PrintSupport)
 
 find_package(OpenCV REQUIRED)
-include_directories(${OpenCV_INCLUDE_DIRS})
+
+
+include_directories(${CMAKE_SOURCE_DIR}/fftw-3.3.5-dll64)
+link_directories(${CMAKE_SOURCE_DIR}/fftw-3.3.5-dll64)
+
 qt_standard_project_setup(I18N_TRANSLATED_LANGUAGES ja)
 
 set(TS_FILES OpenCV_Integration_en_US.ts)
@@ -33,11 +37,16 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         ${PROJECT_SOURCES}
         utils.cpp
         utils.h
-        imagesubtraction.h imagesubtraction.cpp
+
         FlameProcessing.h
         FlameProcessing.cpp
         calculateWidth.h calculateWidth.cpp calculateWidth.ui
         scalingtool.h scalingtool.cpp scalingtool.ui
+        frequencydetection.h frequencydetection.cpp frequencydetection.ui
+        qgraphicsviewresize.h qgraphicsviewresize.cpp
+
+
+
 
 
     )
@@ -65,19 +74,21 @@ endif()
 
 # Language stuff
 # configure_file(${QM_FILES} ${CMAKE_SOURCE_DIR} COPYONLY)
-#qt_collect_translation_source_targets(TARGETS)
-#qt_add_lupdate(
+# qt_collect_translation_source_targets(TARGETS)
+# qt_add_lupdate(
 #    TS_FILES ${TS_FILES}
 #   SOURCES ${TARGETS}
-#)
+# )
 
 
-qt_add_translations(OpenCV_Integration
-    QM_FILES_OUTPUT_VARIABLE qm_files)
+qt6_add_translations(OpenCV_Integration
+    QM_FILES_OUTPUT_VARIABLE qm_files
+    LUPDATE_OPTIONS "-noobsolete"
+)
 install(FILES ${qm_files} DESTINATION ${CMAKE_SOURCE_DIR}/translations)
 
 
-target_link_libraries(OpenCV_Integration PRIVATE Qt${QT_VERSION_MAJOR}::Widgets ${OpenCV_LIBS} Qt6::Concurrent Qt6::UiTools)
+target_link_libraries(OpenCV_Integration PRIVATE Qt${QT_VERSION_MAJOR}::Widgets ${OpenCV_LIBS} Qt6::Concurrent Qt6::UiTools -llibfftw3-3 Qt6::PrintSupport)
 
 # Qt for iOS sets MACOSX_BUNDLE_GUI_IDENTIFIER automatically since Qt 6.1.
 # If you are developing for iOS or macOS you should consider setting an
@@ -104,3 +115,9 @@ if(QT_VERSION_MAJOR EQUAL 6)
     qt_finalize_executable(OpenCV_Integration)
 endif()
 
+qt_generate_deploy_app_script(
+    TARGET OpenCV_Integration
+    OUTPUT_SCRIPT deploy_script
+    NO_UNSUPPORTED_PLATFORM_ERROR
+)
+install(SCRIPT ${deploy_script})

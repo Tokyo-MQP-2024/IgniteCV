@@ -24,6 +24,7 @@ private slots:
 
 private:
     Ui::CalculateWidth *ui;
+    void changeEvent(QEvent* event);
 };
 
 #endif // CALCULATEWIDTH_H

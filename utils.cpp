@@ -8,6 +8,8 @@
 #include <QFileInfoList>
 #include <QImage>
 #include <QList>
+
+
 #include <QtConcurrent/QtConcurrent>
 #include <opencv2/opencv.hpp>
 #include <algorithm>
@@ -298,4 +300,150 @@ void imageWidthOverlay(cv::Mat &image) {
 
 
     //cv::imshow("Result", image);
+}
+
+
+// ------------------- FLAME TOOL FUNCTIONS --------------------------
+
+// Edits image and circles vector in place.
+void detectCircles(cv::Mat &image, std::vector<cv::Vec3f> &circles, int min, int max, int canny, int accum) {
+
+    // Convert to gray
+    std::cout << "made it to function call\n";
+    cv::Mat gray;
+    cv::cvtColor(image, gray, cv::COLOR_BGR2GRAY);
+    //cv::imshow("gray", gray);
+
+    std::cout << "converted to gray\n";
+
+    // Blur - may not be necessary. Test
+    cv::medianBlur(gray, gray, 21);  //add ui (must be odd)
+    std::cout << "median blurr\n";
+
+    cv::HoughCircles(gray, circles, cv::HOUGH_GRADIENT, 1,
+                    gray.rows/19, // change this to detect circles with different distances to each other
+                     canny, accum, min, max // change last two params (min_radius and max_radius) to detect larger circles
+                     );
+
+    std::cout << "circle detection\n";
+
+    // Loop through array and draw circle
+    for(size_t i = 0; i < circles.size(); i++) {
+        cv::Vec3i c = circles[i];
+        cv::Point center = cv::Point(c[0], c[1]);
+
+        // Circle center
+        cv::circle(image, center, 1, cv::Scalar(0, 100, 100), 3, cv::LINE_AA);
+        // Circle outline
+        int radius = c[2];
+        circle(image, center, radius, cv::Scalar(255, 0, 255), 3, cv::LINE_AA);
+
+        //std::cout << "drawing circles\n";
+    }
+
+}
+
+void createGridlines(cv::Mat &image, std::vector<cv::Vec3f> &circles) {
+    // Sort circle vector by x values
+    std::sort(circles.begin(), circles.end(), [](const cv::Vec3i &a, const cv::Vec3i &b) {
+        return a[0] < b[0];
+    });
+
+    for (const auto& v : circles) {
+        std::cout << "(" << v[0] << ", " << v[1] << ", " << v[2] << ")" << std::endl;
+    }
+
+    // Average x values of circles within threshold
+    int threshold = 10;
+    float prev = -1;
+    std::vector<double> averages;
+    double columnSum = 0;
+    int columnCount = 0;
+
+    for (const auto& c : circles) {
+        float value = c[0];
+        if(prev == -1 || (value - prev) < threshold) {
+            columnSum += value;
+            columnCount += 1;
+        } else {
+            if(columnCount == 0) {
+                prev = -1;
+                continue;
+            }
+            double average = columnSum / columnCount;
+            std::cout << average << std::endl;
+            averages.push_back(average);
+            columnSum = 0;
+            columnCount = 0;
+        }
+        prev = value;
+    }
+
+    // Draw vertical lines between the averages
+    for(int i = 0; i < averages.size() - 1; i++) {
+        double lineX = (averages[i] + averages[i + 1]) / 2.0;
+        cv::Point startPoint(lineX, 0);
+        cv::Point endPoint(lineX, image.rows);
+
+        cv::line(image, startPoint, endPoint, cv::Scalar(0, 255, 0), 2);
+    }
+
+}
+void graphicsViewHelper(QGraphicsView *view, FlameProcessing *fp, cv::Mat f) {
+
+    //TOD: rm fp
+
+
+    //std::string filePathSTD = filePath.toStdString();
+    //ui->FileLabel->setText(filePath);
+    //videoFilePath = filePathSTD;
+    //view = new QGraphicsView();
+    QGraphicsScene *scene = new QGraphicsScene();
+    view->setScene(scene);
+    //cv::VideoCapture cap(videoFilePath);
+    //cv::Mat frame1;
+    //cap >> frame1;
+    view->scene()->clear();
+    QImage qimg = matToQImage(f);
+    QPixmap pixmap = QPixmap::fromImage(qimg);
+    QGraphicsPixmapItem *item = scene->addPixmap(pixmap);
+    view->fitInView(item, Qt::KeepAspectRatio);
+
+}
+
+// Fast Fourier Transform for frequency detection
+void computeFFT(const std::vector<double> &inputSignal, std::vector<double> &amplitudeSpectrum) {
+    int N = inputSignal.size();
+
+    // Allocate input and output arrays for FFTW
+    fftw_complex *in = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
+    fftw_complex *out = (fftw_complex*) fftw_malloc(sizeof(fftw_complex) * N);
+    fftw_plan plan = fftw_plan_dft_1d(N, in, out, FFTW_FORWARD, FFTW_ESTIMATE);
+
+    // Copy input signal into the input array
+    for (int i = 0; i < N; ++i) {
+        in[i][0] = inputSignal[i]; // Real part
+        in[i][1] = 0.0;            // Imaginary part (0 since we're starting with real data)
+    }
+
+    // Execute FFT
+    fftw_execute(plan);
+
+    // Compute the amplitude spectrum (magnitude of FFT output)
+    amplitudeSpectrum.resize(N);
+    for (int i = 0; i < N; ++i) {
+        amplitudeSpectrum[i] = sqrt(out[i][0] * out[i][0] + out[i][1] * out[i][1]); // sqrt(Re^2 + Im^2)
+    }
+
+    // Cleanup
+    fftw_destroy_plan(plan);
+    fftw_free(in);
+    fftw_free(out);
+}
+
+
+void updateNumericalLabel(QLabel *label, int val) {
+
+    QString valSTR = QString::number(val);
+    label->setText(valSTR);
 }
