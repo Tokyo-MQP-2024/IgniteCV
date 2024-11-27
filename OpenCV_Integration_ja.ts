@@ -87,12 +87,12 @@
     <message>
         <location filename="calculateWidth.cpp" line="54"/>
         <source>Error</source>
-        <translation type="unfinished">エラー</translation>
+        <translation>エラー</translation>
     </message>
     <message>
         <location filename="calculateWidth.cpp" line="54"/>
         <source>Failed to load the image. Please check the file path and format.</source>
-        <translation type="unfinished"></translation>
+        <translation>ファイルを書き込み用に開けませんでした。ファイル パスと権限を確認してください。</translation>
     </message>
     <message>
         <location filename="calculateWidth.cpp" line="95"/>
@@ -281,9 +281,19 @@
         <translation>フォルダを開く</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="193"/>
+        <location filename="mainwindow.cpp" line="170"/>
+        <source>Error</source>
+        <translation>エラー</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="170"/>
+        <source>Invalid folder path</source>
+        <translation>フォルダパスが無効です。もう一度お試しください</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="197"/>
         <source>Open a File</source>
-        <translation type="unfinished"></translation>
+        <translation>ファイルを開く</translation>
     </message>
 </context>
 <context>
@@ -445,7 +455,7 @@
     <message>
         <location filename="scalingtool.cpp" line="228"/>
         <source>Open a File</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">ファイルを開く</translation>
     </message>
 </context>
 <context>

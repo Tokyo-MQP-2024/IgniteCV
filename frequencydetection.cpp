@@ -42,7 +42,16 @@ void FrequencyDetection::on_pushButton_clicked() {
 // Refresh image in graphics view
 void FrequencyDetection::refreshImage() {
     // Assumes value is in range
-    cv::Mat image = cv::imread(ui->lineEdit->text().toStdString() + "/" + m_imageFiles[ui->horizontalSlider->value() - 1].toStdString());
+    QString filePath = ui->lineEdit->text() + "/" + m_imageFiles[ui->horizontalSlider->value() - 1];
+    QFile file(filePath);
+    file.open(QFile::ReadOnly);
+    qint64 sz = file.size();
+    std::vector<uchar> buf(sz);
+    file.read((char*) buf.data(), sz);
+
+
+    cv::Mat image = cv::imdecode(buf, cv::IMREAD_COLOR);
+
     applyThreshold(image);
     if(ui->checkBoxApplyLimits->isChecked())
         applyLines(image);
@@ -57,19 +66,7 @@ void FrequencyDetection::on_horizontalSlider_valueChanged(int value) {
     if(m_numFrames <= 0) {
         return;
     }
-
-    // Assumes value is in range
-    cv::Mat image = cv::imread(ui->lineEdit->text().toStdString() + "/" + m_imageFiles[value - 1].toStdString());
-    //cv::Mat image2 = processImage(image);
-    cv::Mat image2 = image;
-    applyThreshold(image2);
-    if(ui->checkBoxApplyLimits->isChecked())
-        applyLines(image2);
-    QImage toDisplay = matToQImage(image2);
-    //QImage toDisplay(ui->lineEdit->text() + "/" + imageFiles[value - 1]);
-    ui->graphicsView->scene()->clear();
-    ui->graphicsView->scene()->addPixmap(QPixmap::fromImage(toDisplay));
-    ui->graphicsView->fitInView(ui->graphicsView->scene()->sceneRect(), Qt::KeepAspectRatio);
+    refreshImage();
 }
 
 // Set button (set image and display first frame
@@ -190,8 +187,16 @@ double FrequencyDetection::countWhitePixels(const QString &item) {
     if(QThread::currentThread()->isInterruptionRequested()) {
         return 0;
     }
-    // Open file
-    cv::Mat image = cv::imread(ui->lineEdit->text().toStdString() + "/" + item.toStdString());
+    // Open file 
+    QString filePath = ui->lineEdit->text() + "/" + item;
+    QFile file(filePath);
+    file.open(QFile::ReadOnly);
+    qint64 sz = file.size();
+    std::vector<uchar> buf(sz);
+    file.read((char*) buf.data(), sz);
+
+
+    cv::Mat image = cv::imdecode(buf, cv::IMREAD_COLOR);
 
     // Convert to grayscale
     cv::Mat gray;
@@ -363,13 +368,14 @@ void FrequencyDetection::exportAreasToCSV(const std::vector<double> &areas) {
 
     // Create a QTextStream to write data to the file
     QTextStream out(&file);
-
     // Write CSV headers (optional)
-    out << "Index,Area\n";
+    out << tr("Index") + "," + tr("Area") + "," + tr("Time") + "\n";
 
     // Write each element of the vector to the file
     for (size_t i = 0; i < areas.size(); ++i) {
-        out << i << "," << areas[i] << "\n";
+        // Convert frame to time
+        double time = static_cast<double>(i) / ui->spinBoxFPS->value();
+        out << i << "," << areas[i] << "," << time << "\n";
     }
 
     // Close the file

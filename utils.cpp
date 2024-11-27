@@ -57,6 +57,24 @@ cv::Mat QImageToCvMat(const QImage& image) {
     }
     return mat;
 }
+
+cv::Mat QImageToMat(const QImage& qimage) {
+    // Check the format of the QImage
+    if (qimage.format() == QImage::Format_RGB888) {
+        // Convert to RGB888 (3 channels, 8-bit unsigned)
+        return cv::Mat(qimage.height(), qimage.width(), CV_8UC3, (void*)qimage.bits(), qimage.bytesPerLine());
+    } else if (qimage.format() == QImage::Format_ARGB32) {
+        // Convert to ARGB32 (4 channels, 8-bit unsigned)
+        return cv::Mat(qimage.height(), qimage.width(), CV_8UC4, (void*)qimage.bits(), qimage.bytesPerLine());
+    } else if (qimage.format() == QImage::Format_RGB16) {
+        // Convert to RGB16 if necessary (e.g., for 16-bit image formats)
+        return cv::Mat(qimage.height(), qimage.width(), CV_8UC3, (void*)qimage.bits(), qimage.bytesPerLine());
+    } else {
+        // For unsupported formats, convert QImage to RGB888 first
+        QImage converted = qimage.convertToFormat(QImage::Format_RGB888);
+        return cv::Mat(converted.height(), converted.width(), CV_8UC3, converted.bits(), converted.bytesPerLine());
+    }
+}
 //--------------------- IMAGE AVERAGING FUNCTIONS ---------------------
 
 // Map function to average a batch of images

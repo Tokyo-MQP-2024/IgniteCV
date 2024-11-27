@@ -165,8 +165,12 @@ void MainWindow::on_pushButton_2_clicked() {
 
 // Average images in selected folder
 void MainWindow::on_pushButton_4_clicked() {
+    // Make sure file path is valid
+    if(!QDir(ui->label_4->text()).exists() || ui->label_4->text() == "") {
+        QMessageBox::critical(this, tr("Error"), tr("Invalid folder path"));
+        return;
+    }
     // Helper function from utils
-    //cv::Mat averageImage = averageImagesFromFolder(ui->label_4->text());
     ui->pushButton_4->setDisabled(true);
     QFuture<cv::Mat> future = QtConcurrent::run(averageImagesFromFolder, ui->label_4->text());
     cv::Mat averageImage = future.result();
