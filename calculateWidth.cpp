@@ -3,6 +3,7 @@
 #include "utils.h"
 
 #include <QFileDialog>
+#include <QImageReader>
 #include <QMessageBox>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
@@ -39,9 +40,26 @@ void CalculateWidth::on_pushButton_6_clicked() {
     ui->label_5->setText(fileName);
     //cv::Mat image = cv::imread(fileName.toStdString());
 
+    if(ui->label_5->text() == "") {
+        return;
+    }
+
     // Assumes value is in range
     QFile file(fileName);
-    file.open(QFile::ReadOnly);
+    if (!file.open(QFile::ReadOnly)) {
+        // Show a simple error message box
+        QMessageBox::critical(nullptr, tr("Error"), tr("Failed to open file: ") + file.errorString());
+        ui->label_5->setText("");
+        return; // Exit the function
+    }
+    // Use QImageReader to check if the file is a valid image
+    QImageReader reader(fileName);
+    if (!reader.canRead()) {
+        QMessageBox::critical(nullptr, tr("Error"), tr("The file is not a valid image: ") + reader.errorString());
+        ui->label_5->setText("");
+        return;
+    }
+
     qint64 sz = file.size();
     std::vector<uchar> buf(sz);
     file.read((char*) buf.data(), sz);
@@ -62,9 +80,15 @@ void CalculateWidth::on_pushButton_7_clicked() {
     QString fileName = ui->label_5->text();
 
 
+
     // Assumes value is in range
     QFile file(fileName);
-    file.open(QFile::ReadOnly);
+    // Attempt to open the file
+    if (!file.open(QFile::ReadOnly)) {
+        // Show a simple error message box
+        QMessageBox::critical(nullptr, tr("Error"), tr("Failed to open file: ") + file.errorString());
+        return; // Exit the function
+    }
     qint64 sz = file.size();
     std::vector<uchar> buf(sz);
     file.read((char*) buf.data(), sz);
@@ -110,9 +134,17 @@ void CalculateWidth::on_pushButton_7_clicked() {
             roi.width = ui->spinBox_3->value();
             roi.height = ui->spinBox_4->value();
         } else {
+            QMessageBox::information(this, tr("Information"), tr("Select a ROI and then press SPACE or ENTER button. Cancel the selection process by pressing c button and closing the ROI window."));
             roi = cv::selectROI(image);
         }
+
+        // If ROI is empty, return
+        if(roi.width == 0 || roi.height == 0) {
+            return;
+        }
+
         cv::Mat imCropped;
+
         try {
             imCropped = image(roi);
         } catch (const cv::Exception &e) {
@@ -144,7 +176,11 @@ void CalculateWidth::refreshImage() {
 
     // Assumes value is in range
     QFile file(label);
-    file.open(QFile::ReadOnly);
+    if (!file.open(QFile::ReadOnly)) {
+        // Show a simple error message box
+        QMessageBox::critical(nullptr, tr("Error"), tr("Failed to open file: ") + file.errorString());
+        return; // Exit the function
+    }
     qint64 sz = file.size();
     std::vector<uchar> buf(sz);
     file.read((char*) buf.data(), sz);
