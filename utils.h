@@ -11,7 +11,8 @@
 #include <QLabel>
 
 QImage matToQImage(const cv::Mat &mat);
-cv::Mat QImageToCvMat(const QImage& image);
+cv::Mat QImageToMat(const QImage& image);
+cv::Mat QImageToCvMat(const QImage &image);
 cv::Mat averageImagesFromFolder(const QString& folderPath);
 void imageWidthOverlay(cv::Mat &image);
 void detectCircles(cv::Mat &image, std::vector<cv::Vec3f> &circles);

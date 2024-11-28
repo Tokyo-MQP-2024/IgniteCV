@@ -57,6 +57,24 @@ cv::Mat QImageToCvMat(const QImage& image) {
     }
     return mat;
 }
+
+cv::Mat QImageToMat(const QImage& qimage) {
+    // Check the format of the QImage
+    if (qimage.format() == QImage::Format_RGB888) {
+        // Convert to RGB888 (3 channels, 8-bit unsigned)
+        return cv::Mat(qimage.height(), qimage.width(), CV_8UC3, (void*)qimage.bits(), qimage.bytesPerLine());
+    } else if (qimage.format() == QImage::Format_ARGB32) {
+        // Convert to ARGB32 (4 channels, 8-bit unsigned)
+        return cv::Mat(qimage.height(), qimage.width(), CV_8UC4, (void*)qimage.bits(), qimage.bytesPerLine());
+    } else if (qimage.format() == QImage::Format_RGB16) {
+        // Convert to RGB16 if necessary (e.g., for 16-bit image formats)
+        return cv::Mat(qimage.height(), qimage.width(), CV_8UC3, (void*)qimage.bits(), qimage.bytesPerLine());
+    } else {
+        // For unsupported formats, convert QImage to RGB888 first
+        QImage converted = qimage.convertToFormat(QImage::Format_RGB888);
+        return cv::Mat(converted.height(), converted.width(), CV_8UC3, converted.bits(), converted.bytesPerLine());
+    }
+}
 //--------------------- IMAGE AVERAGING FUNCTIONS ---------------------
 
 // Map function to average a batch of images
@@ -288,10 +306,19 @@ void imageWidthOverlay(cv::Mat &image) {
         double dimB = dB;
 
         // Draw the object sizes on the image
+        // Black outline
+        cv::putText(image, cv::format("%.1fpx", dimA),
+                    cv::Point(static_cast<int>(tltr.x - 15), static_cast<int>(tltr.y - 10)),
+                    cv::FONT_HERSHEY_SIMPLEX, 0.65, cv::Scalar(0, 0, 0), 3);
+        // White inner text
         cv::putText(image, cv::format("%.1fpx", dimA),
                     cv::Point(static_cast<int>(tltr.x - 15), static_cast<int>(tltr.y - 10)),
                     cv::FONT_HERSHEY_SIMPLEX, 0.65, cv::Scalar(255, 255, 255), 1);
-
+        // Black outline
+        cv::putText(image, cv::format("%.1fpx", dimB),
+                    cv::Point(static_cast<int>(trbr.x + 10), static_cast<int>(trbr.y)),
+                    cv::FONT_HERSHEY_SIMPLEX, 0.65, cv::Scalar(0, 0, 0), 3);
+        // White inner text
         cv::putText(image, cv::format("%.1fpx", dimB),
                     cv::Point(static_cast<int>(trbr.x + 10), static_cast<int>(trbr.y)),
                     cv::FONT_HERSHEY_SIMPLEX, 0.65, cv::Scalar(255, 255, 255), 1);

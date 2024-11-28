@@ -49,7 +49,11 @@ void CalculateWidth::on_pushButton_6_clicked() {
 void CalculateWidth::on_pushButton_7_clicked() {
     QString fileName = ui->label_5->text();
     cv::Mat image = cv::imread(fileName.toStdString());
-
+    if (image.empty()) {
+        // Error handling
+        QMessageBox::critical(nullptr, tr("Error"), tr("Failed to load the image. Please check the file path and format."));
+        return;
+    }
 
     // Apply threshold from slider
     int sliderValue = ui->horizontalSlider->value();
@@ -103,24 +107,9 @@ void CalculateWidth::on_pushButton_7_clicked() {
         ui->spinBox_4->setValue(roi.height);
     }
 
-    //QImage screen(ui->graphicsView_2->viewport()->size(), QImage::Format_RGB32);
-    //QPainter painter(&screen);
-    //ui->graphicsView_2->render(&painter);
-    //cv::Mat image = QImageToCvMat(screen);
-
     // Modify image in place
     imageWidthOverlay(image);
-    //cv::Rect2d r = cv::selectROI(image);
-    //cv::Mat imCrop = image(r);
-    //cv::imshow("Result", imCrop);
     cv::imshow("Result", image);
-
-    // Display to graphics window
-    // QImage toDisplay = matToQImage(image);
-    // ui->graphicsView_2->setScene(new QGraphicsScene(this));
-    // ui->graphicsView_2->scene()->addPixmap(QPixmap::fromImage(toDisplay));
-    // ui->graphicsView_2->fitInView(ui->graphicsView_2->scene()->sceneRect(), Qt::KeepAspectRatio);
-
 }
 
 // When slider changes, edit image in display with appropriate thresholding
@@ -149,7 +138,6 @@ void CalculateWidth::on_horizontalSlider_sliderMoved(int position) {
         qErrnoWarning("ERROR: TYPE NOT DEFINED");
     }
 
-    // Threshold type hardcoded for now
     cv::threshold(grey, output, position, 255, threshType);
     QImage toDisplay = matToQImage(output);
     ui->graphicsView_2->scene()->clear();

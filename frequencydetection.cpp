@@ -10,6 +10,7 @@
 #include <qtconcurrentmap.h>
 #include <QFutureWatcher>
 #include <QDialog>
+#include <QImageReader>
 
 
 
@@ -38,24 +39,34 @@ void FrequencyDetection::on_pushButton_clicked() {
     ui->lineEdit->setText(folderPath);
 }
 
+// Refresh image in graphics view
+void FrequencyDetection::refreshImage() {
+    // Assumes value is in range
+    QString filePath = ui->lineEdit->text() + "/" + m_imageFiles[ui->horizontalSlider->value() - 1];
+    QFile file(filePath);
+    file.open(QFile::ReadOnly);
+    qint64 sz = file.size();
+    std::vector<uchar> buf(sz);
+    file.read((char*) buf.data(), sz);
+
+
+    cv::Mat image = cv::imdecode(buf, cv::IMREAD_COLOR);
+
+    applyThreshold(image);
+    if(ui->checkBoxApplyLimits->isChecked())
+        applyLines(image);
+    QImage toDisplay = matToQImage(image);
+    ui->graphicsView->scene()->clear();
+    ui->graphicsView->scene()->addPixmap(QPixmap::fromImage(toDisplay));
+    ui->graphicsView->fitInView(ui->graphicsView->scene()->sceneRect(), Qt::KeepAspectRatio);
+}
+
 // Slider for frame selection
 void FrequencyDetection::on_horizontalSlider_valueChanged(int value) {
     if(m_numFrames <= 0) {
         return;
     }
-
-    // Assumes value is in range
-    cv::Mat image = cv::imread(ui->lineEdit->text().toStdString() + "/" + m_imageFiles[value - 1].toStdString());
-    //cv::Mat image2 = processImage(image);
-    cv::Mat image2 = image;
-    applyThreshold(image2);
-    if(ui->checkBox_2->isChecked())
-        applyLines(image2);
-    QImage toDisplay = matToQImage(image2);
-    //QImage toDisplay(ui->lineEdit->text() + "/" + imageFiles[value - 1]);
-    ui->graphicsView->scene()->clear();
-    ui->graphicsView->scene()->addPixmap(QPixmap::fromImage(toDisplay));
-    ui->graphicsView->fitInView(ui->graphicsView->scene()->sceneRect(), Qt::KeepAspectRatio);
+    refreshImage();
 }
 
 // Set button (set image and display first frame
@@ -97,6 +108,21 @@ void FrequencyDetection::on_pushButtonSet_clicked() {
 
     // Load first image
     QImage toDisplay = QImage(folderPath + "/" + m_imageFiles[0]);
+    m_width = toDisplay.width();
+    m_height = toDisplay.height();
+
+    // Loop through images to make sure width and height are same [TAKES TOO LONG]
+    // for(const QString item : m_imageFiles) {
+    //     QImageReader reader(ui->lineEdit->text() + "/" + item);
+    //     QSize size = reader.size();
+    //     if(size.height() != m_height || size.width() != m_width) {
+    //         QMessageBox::warning(this, tr("Error"), tr("Images have different dimensions"));
+    //         ui->lineEdit->clear();
+    //         m_height = -1;
+    //         m_width = -1;
+    //         return;
+    //     }
+    // }
 
     ui->horizontalSliderLowerLimit->setMaximum(toDisplay.height());
     ui->horizontalSliderUpperLimit->setMaximum(toDisplay.height());
@@ -106,25 +132,6 @@ void FrequencyDetection::on_pushButtonSet_clicked() {
     ui->graphicsView->setScene(new QGraphicsScene(this));
     ui->graphicsView->scene()->addPixmap(QPixmap::fromImage(toDisplay));
     ui->graphicsView->fitInView(ui->graphicsView->scene()->sceneRect(), Qt::KeepAspectRatio);
-}
-
-// Return edges of image [Redundant - Switched to thresholding]
-cv::Mat FrequencyDetection::processImage(cv::Mat &image) {
-    // Pre-process
-    // Convert to gray
-    cv::Mat gray;
-    cv::cvtColor(image, gray, cv::COLOR_BGR2GRAY);
-
-    // Blur image
-    cv::Mat blurred;
-    cv::GaussianBlur(gray, blurred, cv::Size(5,5), 0);
-
-    // Get edges [TODO: MAKE CANNY THRESHOLDS MODIFIABLE THROUGH UI]
-    cv::Mat edges;
-    cv::Canny(blurred, edges, 50, 100);
-
-    return edges;
-
 }
 
 // Applies thresholding based on selected settings in the UI (modifies image in place)
@@ -171,17 +178,7 @@ void FrequencyDetection::on_thresholdSlider_valueChanged(int value){
         return;
     }
     // On change, update image
-    // Assumes value is in range
-    cv::Mat image = cv::imread(ui->lineEdit->text().toStdString() + "/" + m_imageFiles[ui->horizontalSlider->value() - 1].toStdString());
-    //cv::Mat image2 = processImage(image);
-    cv::Mat image2 = image;
-    applyThreshold(image2);
-    if(ui->checkBox_2->isChecked())
-        applyLines(image2);
-    QImage toDisplay = matToQImage(image2);
-    ui->graphicsView->scene()->clear();
-    ui->graphicsView->scene()->addPixmap(QPixmap::fromImage(toDisplay));
-    ui->graphicsView->fitInView(ui->graphicsView->scene()->sceneRect(), Qt::KeepAspectRatio);
+    refreshImage();
 }
 
 // For use in QtConcurrent::mapped
@@ -190,8 +187,16 @@ double FrequencyDetection::countWhitePixels(const QString &item) {
     if(QThread::currentThread()->isInterruptionRequested()) {
         return 0;
     }
-    // Open file
-    cv::Mat image = cv::imread(ui->lineEdit->text().toStdString() + "/" + item.toStdString());
+    // Open file 
+    QString filePath = ui->lineEdit->text() + "/" + item;
+    QFile file(filePath);
+    file.open(QFile::ReadOnly);
+    qint64 sz = file.size();
+    std::vector<uchar> buf(sz);
+    file.read((char*) buf.data(), sz);
+
+
+    cv::Mat image = cv::imdecode(buf, cv::IMREAD_COLOR);
 
     // Convert to grayscale
     cv::Mat gray;
@@ -203,7 +208,7 @@ double FrequencyDetection::countWhitePixels(const QString &item) {
 
     // If checkbox set, use custom region, else use default
     cv::Mat bottomRegion;
-    if(ui->checkBox_2->isChecked()) {
+    if(ui->checkBoxApplyLimits->isChecked()) {
         bottomRegion = binary(cv::Range(ui->horizontalSliderUpperLimit->value(), ui->horizontalSliderLowerLimit->value()), cv::Range(0, binary.cols));
     } else { // Use entire image
         int height = binary.rows;
@@ -265,7 +270,7 @@ void FrequencyDetection::on_runButton_clicked() {
     }
 
     // Check if limits are reasonable
-    if(ui->checkBox_2->isChecked() && ui->horizontalSliderUpperLimit->value() >= ui->horizontalSliderLowerLimit->value()) {
+    if(ui->checkBoxApplyLimits->isChecked() && ui->horizontalSliderUpperLimit->value() >= ui->horizontalSliderLowerLimit->value()) {
         QMessageBox::warning(this, tr("Warning"), tr("Upper limit must be above lower limit"));
         ui->runButton->setEnabled(true);
         return;
@@ -291,7 +296,6 @@ void FrequencyDetection::on_runButton_clicked() {
             return;
         }
     }
-
 
     // Create the progress dialog with a cancel button
     progressDialog = new QProgressDialog(tr("Processing images"), tr("Cancel"), 0, m_imageFiles.size(), this);
@@ -338,38 +342,6 @@ void FrequencyDetection::on_runButton_clicked() {
     QFuture<double> future = QtConcurrent::mapped(m_imageFiles, [this](const QString s){return countWhitePixels(s);});
     watcher->setFuture(future);
     progressDialog->setMaximum(m_imageFiles.size());
-
-    // future.waitForFinished();
-    // areas.reserve(future.resultCount());
-    // // Collect results from future
-    // for(int i = 0; i < future.resultCount(); i++) {
-    //     areas.push_back(future.resultAt(i));
-    // }
-
-    // if(ui->checkBox->isChecked())
-    //     exportAreasToCSV(areas);
-
-    // // Compute FFT of area data
-    // std::vector<double> amplitudeSpectrum;
-    // computeFFT(areas, amplitudeSpectrum);
-    // //exportAreasToCSV(amplitudeSpectrum);
-
-    // // Find the dominant frequency
-    // int N = amplitudeSpectrum.size();
-    // double maxAmplitude = 0.0;
-    // int dominantIndex = 0;
-
-    // for (int i = 1; i < N / 2; ++i) { // Use N/2 because of symmetry in FFT output
-    //     if (amplitudeSpectrum[i] > maxAmplitude) {
-    //         maxAmplitude = amplitudeSpectrum[i];
-    //         dominantIndex = i;
-    //     }
-    // }
-
-    // // Calculate with fps
-    // double fps = ui->spinBoxFPS->value();
-    // double frequency = (dominantIndex * fps) / N;
-    // std::cout << "Approximate Oscillation Frequency: " << frequency << " Hz" << std::endl;
 }
 
 void FrequencyDetection::exportAreasToCSV(const std::vector<double> &areas) {
@@ -396,13 +368,14 @@ void FrequencyDetection::exportAreasToCSV(const std::vector<double> &areas) {
 
     // Create a QTextStream to write data to the file
     QTextStream out(&file);
-
     // Write CSV headers (optional)
-    out << "Index,Area\n";
+    out << tr("Index") + "," + tr("Area") + "," + tr("Time") + "\n";
 
     // Write each element of the vector to the file
     for (size_t i = 0; i < areas.size(); ++i) {
-        out << i << "," << areas[i] << "\n";
+        // Convert frame to time
+        double time = static_cast<double>(i) / ui->spinBoxFPS->value();
+        out << i << "," << areas[i] << "," << time << "\n";
     }
 
     // Close the file
@@ -415,17 +388,7 @@ void FrequencyDetection::on_horizontalSliderUpperLimit_valueChanged(int value) {
         return;
     }
     m_upper = value;
-    // Assumes value is in range
-    cv::Mat image = cv::imread(ui->lineEdit->text().toStdString() + "/" + m_imageFiles[ui->horizontalSlider->value() - 1].toStdString());
-    //cv::Mat image2 = processImage(image);
-    cv::Mat image2 = image;
-    applyThreshold(image2);
-    if(ui->checkBox_2->isChecked())
-        applyLines(image2);
-    QImage toDisplay = matToQImage(image2);
-    ui->graphicsView->scene()->clear();
-    ui->graphicsView->scene()->addPixmap(QPixmap::fromImage(toDisplay));
-    ui->graphicsView->fitInView(ui->graphicsView->scene()->sceneRect(), Qt::KeepAspectRatio);
+    refreshImage();
 }
 
 // Lower limit
@@ -434,40 +397,21 @@ void FrequencyDetection::on_horizontalSliderLowerLimit_valueChanged(int value) {
         return;
     }
     m_lower = value;
-    // Assumes value is in range
-    cv::Mat image = cv::imread(ui->lineEdit->text().toStdString() + "/" + m_imageFiles[ui->horizontalSlider->value() - 1].toStdString());
-    //cv::Mat image2 = processImage(image);
-    cv::Mat image2 = image;
-    applyThreshold(image2);
-    if(ui->checkBox_2->isChecked())
-        applyLines(image2);
-    QImage toDisplay = matToQImage(image2);
-    ui->graphicsView->scene()->clear();
-    ui->graphicsView->scene()->addPixmap(QPixmap::fromImage(toDisplay));
-    ui->graphicsView->fitInView(ui->graphicsView->scene()->sceneRect(), Qt::KeepAspectRatio);
+    refreshImage();
 }
 
 // Show lines checkbox
-void FrequencyDetection::on_checkBox_2_checkStateChanged(const Qt::CheckState &arg1) {
+void FrequencyDetection::on_checkBoxApplyLimits_checkStateChanged(const Qt::CheckState &arg1) {
     if(m_numFrames <= 0) {
         return;
     }
-    // Assumes value is in range
-    cv::Mat image = cv::imread(ui->lineEdit->text().toStdString() + "/" + m_imageFiles[ui->horizontalSlider->value() - 1].toStdString());
-    //cv::Mat image2 = processImage(image);
-    cv::Mat image2 = image;
-    applyThreshold(image2);
     if(arg1 == Qt::Checked) {
-        applyLines(image2);
         ui->horizontalSliderLowerLimit->setEnabled(true);
         ui->horizontalSliderUpperLimit->setEnabled(true);
     } else {
         ui->horizontalSliderLowerLimit->setEnabled(false);
         ui->horizontalSliderUpperLimit->setEnabled(false);
-    }
-    QImage toDisplay = matToQImage(image2);
-    ui->graphicsView->scene()->clear();
-    ui->graphicsView->scene()->addPixmap(QPixmap::fromImage(toDisplay));
-    ui->graphicsView->fitInView(ui->graphicsView->scene()->sceneRect(), Qt::KeepAspectRatio);
+    }  
+    refreshImage();
 }
 
