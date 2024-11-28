@@ -21,11 +21,11 @@ link_directories(${CMAKE_SOURCE_DIR}/fftw-3.3.5-dll64)
 
 qt_standard_project_setup(I18N_TRANSLATED_LANGUAGES ja)
 
-set(TS_FILES OpenCV_Integration_en_US.ts)
-#set(TS_FILES OpenCV_Integration_ja.ts)
+#set(TS_FILES OpenCV_Integration_en_US.ts)
+set(TS_FILES OpenCV_Integration_ja.ts)
 
 set(PROJECT_SOURCES
-        ${TS_FILES}
+        #${TS_FILES}
         mainwindow.cpp mainwindow.h mainwindow.ui
         image.png
         main.cpp mainwindow.cpp
@@ -44,18 +44,13 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
         scalingtool.h scalingtool.cpp scalingtool.ui
         frequencydetection.h frequencydetection.cpp frequencydetection.ui
         qgraphicsviewresize.h qgraphicsviewresize.cpp
-
-
-
-
-
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET OpenCV_Integration APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
 #                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
 # For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
 
-    qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
+    #qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 else()
     if(ANDROID)
         add_library(OpenCV_Integration SHARED
@@ -69,7 +64,7 @@ else()
         )
     endif()
 
-    qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
+    #qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 endif()
 
 # Language stuff
@@ -81,8 +76,11 @@ endif()
 # )
 
 
-qt6_add_translations(OpenCV_Integration
+# MAKE SURE TO GO TO BUILD STEPS TO ADD update_translations AND release_translations AS BUILD STEPS!
+qt6_add_translations(TARGETS OpenCV_Integration
     QM_FILES_OUTPUT_VARIABLE qm_files
+    INCLUDE_DIRECTORIES ${CMAKE_SOURCE_DIR}
+    LUPDATE_TARGET update_translations
     LUPDATE_OPTIONS "-noobsolete"
 )
 install(FILES ${qm_files} DESTINATION ${CMAKE_SOURCE_DIR}/translations)

@@ -24,53 +24,58 @@
         <translation>手動モード</translation>
     </message>
     <message>
-        <location filename="calculateWidth.ui" line="91"/>
+        <location filename="calculateWidth.ui" line="101"/>
         <source>X</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="calculateWidth.ui" line="146"/>
+        <location filename="calculateWidth.ui" line="156"/>
         <source>Y</source>
         <translation></translation>
     </message>
     <message>
-        <location filename="calculateWidth.ui" line="193"/>
+        <location filename="calculateWidth.ui" line="203"/>
         <source>Threshold Type</source>
         <translation>しきい値タイプ</translation>
     </message>
     <message>
-        <location filename="calculateWidth.ui" line="202"/>
+        <location filename="calculateWidth.ui" line="212"/>
+        <source>None</source>
+        <translation>なし</translation>
+    </message>
+    <message>
+        <location filename="calculateWidth.ui" line="222"/>
         <source>Binary Inverted</source>
         <translation>バイナリ反転</translation>
     </message>
     <message>
-        <location filename="calculateWidth.ui" line="209"/>
+        <location filename="calculateWidth.ui" line="232"/>
         <source>Binary</source>
         <translation>バイナリ</translation>
     </message>
     <message>
-        <location filename="calculateWidth.ui" line="219"/>
+        <location filename="calculateWidth.ui" line="245"/>
         <source>Truncate</source>
         <oldsource>Threshold Truncated</oldsource>
         <translation>上位省略表記</translation>
     </message>
     <message>
-        <location filename="calculateWidth.ui" line="226"/>
+        <location filename="calculateWidth.ui" line="255"/>
         <source>Threshold to Zero</source>
         <translation>閾値をゼロにする</translation>
     </message>
     <message>
-        <location filename="calculateWidth.ui" line="233"/>
+        <location filename="calculateWidth.ui" line="265"/>
         <source>Threshold to Zero Inverted</source>
         <translation>閾値がゼロに反転</translation>
     </message>
     <message>
-        <location filename="calculateWidth.ui" line="249"/>
+        <location filename="calculateWidth.ui" line="284"/>
         <source>Run</source>
         <translation>実行</translation>
     </message>
     <message>
-        <location filename="calculateWidth.ui" line="258"/>
+        <location filename="calculateWidth.ui" line="293"/>
         <source>Height</source>
         <translation>高さ</translation>
     </message>
@@ -80,22 +85,48 @@
         <translation>しきい値</translation>
     </message>
     <message>
-        <location filename="calculateWidth.ui" line="118"/>
+        <location filename="calculateWidth.ui" line="128"/>
         <source>Select Image</source>
         <translation>画像を選択</translation>
     </message>
     <message>
-        <location filename="calculateWidth.cpp" line="54"/>
+        <location filename="calculateWidth.cpp" line="51"/>
+        <location filename="calculateWidth.cpp" line="58"/>
+        <location filename="calculateWidth.cpp" line="89"/>
+        <location filename="calculateWidth.cpp" line="102"/>
+        <location filename="calculateWidth.cpp" line="181"/>
         <source>Error</source>
         <translation>エラー</translation>
     </message>
     <message>
-        <location filename="calculateWidth.cpp" line="54"/>
+        <location filename="calculateWidth.cpp" line="51"/>
+        <location filename="calculateWidth.cpp" line="89"/>
+        <location filename="calculateWidth.cpp" line="181"/>
+        <source>Failed to open file: </source>
+        <translation>ファイルを開けませんでした: </translation>
+    </message>
+    <message>
+        <location filename="calculateWidth.cpp" line="58"/>
+        <source>The file is not a valid image: </source>
+        <translation>ファイルは有効な画像ではありません: </translation>
+    </message>
+    <message>
+        <location filename="calculateWidth.cpp" line="102"/>
         <source>Failed to load the image. Please check the file path and format.</source>
         <translation>ファイルを書き込み用に開けませんでした。ファイル パスと権限を確認してください。</translation>
     </message>
     <message>
-        <location filename="calculateWidth.cpp" line="95"/>
+        <location filename="calculateWidth.cpp" line="137"/>
+        <source>Information</source>
+        <translation>お知らせ</translation>
+    </message>
+    <message>
+        <location filename="calculateWidth.cpp" line="137"/>
+        <source>Select a ROI and then press SPACE or ENTER button. Cancel the selection process by pressing c button and closing the ROI window.</source>
+        <translation>ROI を選択して、SPACE キーまたは ENTER キーを押します。選択処理をキャンセルするには、c ボタンを押して ROI ウィンドウを閉じます。</translation>
+    </message>
+    <message>
+        <location filename="calculateWidth.cpp" line="151"/>
         <source>OpenCV Error</source>
         <translation>OpenCVエラー</translation>
     </message>
@@ -108,72 +139,87 @@
         <translation>フォルダを開く</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="79"/>
-        <location filename="frequencydetection.cpp" line="86"/>
-        <location filename="frequencydetection.cpp" line="100"/>
-        <location filename="frequencydetection.cpp" line="256"/>
-        <location filename="frequencydetection.cpp" line="263"/>
-        <location filename="frequencydetection.cpp" line="269"/>
-        <location filename="frequencydetection.cpp" line="285"/>
+        <location filename="frequencydetection.cpp" line="76"/>
+        <location filename="frequencydetection.cpp" line="83"/>
+        <location filename="frequencydetection.cpp" line="97"/>
+        <location filename="frequencydetection.cpp" line="261"/>
+        <location filename="frequencydetection.cpp" line="268"/>
+        <location filename="frequencydetection.cpp" line="274"/>
+        <location filename="frequencydetection.cpp" line="290"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="79"/>
-        <location filename="frequencydetection.cpp" line="86"/>
-        <location filename="frequencydetection.cpp" line="256"/>
-        <location filename="frequencydetection.cpp" line="263"/>
+        <location filename="frequencydetection.cpp" line="76"/>
+        <location filename="frequencydetection.cpp" line="83"/>
+        <location filename="frequencydetection.cpp" line="261"/>
+        <location filename="frequencydetection.cpp" line="268"/>
         <source>Invalid file path. Please try again</source>
         <translation>ファイルパスが無効です。もう一度お試しください</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="100"/>
+        <location filename="frequencydetection.cpp" line="97"/>
         <source>No images in folder. Please select another folder</source>
         <translation>フォルダ内に画像がありません。別のフォルダを選択してください</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="221"/>
+        <location filename="frequencydetection.cpp" line="226"/>
         <source>Notice</source>
         <translation>お知らせ</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="221"/>
+        <location filename="frequencydetection.cpp" line="226"/>
         <source>Processing incomplete or cancelled by user</source>
         <translation>処理は完了またはユーザーによってキャンセルされました</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="248"/>
+        <location filename="frequencydetection.cpp" line="253"/>
         <source>Frequency Result</source>
         <translation>周波数結果</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="296"/>
+        <location filename="frequencydetection.cpp" line="301"/>
         <source>Processing images</source>
         <oldsource>Processing images...</oldsource>
         <translation>画像を処理中</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="296"/>
+        <location filename="frequencydetection.cpp" line="301"/>
         <source>Cancel</source>
         <translation>キャンセル</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="269"/>
+        <location filename="frequencydetection.cpp" line="372"/>
+        <source>Index</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="frequencydetection.cpp" line="372"/>
+        <source>Area</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="frequencydetection.cpp" line="372"/>
+        <source>Time</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="frequencydetection.cpp" line="274"/>
         <source>Upper limit must be above lower limit</source>
         <translation>上限は下限より上になければなりません</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="285"/>
+        <location filename="frequencydetection.cpp" line="290"/>
         <source>No file selected. Please choose a file to save.</source>
         <translation>ファイルが選択されていません。保存するファイルを選択してください。</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="290"/>
+        <location filename="frequencydetection.cpp" line="295"/>
         <source>Error</source>
         <translation>エラー</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="290"/>
+        <location filename="frequencydetection.cpp" line="295"/>
         <source>The file could not be opened for writing. Please check the file path and permissions.</source>
         <translation>ファイルを書き込み用に開けませんでした。ファイル パスと権限を確認してください。</translation>
     </message>
@@ -299,12 +345,12 @@
 <context>
     <name>QFileDevice</name>
     <message>
-        <location filename="utils.cpp" line="81"/>
+        <location filename="utils.cpp" line="99"/>
         <source>Skipping invalid or incompatible file:</source>
         <translation>無効または互換性のないファイルをスキップします：</translation>
     </message>
     <message>
-        <location filename="utils.cpp" line="101"/>
+        <location filename="utils.cpp" line="119"/>
         <source>No valid images could be processed for averaging.</source>
         <translation>平均化のために有効な画像を処理できませんでした。</translation>
     </message>

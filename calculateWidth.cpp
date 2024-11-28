@@ -3,6 +3,7 @@
 #include "utils.h"
 
 #include <QFileDialog>
+#include <QImageReader>
 #include <QMessageBox>
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
@@ -16,7 +17,7 @@ CalculateWidth::CalculateWidth(QWidget *parent) :
     ui->setupUi(this);
 
     // Explicit signal and slot connections
-    //connect(ui->pushButton_6, &QPushButton::clicked, this, &CalculateWidth::on_pushButton_6_clicked);
+    connect(ui->buttonGroup_threshtype, &QButtonGroup::buttonClicked, this, &CalculateWidth::refreshImage);
 }
 
 CalculateWidth::~CalculateWidth()
@@ -37,7 +38,36 @@ void CalculateWidth::changeEvent(QEvent* event) {
 void CalculateWidth::on_pushButton_6_clicked() {
     QString fileName = QFileDialog::getOpenFileName(this, "Open A File", "C://");
     ui->label_5->setText(fileName);
-    cv::Mat image = cv::imread(fileName.toStdString());
+    //cv::Mat image = cv::imread(fileName.toStdString());
+
+    if(ui->label_5->text() == "") {
+        return;
+    }
+
+    // Assumes value is in range
+    QFile file(fileName);
+    if (!file.open(QFile::ReadOnly)) {
+        // Show a simple error message box
+        QMessageBox::critical(nullptr, tr("Error"), tr("Failed to open file: ") + file.errorString());
+        ui->label_5->setText("");
+        return; // Exit the function
+    }
+    // Use QImageReader to check if the file is a valid image
+    QImageReader reader(fileName);
+    if (!reader.canRead()) {
+        QMessageBox::critical(nullptr, tr("Error"), tr("The file is not a valid image: ") + reader.errorString());
+        ui->label_5->setText("");
+        return;
+    }
+
+    qint64 sz = file.size();
+    std::vector<uchar> buf(sz);
+    file.read((char*) buf.data(), sz);
+
+
+    cv::Mat image = cv::imdecode(buf, cv::IMREAD_COLOR);
+
+
     // Display to graphics window
     QImage toDisplay = matToQImage(image);
     ui->graphicsView_2->setScene(new QGraphicsScene(this));
@@ -48,7 +78,25 @@ void CalculateWidth::on_pushButton_6_clicked() {
 // Run width calculation on image
 void CalculateWidth::on_pushButton_7_clicked() {
     QString fileName = ui->label_5->text();
-    cv::Mat image = cv::imread(fileName.toStdString());
+
+
+
+    // Assumes value is in range
+    QFile file(fileName);
+    // Attempt to open the file
+    if (!file.open(QFile::ReadOnly)) {
+        // Show a simple error message box
+        QMessageBox::critical(nullptr, tr("Error"), tr("Failed to open file: ") + file.errorString());
+        return; // Exit the function
+    }
+    qint64 sz = file.size();
+    std::vector<uchar> buf(sz);
+    file.read((char*) buf.data(), sz);
+
+
+    cv::Mat image = cv::imdecode(buf, cv::IMREAD_COLOR);
+
+    //cv::Mat image = cv::imread(fileName.toStdString());
     if (image.empty()) {
         // Error handling
         QMessageBox::critical(nullptr, tr("Error"), tr("Failed to load the image. Please check the file path and format."));
@@ -86,9 +134,17 @@ void CalculateWidth::on_pushButton_7_clicked() {
             roi.width = ui->spinBox_3->value();
             roi.height = ui->spinBox_4->value();
         } else {
+            QMessageBox::information(this, tr("Information"), tr("Select a ROI and then press SPACE or ENTER button. Cancel the selection process by pressing c button and closing the ROI window."));
             roi = cv::selectROI(image);
         }
+
+        // If ROI is empty, return
+        if(roi.width == 0 || roi.height == 0) {
+            return;
+        }
+
         cv::Mat imCropped;
+
         try {
             imCropped = image(roi);
         } catch (const cv::Exception &e) {
@@ -112,16 +168,30 @@ void CalculateWidth::on_pushButton_7_clicked() {
     cv::imshow("Result", image);
 }
 
-// When slider changes, edit image in display with appropriate thresholding
-void CalculateWidth::on_horizontalSlider_sliderMoved(int position) {
+// Helper function to refresh image on certain UI actions
+void CalculateWidth::refreshImage() {
     QString label = ui->label_5->text();
     if(label == "")
         return;
-    cv::Mat image = cv::imread(label.toStdString());
+
+    // Assumes value is in range
+    QFile file(label);
+    if (!file.open(QFile::ReadOnly)) {
+        // Show a simple error message box
+        QMessageBox::critical(nullptr, tr("Error"), tr("Failed to open file: ") + file.errorString());
+        return; // Exit the function
+    }
+    qint64 sz = file.size();
+    std::vector<uchar> buf(sz);
+    file.read((char*) buf.data(), sz);
+
+    cv::Mat image = cv::imdecode(buf, cv::IMREAD_COLOR);
+
+    //cv::Mat image = cv::imread(label.toStdString());
     cv::Mat grey, output;
     // Convert to grey
     cv::cvtColor(image, grey, cv::COLOR_BGR2GRAY);
-    int threshType = 0;
+    int threshType = -1;
 
     // Manually check radio buttons
     if(ui->radioButton_binary->isChecked()) {
@@ -134,17 +204,23 @@ void CalculateWidth::on_horizontalSlider_sliderMoved(int position) {
         threshType = 3;
     } else if(ui->radioButton_thresh0inv->isChecked()) {
         threshType = 4;
+    } else if(ui->radioButton_none->isChecked()) {
+        threshType = -1;
     } else {
         qErrnoWarning("ERROR: TYPE NOT DEFINED");
     }
 
-    cv::threshold(grey, output, position, 255, threshType);
+    if(threshType != -1) {
+        cv::threshold(grey, output, ui->horizontalSlider->value(), 255, threshType);
+    } else {
+        output = grey;
+    }
     QImage toDisplay = matToQImage(output);
     ui->graphicsView_2->scene()->clear();
     ui->graphicsView_2->scene()->addPixmap(QPixmap::fromImage(toDisplay));
     ui->graphicsView_2->fitInView(ui->graphicsView_2->scene()->sceneRect(), Qt::KeepAspectRatio);
-
 }
+
 
 // Checkbox for ROI
 void CalculateWidth::on_checkBox_checkStateChanged(const Qt::CheckState &arg1) {
@@ -169,4 +245,10 @@ void CalculateWidth::on_checkBox_2_checkStateChanged(const Qt::CheckState &arg1)
         ui->checkBox->setEnabled(false);
     }
 }
+
+// When slider changes, edit image in display with appropriate thresholding
+void CalculateWidth::on_horizontalSlider_valueChanged(int value) {
+    refreshImage();
+}
+
 
