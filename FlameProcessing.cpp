@@ -170,13 +170,11 @@ void FlameProcessing::imageScaling(std::string videoFilePath, char axis) {
 
     cv::destroyWindow("Manual Scaling"); // Destroy the window to release resources
 
-    //parseVideo(videoFilePath, scene);
-
 }
 
 
 void FlameProcessing::parseVideo(std::string videoFilePath, QGraphicsView *view) {
-    view->setScene(scene);
+
 
     auto const MASK_WINDOW = "Mask Settings";
     cv::namedWindow(MASK_WINDOW, cv::WINDOW_AUTOSIZE);
@@ -330,17 +328,18 @@ void FlameProcessing::parseVideo(std::string videoFilePath, QGraphicsView *view)
             cv::drawContours(newFrame, contours, -1, cv::Scalar(255, 0, 0), cv::FILLED);
 
             if (frameCount % 5 == 0) { // Show every 5th frame
-                //cv::imshow("cleaned mask", frame);
-                view->scene()->clear();
-                QImage qimg = matToQImage(newFrame);
+                // //cv::imshow("cleaned mask", frame);
+                // view->scene()->clear();
+                // QImage qimg = matToQImage(newFrame);
 
-                // Create a QPixmap from the QImage and add it to the scene
+                // // Create a QPixmap from the QImage and add it to the scene
 
-                scene->addPixmap(QPixmap::fromImage(qimg));
+                // scene->addPixmap(QPixmap::fromImage(qimg));
                 //view->setSceneRect(0, 0, qimg.width(), qimg.height());
 
                 // Optionally set the view size to match the image size
                 //view->setSceneRect(0, 0, qimg.width(), qimg.height());
+                //graphicsViewHelper(view, newFrame, scene);
 
             }
 

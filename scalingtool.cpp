@@ -4,6 +4,8 @@
 
 
 
+
+
 ScalingTool::ScalingTool(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::ScalingTool)
@@ -32,6 +34,25 @@ ScalingTool::ScalingTool(QWidget *parent)
     updateNumericalLabel(ui->CannyLabel, canny);
     updateNumericalLabel(ui->minLabel, minRad);
     updateNumericalLabel(ui->MaxLabel, maxRad);
+
+
+    std::cout<<maxHue;
+    ui->HMax->setMaximum(179);
+    ui->HMin->setMaximum(278);
+    ui->HMax->setValue(maxHue);
+
+    ui->SMax->setMaximum(255);
+    ui->SMax->setValue(maxSat);
+    ui->SMin->setValue(minSat);
+    ui->SMin->setMaximum(254);
+
+    ui->VMax->setMaximum(255);
+    ui->VMin->setMaximum(254);
+    ui->VMin->setValue(minVal);
+    ui->VMax->setValue(maxVal);
+
+
+
 
 
     //setupHistogram();
@@ -162,7 +183,7 @@ void ScalingTool::imageROISelect(std::string vf) {
         applyROIMask(frame);
         frame.copyTo(currSelectFrame);
     }
-    graphicsViewHelper(ui->FileViewWindow, flame_process, frame);
+    graphicsViewHelper(ui->FileViewWindow, frame, scene);
 
 
 
@@ -241,7 +262,7 @@ void ScalingTool::on_pushButton_2_clicked()
 
         globalCap.open(videoFilePath);
 
-        graphicsViewHelper(ui->FileViewWindow, flame_process, frame1);
+        graphicsViewHelper(ui->FileViewWindow, frame1, scene);
 
 
         int totalFrames = static_cast<int>(cap.get(cv::CAP_PROP_FRAME_COUNT));
@@ -270,10 +291,10 @@ void ScalingTool::on_VideoScroll_valueChanged(int value)
     if (globalCap.read(frame)) {
         if(roiSelected) {
             applyROIMask(frame);
-            graphicsViewHelper(ui->FileViewWindow, flame_process, frame);
+            graphicsViewHelper(ui->FileViewWindow, frame, scene);
 
         } else {
-            graphicsViewHelper(ui->FileViewWindow, flame_process, frame);
+            graphicsViewHelper(ui->FileViewWindow, frame, scene);
         }
 
         frame.copyTo(currSelectFrame);
@@ -306,7 +327,7 @@ void ScalingTool::on_pushButton_4_clicked()
     detectCircles(newImg, circles, minRad, maxRad, canny, accumulator);
 
     createGridlines(newImg, circles);
-    graphicsViewHelper(ui->FileViewWindow, flame_process, newImg);
+    graphicsViewHelper(ui->FileViewWindow, newImg, scene);
 
 }
 
@@ -360,7 +381,7 @@ void ScalingTool::adjustLevels(cv::Mat image) {
             }
         }
 
-        graphicsViewHelper(ui->FileViewWindow, flame_process, levelsIMG);
+        graphicsViewHelper(ui->FileViewWindow, levelsIMG, scene);
     }
 
 
@@ -457,5 +478,155 @@ void ScalingTool::on_Accumulator_valueChanged(int value)
     accumulator = value;
     //updateNumericalLabel(ui, value);
 
+}
+
+
+void ScalingTool::on_HSVbutton_clicked()
+{
+    cv::Mat hsvFrame, hsvMask, resultFrame;
+    cv::cvtColor(currSelectFrame, hsvFrame, cv::COLOR_BGR2HSV); // Convert to HSV
+    // Create an HSV mask for flame colors
+    cv::inRange(hsvFrame, cv::Scalar(minHue, minSat, minVal), cv::Scalar(maxHue, maxSat, maxVal), hsvMask);
+    currSelectFrame.copyTo(resultFrame, hsvMask);
+    graphicsViewHelper(ui->FileViewWindow, resultFrame, scene);
+}
+
+
+
+
+void ScalingTool::on_HMin_valueChanged(int arg1)
+{
+    if(minHue < maxHue && !(videoFilePath.empty())) {
+        minHue = arg1;
+        on_HSVbutton_clicked();
+    }
+}
+
+
+void ScalingTool::on_HMax_valueChanged(int arg1)
+{
+    if(maxHue > minHue && !(videoFilePath.empty())) {
+        maxHue = arg1;
+        on_HSVbutton_clicked();
+    }
+}
+
+
+void ScalingTool::on_SMin_valueChanged(int arg1)
+{
+    if(minSat < maxSat && !(videoFilePath.empty())) {
+        minSat = arg1;
+        on_HSVbutton_clicked();
+    }
+}
+
+
+void ScalingTool::on_SMax_valueChanged(int arg1)
+{
+    if(maxSat > minSat && !(videoFilePath.empty())) {
+        maxSat = arg1;
+        on_HSVbutton_clicked();
+    }
+}
+
+
+void ScalingTool::on_VMin_valueChanged(int arg1)
+{
+    if(minVal < maxVal && !(videoFilePath.empty())) {
+        minVal = arg1;
+        on_HSVbutton_clicked();
+    }
+}
+
+
+void ScalingTool::on_VMax_valueChanged(int arg1)
+{
+    if(maxVal > minVal && !(videoFilePath.empty())) {
+        maxVal = arg1;
+        on_HSVbutton_clicked();
+    }
+}
+
+
+// IMPORTANT FUNCTION TO PREFORM SPEED TRACKING AND ANALIZING
+void ScalingTool::on_pushButton_8_clicked()
+{
+    // loop through video frames {
+
+        // for each frame, return the contours and display them
+        // store an array of contour pixels
+        // loop through each grid line
+        // find the y position and angle of the flame leading edge
+        // store pos and angle values every second
+
+    // }
+    cv::VideoCapture cap(videoFilePath);
+
+
+    if (!cap.isOpened()) {
+        std::cout<<"CAP FAILED\n";
+    }
+
+    cap.set(cv::CAP_PROP_POS_FRAMES, 0);
+    // Get video frame rate
+    double fps = cap.get(cv::CAP_PROP_FPS);
+    double timePerFrame = 1.0/fps; // in seconds
+    double accumulatedTime = 0.0;
+    double sampleInterval = 1.0;
+    int seconds = 0;
+    int frameCount = 0;
+    cv::Mat frame;
+
+    std::cout<<"MADE IT TO RUN PROCESS\n";
+
+    while (true) {
+
+        if(stopProcess) {
+            break;
+        }
+
+        accumulatedTime = accumulatedTime + timePerFrame;
+        // Capture each frame
+        cap >> frame;
+
+        // If the frame is empty, break the loop (end of video)
+        if (frame.empty()) {
+            break;
+        }
+
+        if(accumulatedTime > sampleInterval) {
+            accumulatedTime = accumulatedTime - sampleInterval;
+            seconds = seconds +1;
+        }
+
+
+        //if (frameCount % 5 == 0) { // Show every 5th frame
+
+        graphicsViewHelper(ui->FileViewWindow, frame, scene);
+
+        //}
+
+        //cv::imshow("STUFF", frame);
+
+        // // Wait for 1 ms between frames (to simulate real-time playback)
+        if (cv::waitKey(1) == 27) { // Exit if 'Esc' is pressed
+            break;
+        }
+
+
+        frameCount++;
+    }
+
+
+    // Release video capture object and close display window
+    cap.release();
+    cv::destroyAllWindows();
+
+}
+
+
+void ScalingTool::on_pushButton_9_clicked()
+{
+    stopProcess = true;
 }
 

@@ -335,6 +335,7 @@ void imageWidthOverlay(cv::Mat &image) {
 // Edits image and circles vector in place.
 void detectCircles(cv::Mat &image, std::vector<cv::Vec3f> &circles, int min, int max, int canny, int accum) {
 
+
     // Convert to gray
     std::cout << "made it to function call\n";
     cv::Mat gray;
@@ -381,7 +382,7 @@ void createGridlines(cv::Mat &image, std::vector<cv::Vec3f> &circles) {
     }
 
     // Average x values of circles within threshold
-    int threshold = 10;
+    int threshold = 10; // TODO: add slider for this
     float prev = -1;
     std::vector<double> averages;
     double columnSum = 0;
@@ -411,31 +412,16 @@ void createGridlines(cv::Mat &image, std::vector<cv::Vec3f> &circles) {
         double lineX = (averages[i] + averages[i + 1]) / 2.0;
         cv::Point startPoint(lineX, 0);
         cv::Point endPoint(lineX, image.rows);
-
         cv::line(image, startPoint, endPoint, cv::Scalar(0, 255, 0), 2);
     }
-
 }
-void graphicsViewHelper(QGraphicsView *view, FlameProcessing *fp, cv::Mat f) {
-
-    //TOD: rm fp
-
-
-    //std::string filePathSTD = filePath.toStdString();
-    //ui->FileLabel->setText(filePath);
-    //videoFilePath = filePathSTD;
-    //view = new QGraphicsView();
-    QGraphicsScene *scene = new QGraphicsScene();
+void graphicsViewHelper(QGraphicsView *view, cv::Mat f, QGraphicsScene *scene) {
     view->setScene(scene);
-    //cv::VideoCapture cap(videoFilePath);
-    //cv::Mat frame1;
-    //cap >> frame1;
     view->scene()->clear();
     QImage qimg = matToQImage(f);
     QPixmap pixmap = QPixmap::fromImage(qimg);
     QGraphicsPixmapItem *item = scene->addPixmap(pixmap);
     view->fitInView(item, Qt::KeepAspectRatio);
-
 }
 
 // Fast Fourier Transform for frequency detection
