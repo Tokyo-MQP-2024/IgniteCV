@@ -35,6 +35,9 @@ public:
 
     void setIRLScale(double x, double y);
 
+    cv::Mat findContourImage(cv::Mat original_frame);
+    void setROIBox(int x, int y, int h, int w);
+
 private:
     bool stopProcess = false;
     QGraphicsScene *scene = new QGraphicsScene();
@@ -62,6 +65,12 @@ private:
     double unitPerPixelX = 0;
     double unitPerPixelY = 0;
     static void mouseCallback(int event, int x, int y, int flags, void* userdata);
+
+
+    cv::Mat frame, HSVFrame, foreground, mask, hsvMask, resultImage, dilateErodeMask;
+    cv::Mat dMask, eMask;
+    cv::Mat kernel = cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(3, 3));
+    cv::Ptr<cv::BackgroundSubtractor> bg_sub = cv::createBackgroundSubtractorKNN();
 };
 
 

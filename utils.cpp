@@ -416,6 +416,7 @@ void createGridlines(cv::Mat &image, std::vector<cv::Vec3f> &circles) {
     }
 }
 void graphicsViewHelper(QGraphicsView *view, cv::Mat f, QGraphicsScene *scene) {
+    //std::cout<<"frame\n";
     view->setScene(scene);
     view->scene()->clear();
     QImage qimg = matToQImage(f);

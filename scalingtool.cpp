@@ -176,6 +176,8 @@ void ScalingTool::imageROISelect(std::string vf) {
     maskH = roi.height;
     maskW = roi.width;
 
+    flame_process->setROIBox(maskX, maskY, maskH, maskW);
+
     roiSelected = true;
 
     cv::Mat frame;
@@ -319,6 +321,10 @@ void ScalingTool::on_pushButton_7_clicked()
 // Open circle detect edit panel
 void ScalingTool::on_pushButton_4_clicked()
 {
+    if(!levelsIMG.empty()) {
+
+
+
     cv::Mat newImg;
     levelsIMG.copyTo(newImg);
 
@@ -328,6 +334,7 @@ void ScalingTool::on_pushButton_4_clicked()
 
     createGridlines(newImg, circles);
     graphicsViewHelper(ui->FileViewWindow, newImg, scene);
+    }
 
 }
 
@@ -549,84 +556,70 @@ void ScalingTool::on_VMax_valueChanged(int arg1)
 
 
 // IMPORTANT FUNCTION TO PREFORM SPEED TRACKING AND ANALIZING
-void ScalingTool::on_pushButton_8_clicked()
-{
-    // loop through video frames {
+void ScalingTool::on_pushButton_8_clicked() {
 
-        // for each frame, return the contours and display them
-        // store an array of contour pixels
-        // loop through each grid line
-        // find the y position and angle of the flame leading edge
-        // store pos and angle values every second
-
-    // }
     cv::VideoCapture cap(videoFilePath);
 
-
+    // Check if the video file was opened successfully
     if (!cap.isOpened()) {
-        std::cout<<"CAP FAILED\n";
+        std::cerr << "Error: FAILED OPENING FILE" << std::endl;
+
+    } else {
+        // Get video frame rate
+        cap.set(cv::CAP_PROP_POS_FRAMES, 0);
+        double fps = cap.get(cv::CAP_PROP_FPS);
+        double timePerFrame = 1.0/fps; // in seconds
+        double accumulatedTime = 0.0;
+        double sampleInterval = 1.0;
+        int seconds = 0;
+
+
+        int frameCount = 0;
+        cv::Mat frame;
+
+
+
+        //output = output_start + ((output_end - output_start) / (input_end - input_start)) * (input - input_start)
+
+        while (true) {
+
+            if(stopProcess) {
+                break;
+            }
+
+            accumulatedTime = accumulatedTime + timePerFrame;
+            // Capture each frame
+            cap >> frame;
+
+            // If the frame is empty, break the loop (end of video)
+            if (frame.empty()) {
+                break;
+            }
+            if(accumulatedTime > sampleInterval) {
+                std::cout << frameCount << "\n";
+                accumulatedTime = accumulatedTime - sampleInterval;
+                seconds = seconds +1;
+                cv::Mat incoming = flame_process->findContourImage(frame);
+                graphicsViewHelper(ui->FileViewWindow, incoming, scene);
+                int out = 0 + ((100/cap.get(cv::CAP_PROP_FRAME_COUNT)) * (frameCount));
+                ui->progressBar->setValue(out);
+                QCoreApplication::processEvents();
+            }
+            frameCount++;
+        }
+        //setStopProcess(false);
+        //stopProcess = true;
+        // Release video capture object and close display window
+        cap.release();
+        ui->progressBar->setValue(100);
+
     }
-
-    cap.set(cv::CAP_PROP_POS_FRAMES, 0);
-    // Get video frame rate
-    double fps = cap.get(cv::CAP_PROP_FPS);
-    double timePerFrame = 1.0/fps; // in seconds
-    double accumulatedTime = 0.0;
-    double sampleInterval = 1.0;
-    int seconds = 0;
-    int frameCount = 0;
-    cv::Mat frame;
-
-    std::cout<<"MADE IT TO RUN PROCESS\n";
-
-    while (true) {
-
-        if(stopProcess) {
-            break;
-        }
-
-        accumulatedTime = accumulatedTime + timePerFrame;
-        // Capture each frame
-        cap >> frame;
-
-        // If the frame is empty, break the loop (end of video)
-        if (frame.empty()) {
-            break;
-        }
-
-        if(accumulatedTime > sampleInterval) {
-            accumulatedTime = accumulatedTime - sampleInterval;
-            seconds = seconds +1;
-        }
-
-
-        //if (frameCount % 5 == 0) { // Show every 5th frame
-
-        graphicsViewHelper(ui->FileViewWindow, frame, scene);
-
-        //}
-
-        //cv::imshow("STUFF", frame);
-
-        // // Wait for 1 ms between frames (to simulate real-time playback)
-        if (cv::waitKey(1) == 27) { // Exit if 'Esc' is pressed
-            break;
-        }
-
-
-        frameCount++;
-    }
-
-
-    // Release video capture object and close display window
-    cap.release();
-    cv::destroyAllWindows();
 
 }
-
 
 void ScalingTool::on_pushButton_9_clicked()
 {
     stopProcess = true;
+    ui->EditPanel->setCurrentIndex(0);
 }
 

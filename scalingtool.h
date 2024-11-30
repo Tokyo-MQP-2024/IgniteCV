@@ -14,7 +14,7 @@
 #include <QtCharts/QBarCategoryAxis>
 #include <QtCharts/QValueAxis>
 
-#include <QThread>
+#include <QTimer>
 
 
 //#include "mainwindow.h"
@@ -131,7 +131,8 @@ private:
 
     cv::VideoCapture globalCap;
     QGraphicsScene *scene = new QGraphicsScene();
-    QTimer *timer;
+    // QTimer *timer;
+    QThread *workerThread = nullptr;
 
 
 
