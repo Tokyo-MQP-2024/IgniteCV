@@ -21,6 +21,11 @@ FlameProcessing::FlameProcessing() {
 void FlameProcessing::setIRLScale(double x, double y){
     irlScaleX = x;
     irlScaleY = y;
+    //cmPerPixel =
+}
+
+void FlameProcessing::setScale() {
+    cmPerPixel = irlScaleY / pixelsY;
 }
 
 void FlameProcessing::scalingMouse(int event, int x, int y, int flags) {
@@ -146,10 +151,13 @@ void FlameProcessing::imageScaling(std::string videoFilePath, char axis) {
             endingPos.y = currPos.y;
 
             if(axis == 'x') {
-
+                pixelsX = abs((startingPos.x*2)-(endingPos.x*2));
+            }
+            else if(axis == 'y') {
+                pixelsY = abs((startingPos.y*2)-(endingPos.y*2));
             }
 
-            pixelsX = abs(startingPos.x-endingPos.x);
+
 
             break;
         }
@@ -422,8 +430,9 @@ cv::Mat FlameProcessing::findContourImage(cv::Mat original_frame) {
 }
 
 // loop through lines, find lowest and closest point to each line between threshold
-void FlameProcessing::recordData(std::vector<double> segments){
+std::vector<double> FlameProcessing::recordData(std::vector<double> segments){
     int threshold = 5;
+    std::vector<double> posData; // array of each line
     //loop through all segments
     for(int i = 0; i < segments.size(); i++) {
         double currentX = segments[i];
@@ -439,19 +448,44 @@ void FlameProcessing::recordData(std::vector<double> segments){
                 }
             }
         }
+        posData.push_back(leadingY);
 
-        std::cout<<"segment["<<i<<"]: " << leadingY<<" ";
 
-        // add position to segment data array
     }
 
-    std::cout<<"\n";
-
     filteredContours.clear();
+    return posData;
 }
 
+std::vector<std::vector<double>> FlameProcessing::cleanData(std::vector<std::vector<double>> positions) {
+    int numOfLines = positions[0].size();
+    std::vector<std::vector<double>> allLines;
+    std::cout<<"CM PER PIXEL:" << cmPerPixel << std::endl;
+    for (int line = 0; line < numOfLines; line++) {
+        std::vector<double> cleanedPositions;
+        bool firstDataEncountered = false;
+        double last_known_position = 0.0; // Initialize position at 0 cm
+        double initialPx = 0;
 
+        //loop through all frames
+        for (int frame = 0; frame < positions.size(); frame++) {
+            int curr = positions[frame][line];
+            if (curr == -1) {
+                // If no new data, keep the last position
+                cleanedPositions.push_back(last_known_position);
+            } else if (curr != -1 && !firstDataEncountered) {
+                initialPx = curr;
+                cleanedPositions.push_back(last_known_position); // keep as 0 for the first one
+                firstDataEncountered = true;
+            } else if (curr != -1 && firstDataEncountered) {
+                last_known_position = (curr - initialPx) * cmPerPixel;
+                cleanedPositions.push_back(last_known_position);
+            }
 
-
-
-
+            std::cout<<"Line[" << line << "]:" << cleanedPositions[frame]<< ", with px:" << positions[frame][line]<<std::endl;
+        }
+        std::cout << "NEXT DATA SEGMENT" << std::endl;
+        allLines.emplace_back(cleanedPositions);
+    }
+    return allLines;
+}

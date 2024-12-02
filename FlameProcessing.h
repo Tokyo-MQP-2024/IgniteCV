@@ -25,6 +25,8 @@ public:
 
     bool checkMP4(std::string newFile);
 
+    void setScale();
+
     void setStopProcess(bool state);
 
     void scalingMouse(int event, int x, int y, int flags);
@@ -37,7 +39,9 @@ public:
 
     cv::Mat findContourImage(cv::Mat original_frame);
     void setROIBox(int x, int y, int h, int w);
-    void recordData(std::vector<double> segments);
+    std::vector<double> recordData(std::vector<double> segments);
+
+    std::vector<std::vector<double>> cleanData(std::vector<std::vector<double>> positions);
 
 private:
     bool stopProcess = false;
@@ -51,6 +55,7 @@ private:
     int pixelsY = 0;
     double irlScaleX = 0.0;
     double irlScaleY = 0.0;
+    double cmPerPixel = 0.0;
 
     bool fist_point_selected = false;
 

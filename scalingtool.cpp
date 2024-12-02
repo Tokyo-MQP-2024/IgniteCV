@@ -145,9 +145,6 @@ void ScalingTool::imageROISelect(std::string vf) {
     //cv::resize(image, image, cv::Size(), 0.5, 0.5); // Scale down by half
     cv::Rect roi;
 
-    // // Resize the window for displaying the image
-    // cv::namedWindow("Select ROI", cv::WINDOW_NORMAL);
-    // cv::resizeWindow("Select ROI", 800, 600); // Resize the window (example: 800x600)
 
     cv::Mat imgCopy;
     image.copyTo(imgCopy);
@@ -227,6 +224,7 @@ void ScalingTool::on_ScaleYEdit_editingFinished()
 void ScalingTool::on_BeginButton_clicked()
 {
     //flame_process->parseVideo()
+    flame_process->setScale();
     ui->EditPanel->setCurrentIndex(1);
 }
 
@@ -558,6 +556,8 @@ void ScalingTool::on_pushButton_8_clicked() {
         int frameCount = 0;
         cv::Mat frame;
 
+        std::vector<std::vector<double>> totalPosData;
+
         while (true) {
 
             if(stopProcess) {
@@ -577,17 +577,33 @@ void ScalingTool::on_pushButton_8_clicked() {
                 accumulatedTime = accumulatedTime - sampleInterval;
                 seconds = seconds+1;
                 cv::Mat incoming = flame_process->findContourImage(frame);
-                flame_process->recordData(dataSegments);
+                std::vector<double> posData = flame_process->recordData(dataSegments);
+                totalPosData.emplace_back(posData);
+
+
+
+
                 graphicsViewHelper(ui->FileViewWindow, incoming, scene);
                 int out = 0 + ((100/cap.get(cv::CAP_PROP_FRAME_COUNT)) * (frameCount));
                 ui->progressBar->setValue(out);
+
                 QCoreApplication::processEvents();
             }
             frameCount++;
         }
         cap.release();
         ui->progressBar->setValue(100);
+        // for(int i = 0; i < totalPosData.size(); i++) {
+
+        //     for(int j = 0; j < totalPosData[i].size(); j++) {
+        //         std::cout<<"Line["<<j<<"]: "<<totalPosData[i][j];
+        //     }
+        //     std::cout<< std::endl;
+        // }
+        totalPosData = flame_process->cleanData(totalPosData);
+
     }
+
 
 }
 
