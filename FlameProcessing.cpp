@@ -367,74 +367,91 @@ void FlameProcessing::mouseCallback(int event, int x, int y, int flags, void* us
     FlameProcessing* self = static_cast<FlameProcessing*>(userdata);
     self->scalingMouse(event, x, y, flags);
 }
+
+
+
+
+
 void FlameProcessing::setROIBox(int x, int y, int h, int w) {
     maskX = x;
     maskY = y;
     maskH = h;
     maskW = w;
-    // Print the values of the ROI box
-
 }
 cv::Mat FlameProcessing::findContourImage(cv::Mat original_frame) {
     int minThresh = 200, maxThresh = 255;
     int blurAmount = 2;
-    int minBBArea = 40;
+    int minBBArea = 60;
     // HSV range to detect blue color
     int minHue = 0, maxHue = 50;
     int minSat = 50, maxSat = 255;
     int minVal =  150, maxVal = 255;
-
     // Create a black mask
     cv::Mat newFrame = cv::Mat::zeros(original_frame.size(), original_frame.type());
-
     // Define the rectangle for the mask
     cv::Rect box(maskX, maskY, maskW, maskH);
-
     // Copy the contents of the rectangle from the frame to the mask
     original_frame(box).copyTo(newFrame(box));
     // apply mask
     bg_sub->apply(newFrame, mask);
-
     // reinit image processing masks
     foreground.setTo(cv::Scalar(0, 0, 0));
     HSVFrame.setTo(cv::Scalar(0, 0, 0));
     dilateErodeMask.setTo(cv::Scalar(0,0,0));
     newFrame.copyTo(foreground, mask);
-
     // convert foreground to HSV
     cv::cvtColor(foreground, HSVFrame, cv::COLOR_BGR2HSV);
-
     // Create an HSV mask for flame colors
     cv::inRange(HSVFrame, cv::Scalar(minHue, minSat, minVal), cv::Scalar(maxHue, maxSat, maxVal), hsvMask);
-
     // dilate the flame
     cv::dilate(hsvMask, dMask, kernel, cv::Point(-1, -1), 2);
-
     std::vector<std::vector<cv::Point>> contours;
-    std::vector<std::vector<cv::Point>> filteredContours;
+
     cv::findContours(dMask, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
-
     for (const auto& contour : contours) {
-
         int area = cv::contourArea(contour);
-
         if (area > minBBArea) {
             filteredContours.push_back(contour);
+            std::cout<<"removing contour\n";
         }
-
     }
-
     //Replace the original contours with the filtered ones
     contours = filteredContours;
-
-
-
-
-
-    cv::drawContours(newFrame, contours, -1, cv::Scalar(255, 0, 0), cv::FILLED);
-
+    cv::drawContours(newFrame, filteredContours, -1, cv::Scalar(255, 0, 0), cv::FILLED);
     return newFrame;
 }
+
+// loop through lines, find lowest and closest point to each line between threshold
+void FlameProcessing::recordData(std::vector<double> segments){
+    int threshold = 5;
+    //loop through all segments
+    for(int i = 0; i < segments.size(); i++) {
+        double currentX = segments[i];
+        int leadingY = -1;
+
+        // loop through all contours
+        for (const auto& contour : filteredContours) {
+
+            //loop through each contour pixel
+            for (const auto& point : contour) {
+                if(point.x > (currentX-threshold) && point.x < (currentX+threshold) && point.y > leadingY) {
+                    leadingY = point.y;
+                }
+            }
+        }
+
+        std::cout<<"segment["<<i<<"]: " << leadingY<<" ";
+
+        // add position to segment data array
+    }
+
+    std::cout<<"\n";
+
+    filteredContours.clear();
+}
+
+
+
 
 
 

@@ -273,9 +273,6 @@ void ScalingTool::on_pushButton_2_clicked()
     } else {
         ui->FileLabel->setText("File must be .mp4");
     }
-
-
-
 }
 
 
@@ -322,80 +319,57 @@ void ScalingTool::on_pushButton_7_clicked()
 void ScalingTool::on_pushButton_4_clicked()
 {
     if(!levelsIMG.empty()) {
-
-
-
-    cv::Mat newImg;
-    levelsIMG.copyTo(newImg);
-
-    std::cout << "DETETCING CIRCLES\n";
-    std::vector<cv::Vec3f> circles;
-    detectCircles(newImg, circles, minRad, maxRad, canny, accumulator);
-
-    createGridlines(newImg, circles);
-    graphicsViewHelper(ui->FileViewWindow, newImg, scene);
+        cv::Mat newImg;
+        levelsIMG.copyTo(newImg);
+        std::cout << "DETETCING CIRCLES\n";
+        std::vector<cv::Vec3f> circles;
+        detectCircles(newImg, circles, minRad, maxRad, canny, accumulator);
+        dataSegments = createGridlines(newImg, circles);
+        graphicsViewHelper(ui->FileViewWindow, newImg, scene);
     }
+
+    // if(!levelsIMG.empty()) {
+    //     cv::Mat newImg;
+    //     currSelectFrame.copyTo(levelsIMG);
+
+    //     std::cout << "DETETCING CIRCLES\n";
+    //     std::vector<cv::Vec3f> circles;
+    //     detectCircles(newImg, circles, minRad, maxRad, canny, accumulator);
+
+    //     createGridlines(newImg, circles);
+    //     graphicsViewHelper(ui->FileViewWindow, newImg, scene);
+    // }
 
 }
 
 
 
 void ScalingTool::adjustLevels(cv::Mat image) {
-
     double gamma = 1.0;
-
     image.copyTo(levelsIMG);
-
-
-
-
-    // Create a chart
-    //QChart *chart = new QChart();
-
-    // Set the title for the chart
-    //chart->setTitle("RGB Histogram");
-
-
     if (clipBlack >= clipWhite) {
         std::cerr << "Error: Black level must be less than white level!" << std::endl;
-
     } else {
-
-
-
         // Loop through each pixel
         for (int row = 0; row < levelsIMG.rows; ++row) {
             for (int col = 0; col < levelsIMG.cols; ++col) {
-
                 // Access each color channel for the pixel (BGR format)
                 cv::Vec3b& pixel = levelsIMG.at<cv::Vec3b>(row, col);
-
                 // Adjust each channel: Blue, Green, Red
                 for (int channel = 0; channel < 3; ++channel) {
                     uchar& colorValue = pixel[channel];
-
                     // Normalize to [0, 1]
                     float normalized = (colorValue - clipBlack) / static_cast<float>(clipWhite - clipBlack);
                     normalized = std::clamp(normalized, 0.0f, 1.0f); // Clamp to [0, 1]
-
                     // Apply gamma correction
                     float corrected = std::pow(normalized, 1.0 / gamma);
-
                     // Scale back to [0, 255]
                     colorValue = static_cast<uchar>(corrected * 255.0f);
                 }
-
             }
         }
-
         graphicsViewHelper(ui->FileViewWindow, levelsIMG, scene);
     }
-
-
-
-
-
-
 }
 
 
@@ -407,8 +381,9 @@ void ScalingTool::on_BlackSlider_valueChanged(int value)
     clipBlack = value;
     QString valSTR = QString::number(value);
     ui->BlackVal->setText(valSTR);
-    if(!croppedFrame.empty()) {
-        adjustLevels(croppedFrame);
+    if(!currSelectFrame.empty()) {
+
+        adjustLevels(currSelectFrame);
         //graphicsViewHelper(ui->FileViewWindow, flame_process, croppedFrame);
     }
 
@@ -420,8 +395,8 @@ void ScalingTool::on_WhiteSlider_valueChanged(int value)
 {
     clipWhite = value;
     updateNumericalLabel(ui->WhiteVal, value);
-    if(!croppedFrame.empty()) {
-        adjustLevels(croppedFrame);
+    if(!currSelectFrame.empty()) {
+        adjustLevels(currSelectFrame);
         //graphicsViewHelper(ui->FileViewWindow, flame_process, croppedFrame);
     }
     //graphicsViewHelper(ui->FileViewWindow, flame_process, croppedFrame);
@@ -555,7 +530,13 @@ void ScalingTool::on_VMax_valueChanged(int arg1)
 }
 
 
-// IMPORTANT FUNCTION TO PREFORM SPEED TRACKING AND ANALIZING
+// IMPORTANT FUNCTION TO PREFORM SPEED TRACKING AND ANALYZING
+// get filtered flame contour
+// loop through lines, find lowest and closest point to each line between threshold
+// record position for each line every second
+
+
+
 void ScalingTool::on_pushButton_8_clicked() {
 
     cv::VideoCapture cap(videoFilePath);
@@ -577,10 +558,6 @@ void ScalingTool::on_pushButton_8_clicked() {
         int frameCount = 0;
         cv::Mat frame;
 
-
-
-        //output = output_start + ((output_end - output_start) / (input_end - input_start)) * (input - input_start)
-
         while (true) {
 
             if(stopProcess) {
@@ -598,8 +575,9 @@ void ScalingTool::on_pushButton_8_clicked() {
             if(accumulatedTime > sampleInterval) {
                 std::cout << frameCount << "\n";
                 accumulatedTime = accumulatedTime - sampleInterval;
-                seconds = seconds +1;
+                seconds = seconds+1;
                 cv::Mat incoming = flame_process->findContourImage(frame);
+                flame_process->recordData(dataSegments);
                 graphicsViewHelper(ui->FileViewWindow, incoming, scene);
                 int out = 0 + ((100/cap.get(cv::CAP_PROP_FRAME_COUNT)) * (frameCount));
                 ui->progressBar->setValue(out);
@@ -607,12 +585,8 @@ void ScalingTool::on_pushButton_8_clicked() {
             }
             frameCount++;
         }
-        //setStopProcess(false);
-        //stopProcess = true;
-        // Release video capture object and close display window
         cap.release();
         ui->progressBar->setValue(100);
-
     }
 
 }

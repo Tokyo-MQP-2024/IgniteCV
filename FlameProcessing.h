@@ -37,6 +37,7 @@ public:
 
     cv::Mat findContourImage(cv::Mat original_frame);
     void setROIBox(int x, int y, int h, int w);
+    void recordData(std::vector<double> segments);
 
 private:
     bool stopProcess = false;
@@ -71,6 +72,8 @@ private:
     cv::Mat dMask, eMask;
     cv::Mat kernel = cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(3, 3));
     cv::Ptr<cv::BackgroundSubtractor> bg_sub = cv::createBackgroundSubtractorKNN();
+
+    std::vector<std::vector<cv::Point>> filteredContours;
 };
 
 

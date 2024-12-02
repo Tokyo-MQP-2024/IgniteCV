@@ -16,7 +16,7 @@ cv::Mat QImageToCvMat(const QImage &image);
 cv::Mat averageImagesFromFolder(const QString& folderPath);
 void imageWidthOverlay(cv::Mat &image);
 void detectCircles(cv::Mat &image, std::vector<cv::Vec3f> &circles);
-void createGridlines(cv::Mat &image, std::vector<cv::Vec3f> &circles);
+std::vector<double> createGridlines(cv::Mat &image, std::vector<cv::Vec3f> &circles);
 void graphicsViewHelper(QGraphicsView *view, cv::Mat f, QGraphicsScene *scene);
 void graphicsViewHSV(QGraphicsView *view, cv::Mat f);
 void computeFFT(const std::vector<double> &inputSignal, std::vector<double> &amplitudeSpectrum);

@@ -162,6 +162,9 @@ private:
     int minVal =  150, maxVal = 255;
 
 
+    std::vector<double> dataSegments;
+
+
 
 
 
