@@ -21,6 +21,11 @@ FlameProcessing::FlameProcessing() {
 void FlameProcessing::setIRLScale(double x, double y){
     irlScaleX = x;
     irlScaleY = y;
+    //cmPerPixel =
+}
+
+void FlameProcessing::setScale() {
+    cmPerPixel = irlScaleY / pixelsY;
 }
 
 void FlameProcessing::scalingMouse(int event, int x, int y, int flags) {
@@ -146,10 +151,13 @@ void FlameProcessing::imageScaling(std::string videoFilePath, char axis) {
             endingPos.y = currPos.y;
 
             if(axis == 'x') {
-
+                pixelsX = abs((startingPos.x*2)-(endingPos.x*2));
+            }
+            else if(axis == 'y') {
+                pixelsY = abs((startingPos.y*2)-(endingPos.y*2));
             }
 
-            pixelsX = abs(startingPos.x-endingPos.x);
+
 
             break;
         }
@@ -170,13 +178,11 @@ void FlameProcessing::imageScaling(std::string videoFilePath, char axis) {
 
     cv::destroyWindow("Manual Scaling"); // Destroy the window to release resources
 
-    //parseVideo(videoFilePath, scene);
-
 }
 
 
 void FlameProcessing::parseVideo(std::string videoFilePath, QGraphicsView *view) {
-    view->setScene(scene);
+
 
     auto const MASK_WINDOW = "Mask Settings";
     cv::namedWindow(MASK_WINDOW, cv::WINDOW_AUTOSIZE);
@@ -209,19 +215,17 @@ void FlameProcessing::parseVideo(std::string videoFilePath, QGraphicsView *view)
 
         std::cout << "Frames per second: " << fps << std::endl;
 
-        // FRAME VARIABES
-        cv::Mat frame, HSVFrame, foreground, mask, hsvMask, resultImage, dilateErodeMask;
-        cv::Mat dMask, eMask;
 
-        cv::Mat kernel = cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(3, 3));
-        int frameCount = 0;
-        cv::Ptr<cv::BackgroundSubtractor> bg_sub = cv::createBackgroundSubtractorKNN();
+
+
+
 
         int currY = -1;
         int lastY = -1;
 
         imageScaling(videoFilePath, 'x');
         imageROISelect(videoFilePath);
+        int frameCount = 0;
 
 
         while (true) {
@@ -330,17 +334,18 @@ void FlameProcessing::parseVideo(std::string videoFilePath, QGraphicsView *view)
             cv::drawContours(newFrame, contours, -1, cv::Scalar(255, 0, 0), cv::FILLED);
 
             if (frameCount % 5 == 0) { // Show every 5th frame
-                //cv::imshow("cleaned mask", frame);
-                view->scene()->clear();
-                QImage qimg = matToQImage(newFrame);
+                // //cv::imshow("cleaned mask", frame);
+                // view->scene()->clear();
+                // QImage qimg = matToQImage(newFrame);
 
-                // Create a QPixmap from the QImage and add it to the scene
+                // // Create a QPixmap from the QImage and add it to the scene
 
-                scene->addPixmap(QPixmap::fromImage(qimg));
+                // scene->addPixmap(QPixmap::fromImage(qimg));
                 //view->setSceneRect(0, 0, qimg.width(), qimg.height());
 
                 // Optionally set the view size to match the image size
                 //view->setSceneRect(0, 0, qimg.width(), qimg.height());
+                //graphicsViewHelper(view, newFrame, scene);
 
             }
 
@@ -372,3 +377,115 @@ void FlameProcessing::mouseCallback(int event, int x, int y, int flags, void* us
 }
 
 
+
+
+
+void FlameProcessing::setROIBox(int x, int y, int h, int w) {
+    maskX = x;
+    maskY = y;
+    maskH = h;
+    maskW = w;
+}
+cv::Mat FlameProcessing::findContourImage(cv::Mat original_frame) {
+    int minThresh = 200, maxThresh = 255;
+    int blurAmount = 2;
+    int minBBArea = 60;
+    // HSV range to detect blue color
+    int minHue = 0, maxHue = 50;
+    int minSat = 50, maxSat = 255;
+    int minVal =  150, maxVal = 255;
+    // Create a black mask
+    cv::Mat newFrame = cv::Mat::zeros(original_frame.size(), original_frame.type());
+    // Define the rectangle for the mask
+    cv::Rect box(maskX, maskY, maskW, maskH);
+    // Copy the contents of the rectangle from the frame to the mask
+    original_frame(box).copyTo(newFrame(box));
+    // apply mask
+    bg_sub->apply(newFrame, mask);
+    // reinit image processing masks
+    foreground.setTo(cv::Scalar(0, 0, 0));
+    HSVFrame.setTo(cv::Scalar(0, 0, 0));
+    dilateErodeMask.setTo(cv::Scalar(0,0,0));
+    newFrame.copyTo(foreground, mask);
+    // convert foreground to HSV
+    cv::cvtColor(foreground, HSVFrame, cv::COLOR_BGR2HSV);
+    // Create an HSV mask for flame colors
+    cv::inRange(HSVFrame, cv::Scalar(minHue, minSat, minVal), cv::Scalar(maxHue, maxSat, maxVal), hsvMask);
+    // dilate the flame
+    cv::dilate(hsvMask, dMask, kernel, cv::Point(-1, -1), 2);
+    std::vector<std::vector<cv::Point>> contours;
+
+    cv::findContours(dMask, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+    for (const auto& contour : contours) {
+        int area = cv::contourArea(contour);
+        if (area > minBBArea) {
+            filteredContours.push_back(contour);
+            std::cout<<"removing contour\n";
+        }
+    }
+    //Replace the original contours with the filtered ones
+    contours = filteredContours;
+    cv::drawContours(newFrame, filteredContours, -1, cv::Scalar(255, 0, 0), cv::FILLED);
+    return newFrame;
+}
+
+// loop through lines, find lowest and closest point to each line between threshold
+std::vector<double> FlameProcessing::recordData(std::vector<double> segments){
+    int threshold = 5;
+    std::vector<double> posData; // array of each line
+    //loop through all segments
+    for(int i = 0; i < segments.size(); i++) {
+        double currentX = segments[i];
+        int leadingY = -1;
+
+        // loop through all contours
+        for (const auto& contour : filteredContours) {
+
+            //loop through each contour pixel
+            for (const auto& point : contour) {
+                if(point.x > (currentX-threshold) && point.x < (currentX+threshold) && point.y > leadingY) {
+                    leadingY = point.y;
+                }
+            }
+        }
+        posData.push_back(leadingY);
+
+
+    }
+
+    filteredContours.clear();
+    return posData;
+}
+
+std::vector<std::vector<double>> FlameProcessing::cleanData(std::vector<std::vector<double>> positions) {
+    int numOfLines = positions[0].size();
+    std::vector<std::vector<double>> allLines;
+    std::cout<<"CM PER PIXEL:" << cmPerPixel << std::endl;
+    for (int line = 0; line < numOfLines; line++) {
+        std::vector<double> cleanedPositions;
+        bool firstDataEncountered = false;
+        double last_known_position = 0.0; // Initialize position at 0 cm
+        double initialPx = 0;
+
+        //loop through all frames
+        for (int frame = 0; frame < positions.size(); frame++) {
+            int curr = positions[frame][line];
+            if (curr == -1) {
+                // If no new data, keep the last position
+                cleanedPositions.push_back(last_known_position);
+            } else if (curr != -1 && !firstDataEncountered) {
+                initialPx = curr;
+                cleanedPositions.push_back(last_known_position); // keep as 0 for the first one
+                firstDataEncountered = true;
+            } else if (curr != -1 && firstDataEncountered) {
+                last_known_position = (curr - initialPx) * cmPerPixel;
+                cleanedPositions.push_back(last_known_position);
+            }
+
+            std::cout<<"Line[" << line << "]:" << cleanedPositions[frame]<< ", with px:" << positions[frame][line]<<std::endl;
+        }
+        std::cout << "NEXT DATA SEGMENT" << std::endl;
+        allLines.emplace_back(cleanedPositions);
+    }
+    return allLines;
+}

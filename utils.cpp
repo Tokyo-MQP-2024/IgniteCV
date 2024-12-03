@@ -335,6 +335,7 @@ void imageWidthOverlay(cv::Mat &image) {
 // Edits image and circles vector in place.
 void detectCircles(cv::Mat &image, std::vector<cv::Vec3f> &circles, int min, int max, int canny, int accum) {
 
+
     // Convert to gray
     std::cout << "made it to function call\n";
     cv::Mat gray;
@@ -370,7 +371,7 @@ void detectCircles(cv::Mat &image, std::vector<cv::Vec3f> &circles, int min, int
 
 }
 
-void createGridlines(cv::Mat &image, std::vector<cv::Vec3f> &circles) {
+std::vector<double> createGridlines(cv::Mat &image, std::vector<cv::Vec3f> &circles) {
     // Sort circle vector by x values
     std::sort(circles.begin(), circles.end(), [](const cv::Vec3i &a, const cv::Vec3i &b) {
         return a[0] < b[0];
@@ -381,7 +382,7 @@ void createGridlines(cv::Mat &image, std::vector<cv::Vec3f> &circles) {
     }
 
     // Average x values of circles within threshold
-    int threshold = 10;
+    int threshold = 10; // TODO: add slider for this
     float prev = -1;
     std::vector<double> averages;
     double columnSum = 0;
@@ -405,37 +406,40 @@ void createGridlines(cv::Mat &image, std::vector<cv::Vec3f> &circles) {
         }
         prev = value;
     }
-
-    // Draw vertical lines between the averages
+    std::vector<double> lines;    // Draw vertical lines between the averages
     for(int i = 0; i < averages.size() - 1; i++) {
         double lineX = (averages[i] + averages[i + 1]) / 2.0;
+        lines.push_back(lineX);
         cv::Point startPoint(lineX, 0);
         cv::Point endPoint(lineX, image.rows);
-
         cv::line(image, startPoint, endPoint, cv::Scalar(0, 255, 0), 2);
     }
 
+    return lines;
 }
-void graphicsViewHelper(QGraphicsView *view, FlameProcessing *fp, cv::Mat f) {
 
-    //TOD: rm fp
+// std::vector<double> getLines() {
+//     std::vector<double> lines;
+//     // Draw vertical lines between the averages
+//     for(int i = 0; i < averages.size() - 1; i++) {
+//         double lineX = (averages[i] + averages[i + 1]) / 2.0;
+//         cv::Point startPoint(lineX, 0);
+//         cv::Point endPoint(lineX, image.rows);
+//         cv::line(image, startPoint, endPoint, cv::Scalar(0, 255, 0), 2);
+//     }
 
+//     return averages;
 
-    //std::string filePathSTD = filePath.toStdString();
-    //ui->FileLabel->setText(filePath);
-    //videoFilePath = filePathSTD;
-    //view = new QGraphicsView();
-    QGraphicsScene *scene = new QGraphicsScene();
+// }
+
+void graphicsViewHelper(QGraphicsView *view, cv::Mat f, QGraphicsScene *scene) {
+    //std::cout<<"frame\n";
     view->setScene(scene);
-    //cv::VideoCapture cap(videoFilePath);
-    //cv::Mat frame1;
-    //cap >> frame1;
     view->scene()->clear();
     QImage qimg = matToQImage(f);
     QPixmap pixmap = QPixmap::fromImage(qimg);
     QGraphicsPixmapItem *item = scene->addPixmap(pixmap);
     view->fitInView(item, Qt::KeepAspectRatio);
-
 }
 
 // Fast Fourier Transform for frequency detection

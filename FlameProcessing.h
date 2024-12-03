@@ -25,6 +25,8 @@ public:
 
     bool checkMP4(std::string newFile);
 
+    void setScale();
+
     void setStopProcess(bool state);
 
     void scalingMouse(int event, int x, int y, int flags);
@@ -34,6 +36,12 @@ public:
     void imageROISelect(std::string videoFilePath);
 
     void setIRLScale(double x, double y);
+
+    cv::Mat findContourImage(cv::Mat original_frame);
+    void setROIBox(int x, int y, int h, int w);
+    std::vector<double> recordData(std::vector<double> segments);
+
+    std::vector<std::vector<double>> cleanData(std::vector<std::vector<double>> positions);
 
 private:
     bool stopProcess = false;
@@ -47,6 +55,7 @@ private:
     int pixelsY = 0;
     double irlScaleX = 0.0;
     double irlScaleY = 0.0;
+    double cmPerPixel = 0.0;
 
     bool fist_point_selected = false;
 
@@ -62,6 +71,14 @@ private:
     double unitPerPixelX = 0;
     double unitPerPixelY = 0;
     static void mouseCallback(int event, int x, int y, int flags, void* userdata);
+
+
+    cv::Mat frame, HSVFrame, foreground, mask, hsvMask, resultImage, dilateErodeMask;
+    cv::Mat dMask, eMask;
+    cv::Mat kernel = cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(3, 3));
+    cv::Ptr<cv::BackgroundSubtractor> bg_sub = cv::createBackgroundSubtractorKNN();
+
+    std::vector<std::vector<cv::Point>> filteredContours;
 };
 
 
