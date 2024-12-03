@@ -141,85 +141,85 @@
     <message>
         <location filename="frequencydetection.cpp" line="76"/>
         <location filename="frequencydetection.cpp" line="83"/>
-        <location filename="frequencydetection.cpp" line="97"/>
-        <location filename="frequencydetection.cpp" line="261"/>
-        <location filename="frequencydetection.cpp" line="268"/>
-        <location filename="frequencydetection.cpp" line="274"/>
-        <location filename="frequencydetection.cpp" line="290"/>
+        <location filename="frequencydetection.cpp" line="98"/>
+        <location filename="frequencydetection.cpp" line="262"/>
+        <location filename="frequencydetection.cpp" line="269"/>
+        <location filename="frequencydetection.cpp" line="275"/>
+        <location filename="frequencydetection.cpp" line="291"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
     <message>
         <location filename="frequencydetection.cpp" line="76"/>
         <location filename="frequencydetection.cpp" line="83"/>
-        <location filename="frequencydetection.cpp" line="261"/>
-        <location filename="frequencydetection.cpp" line="268"/>
+        <location filename="frequencydetection.cpp" line="262"/>
+        <location filename="frequencydetection.cpp" line="269"/>
         <source>Invalid file path. Please try again</source>
         <translation>ファイルパスが無効です。もう一度お試しください</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="97"/>
+        <location filename="frequencydetection.cpp" line="98"/>
         <source>No images in folder. Please select another folder</source>
         <translation>フォルダ内に画像がありません。別のフォルダを選択してください</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="226"/>
+        <location filename="frequencydetection.cpp" line="228"/>
         <source>Notice</source>
         <translation>お知らせ</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="226"/>
+        <location filename="frequencydetection.cpp" line="228"/>
         <source>Processing incomplete or cancelled by user</source>
         <translation>処理は完了またはユーザーによってキャンセルされました</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="253"/>
+        <location filename="frequencydetection.cpp" line="254"/>
         <source>Frequency Result</source>
         <translation>周波数結果</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="301"/>
+        <location filename="frequencydetection.cpp" line="302"/>
         <source>Processing images</source>
         <oldsource>Processing images...</oldsource>
         <translation>画像を処理中</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="301"/>
+        <location filename="frequencydetection.cpp" line="302"/>
         <source>Cancel</source>
         <translation>キャンセル</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="372"/>
+        <location filename="frequencydetection.cpp" line="373"/>
         <source>Index</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="372"/>
+        <location filename="frequencydetection.cpp" line="373"/>
         <source>Area</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="372"/>
+        <location filename="frequencydetection.cpp" line="373"/>
         <source>Time</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="274"/>
+        <location filename="frequencydetection.cpp" line="275"/>
         <source>Upper limit must be above lower limit</source>
         <translation>上限は下限より上になければなりません</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="290"/>
+        <location filename="frequencydetection.cpp" line="291"/>
         <source>No file selected. Please choose a file to save.</source>
         <translation>ファイルが選択されていません。保存するファイルを選択してください。</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="295"/>
+        <location filename="frequencydetection.cpp" line="296"/>
         <source>Error</source>
         <translation>エラー</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="295"/>
+        <location filename="frequencydetection.cpp" line="296"/>
         <source>The file could not be opened for writing. Please check the file path and permissions.</source>
         <translation>ファイルを書き込み用に開けませんでした。ファイル パスと権限を確認してください。</translation>
     </message>

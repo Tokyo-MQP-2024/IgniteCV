@@ -23,13 +23,9 @@ private slots:
     void on_pushButtonSet_clicked();
     void on_thresholdSlider_valueChanged(int value);
     void on_runButton_clicked();
-
     void on_horizontalSliderUpperLimit_valueChanged(int value);
-
     void on_horizontalSliderLowerLimit_valueChanged(int value);
-
     void on_checkBoxApplyLimits_checkStateChanged(const Qt::CheckState &arg1);
-
 private:
     Ui::frequencyDetection *ui;
     QProgressDialog *progressDialog = nullptr;
@@ -74,10 +70,6 @@ private:
 
     // For use in QtConcurrent
     void handleComputationCompletion();
-
-
-
-
 };
 
 #endif // FREQUENCYDETECTION_H

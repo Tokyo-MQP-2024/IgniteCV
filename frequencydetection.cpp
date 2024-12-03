@@ -88,6 +88,7 @@ void FrequencyDetection::on_pushButtonSet_clicked() {
     QStringList filters;
     filters << "*.jpg" << "*.jpeg" << "*.png" << "*.bmp";
     dir.setNameFilters(filters);
+    dir.setSorting(QDir::Name | QDir::LocaleAware); // Natural order sorting
 
     // Get the list of image files
     m_imageFiles = dir.entryList(QDir::Files);
@@ -221,6 +222,7 @@ double FrequencyDetection::countWhitePixels(const QString &item) {
     return area;
 }
 
+// For FFT
 void FrequencyDetection::handleComputationCompletion() {
     if(m_areas.size() < m_imageFiles.size()) {
         QMessageBox::information(this, tr("Notice"), tr("Processing incomplete or cancelled by user"));
@@ -248,7 +250,6 @@ void FrequencyDetection::handleComputationCompletion() {
     // Calculate with fps
     double fps = ui->spinBoxFPS->value();
     double frequency = (dominantIndex * fps) / N;
-    //std::cout << "Approximate Oscillation Frequency: " << frequency << " Hz" << std::endl;
     QString message = QString("Approximate Oscillation Frequency: %1 Hz").arg(frequency);
     QMessageBox::information(this, tr("Frequency Result"), message);
 
