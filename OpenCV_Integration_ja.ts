@@ -135,6 +135,7 @@
     <name>FrequencyDetection</name>
     <message>
         <location filename="frequencydetection.cpp" line="38"/>
+        <location filename="frequencydetection.cpp" line="423"/>
         <source>Open a Folder</source>
         <translation>フォルダを開く</translation>
     </message>
@@ -142,84 +143,114 @@
         <location filename="frequencydetection.cpp" line="76"/>
         <location filename="frequencydetection.cpp" line="83"/>
         <location filename="frequencydetection.cpp" line="98"/>
-        <location filename="frequencydetection.cpp" line="262"/>
-        <location filename="frequencydetection.cpp" line="269"/>
-        <location filename="frequencydetection.cpp" line="275"/>
-        <location filename="frequencydetection.cpp" line="291"/>
+        <location filename="frequencydetection.cpp" line="251"/>
+        <location filename="frequencydetection.cpp" line="258"/>
+        <location filename="frequencydetection.cpp" line="264"/>
+        <location filename="frequencydetection.cpp" line="280"/>
+        <location filename="frequencydetection.cpp" line="431"/>
+        <location filename="frequencydetection.cpp" line="438"/>
+        <location filename="frequencydetection.cpp" line="453"/>
+        <location filename="frequencydetection.cpp" line="590"/>
+        <location filename="frequencydetection.cpp" line="667"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
     <message>
         <location filename="frequencydetection.cpp" line="76"/>
         <location filename="frequencydetection.cpp" line="83"/>
-        <location filename="frequencydetection.cpp" line="262"/>
-        <location filename="frequencydetection.cpp" line="269"/>
+        <location filename="frequencydetection.cpp" line="251"/>
+        <location filename="frequencydetection.cpp" line="258"/>
+        <location filename="frequencydetection.cpp" line="431"/>
+        <location filename="frequencydetection.cpp" line="438"/>
         <source>Invalid file path. Please try again</source>
         <translation>ファイルパスが無効です。もう一度お試しください</translation>
     </message>
     <message>
         <location filename="frequencydetection.cpp" line="98"/>
+        <location filename="frequencydetection.cpp" line="453"/>
         <source>No images in folder. Please select another folder</source>
         <translation>フォルダ内に画像がありません。別のフォルダを選択してください</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="228"/>
+        <location filename="frequencydetection.cpp" line="216"/>
         <source>Notice</source>
         <translation>お知らせ</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="228"/>
+        <location filename="frequencydetection.cpp" line="216"/>
         <source>Processing incomplete or cancelled by user</source>
         <translation>処理は完了またはユーザーによってキャンセルされました</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="254"/>
+        <location filename="frequencydetection.cpp" line="242"/>
         <source>Frequency Result</source>
         <translation>周波数結果</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="302"/>
+        <location filename="frequencydetection.cpp" line="291"/>
         <source>Processing images</source>
         <oldsource>Processing images...</oldsource>
         <translation>画像を処理中</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="302"/>
+        <location filename="frequencydetection.cpp" line="291"/>
         <source>Cancel</source>
         <translation>キャンセル</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="373"/>
+        <location filename="frequencydetection.cpp" line="363"/>
         <source>Index</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="373"/>
+        <location filename="frequencydetection.cpp" line="363"/>
         <source>Area</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="373"/>
+        <location filename="frequencydetection.cpp" line="363"/>
         <source>Time</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="275"/>
+        <location filename="frequencydetection.cpp" line="663"/>
+        <source>Information</source>
+        <translation type="unfinished">お知らせ</translation>
+    </message>
+    <message>
+        <location filename="frequencydetection.cpp" line="663"/>
+        <source>Select a ROI and then press SPACE or ENTER button. Cancel the selection process by pressing c button and closing the ROI window.</source>
+        <translation type="unfinished">ROI を選択して、SPACE キーまたは ENTER キーを押します。選択処理をキャンセルするには、c ボタンを押して ROI ウィンドウを閉じます。</translation>
+    </message>
+    <message>
+        <location filename="frequencydetection.cpp" line="590"/>
+        <location filename="frequencydetection.cpp" line="667"/>
+        <source>Selection cannot be empty</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="frequencydetection.cpp" line="598"/>
+        <location filename="frequencydetection.cpp" line="676"/>
+        <source>OpenCV Error</source>
+        <translation type="unfinished">OpenCVエラー</translation>
+    </message>
+    <message>
+        <location filename="frequencydetection.cpp" line="264"/>
         <source>Upper limit must be above lower limit</source>
         <translation>上限は下限より上になければなりません</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="291"/>
+        <location filename="frequencydetection.cpp" line="280"/>
         <source>No file selected. Please choose a file to save.</source>
         <translation>ファイルが選択されていません。保存するファイルを選択してください。</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="296"/>
+        <location filename="frequencydetection.cpp" line="285"/>
         <source>Error</source>
         <translation>エラー</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="296"/>
+        <location filename="frequencydetection.cpp" line="285"/>
         <source>The file could not be opened for writing. Please check the file path and permissions.</source>
         <translation>ファイルを書き込み用に開けませんでした。ファイル パスと権限を確認してください。</translation>
     </message>
@@ -363,143 +394,173 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.ui" line="41"/>
-        <location filename="scalingtool.ui" line="198"/>
-        <location filename="scalingtool.ui" line="232"/>
+        <location filename="scalingtool.ui" line="226"/>
+        <location filename="scalingtool.ui" line="240"/>
+        <location filename="scalingtool.ui" line="288"/>
         <location filename="scalingtool.ui" line="309"/>
-        <location filename="scalingtool.ui" line="316"/>
-        <location filename="scalingtool.ui" line="323"/>
+        <location filename="scalingtool.ui" line="330"/>
+        <location filename="scalingtool.ui" line="416"/>
         <source>TextLabel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.ui" line="48"/>
+        <location filename="scalingtool.ui" line="430"/>
         <source>Upload File</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.ui" line="95"/>
+        <location filename="scalingtool.ui" line="58"/>
         <source>Scale Y Axis</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.ui" line="110"/>
-        <location filename="scalingtool.ui" line="136"/>
+        <location filename="scalingtool.ui" line="66"/>
+        <location filename="scalingtool.ui" line="144"/>
         <source>cm</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.ui" line="115"/>
-        <location filename="scalingtool.ui" line="141"/>
+        <location filename="scalingtool.ui" line="71"/>
+        <location filename="scalingtool.ui" line="149"/>
         <source>mm</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.ui" line="120"/>
-        <location filename="scalingtool.ui" line="146"/>
+        <location filename="scalingtool.ui" line="76"/>
+        <location filename="scalingtool.ui" line="154"/>
         <source>in</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.ui" line="128"/>
+        <location filename="scalingtool.ui" line="176"/>
         <source>Scale X Axis</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.ui" line="102"/>
+        <location filename="scalingtool.ui" line="87"/>
         <source>Select Region of Interest</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.ui" line="157"/>
+        <location filename="scalingtool.ui" line="133"/>
         <source>Begin</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.ui" line="27"/>
+        <location filename="scalingtool.ui" line="423"/>
         <source>Auto Scale</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.ui" line="34"/>
-        <location filename="scalingtool.ui" line="411"/>
+        <location filename="scalingtool.ui" line="409"/>
+        <location filename="scalingtool.ui" line="497"/>
         <source>Manual Scale</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.ui" line="358"/>
+        <location filename="scalingtool.ui" line="444"/>
         <source>Burned Area</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.ui" line="185"/>
-        <location filename="scalingtool.ui" line="365"/>
+        <location filename="scalingtool.ui" line="206"/>
+        <location filename="scalingtool.ui" line="451"/>
         <source>Speed Tracking</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.ui" line="260"/>
+        <location filename="scalingtool.ui" line="212"/>
         <source>Detect Circles</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.ui" line="274"/>
+        <location filename="scalingtool.ui" line="254"/>
         <source>Clip Black</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.ui" line="246"/>
+        <location filename="scalingtool.ui" line="358"/>
         <source>Clip White</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.ui" line="205"/>
+        <location filename="scalingtool.ui" line="351"/>
         <source>max radius</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.ui" line="281"/>
+        <location filename="scalingtool.ui" line="295"/>
         <source>min radius</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.ui" line="288"/>
+        <location filename="scalingtool.ui" line="302"/>
         <source>Canny Threshold</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.ui" line="302"/>
+        <location filename="scalingtool.ui" line="233"/>
         <source>Accumulator </source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.ui" line="331"/>
+        <location filename="scalingtool.ui" line="28"/>
+        <source>HSV Preview</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="scalingtool.ui" line="35"/>
+        <source>Value</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="scalingtool.ui" line="162"/>
+        <source>Saturation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="scalingtool.ui" line="169"/>
+        <source>Hue</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="scalingtool.ui" line="261"/>
+        <source>Track Flames</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="scalingtool.ui" line="365"/>
+        <source>Back</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="scalingtool.ui" line="373"/>
         <source>Area Tracking</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.ui" line="343"/>
+        <location filename="scalingtool.ui" line="385"/>
         <source>Run Circle Detection</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.ui" line="375"/>
-        <location filename="scalingtool.ui" line="382"/>
+        <location filename="scalingtool.ui" line="461"/>
+        <location filename="scalingtool.ui" line="468"/>
         <source>PushButton</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.ui" line="393"/>
+        <location filename="scalingtool.ui" line="479"/>
         <source>Auto detect to be implemented</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.ui" line="404"/>
+        <location filename="scalingtool.ui" line="490"/>
         <source>Auto Detect Scale</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="scalingtool.cpp" line="228"/>
+        <location filename="scalingtool.cpp" line="249"/>
         <source>Open a File</source>
         <translation type="unfinished">ファイルを開く</translation>
     </message>
@@ -512,72 +573,140 @@
         <translation></translation>
     </message>
     <message>
-        <location filename="frequencydetection.ui" line="70"/>
+        <location filename="frequencydetection.ui" line="138"/>
+        <location filename="frequencydetection.ui" line="376"/>
         <source>Frame</source>
         <translation>フレーム</translation>
     </message>
     <message>
-        <location filename="frequencydetection.ui" line="125"/>
+        <location filename="frequencydetection.ui" line="110"/>
         <source>Threshold</source>
         <translation>しきい値</translation>
     </message>
     <message>
-        <location filename="frequencydetection.ui" line="25"/>
+        <location filename="frequencydetection.ui" line="166"/>
         <source>Frames Per Second</source>
         <translation>フレーム/秒</translation>
     </message>
     <message>
-        <location filename="frequencydetection.ui" line="163"/>
+        <location filename="frequencydetection.ui" line="76"/>
         <source>Threshold Type</source>
         <translation>しきい値タイプ</translation>
     </message>
     <message>
-        <location filename="frequencydetection.ui" line="172"/>
+        <location filename="frequencydetection.ui" line="37"/>
+        <source>Area</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="frequencydetection.ui" line="85"/>
         <source>None</source>
         <translation>なし</translation>
     </message>
     <message>
-        <location filename="frequencydetection.ui" line="182"/>
+        <location filename="frequencydetection.ui" line="95"/>
         <source>Binary Inverted</source>
         <translation>バイナリ反転</translation>
     </message>
     <message>
-        <location filename="frequencydetection.ui" line="192"/>
+        <location filename="frequencydetection.ui" line="188"/>
         <source>Limits</source>
         <translation>制限</translation>
     </message>
     <message>
-        <location filename="frequencydetection.ui" line="222"/>
+        <location filename="frequencydetection.ui" line="234"/>
         <source>Lower Limit</source>
         <translation>下限</translation>
     </message>
     <message>
-        <location filename="frequencydetection.ui" line="205"/>
+        <location filename="frequencydetection.ui" line="263"/>
+        <source>Curve</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="frequencydetection.ui" line="292"/>
+        <source>Use ROI</source>
+        <translation type="unfinished">関心領域</translation>
+    </message>
+    <message>
+        <location filename="frequencydetection.ui" line="299"/>
+        <source>Select Region</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="frequencydetection.ui" line="306"/>
+        <source>Reset</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="frequencydetection.ui" line="330"/>
+        <source>Y</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="frequencydetection.ui" line="337"/>
+        <source>Width</source>
+        <translation type="unfinished">幅</translation>
+    </message>
+    <message>
+        <location filename="frequencydetection.ui" line="347"/>
+        <source>X</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="frequencydetection.ui" line="354"/>
+        <source>Height</source>
+        <translation type="unfinished">高さ</translation>
+    </message>
+    <message>
+        <location filename="frequencydetection.ui" line="402"/>
+        <source>Canny Edge Detection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="frequencydetection.ui" line="408"/>
+        <source>Threshold 1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="frequencydetection.ui" line="415"/>
+        <source>Threshold 2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="frequencydetection.ui" line="442"/>
+        <source>Apply Canny Edge Detection</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="frequencydetection.ui" line="217"/>
         <source>Upper Limit</source>
         <translation>上限</translation>
     </message>
     <message>
-        <location filename="frequencydetection.ui" line="198"/>
+        <location filename="frequencydetection.ui" line="194"/>
         <source>Apply Limits</source>
         <translation>制限を適用する</translation>
     </message>
     <message>
-        <location filename="frequencydetection.ui" line="49"/>
+        <location filename="frequencydetection.ui" line="45"/>
+        <location filename="frequencydetection.ui" line="271"/>
         <source>Select Folder</source>
         <translation>フォルダを選択</translation>
     </message>
     <message>
-        <location filename="frequencydetection.ui" line="59"/>
+        <location filename="frequencydetection.ui" line="55"/>
+        <location filename="frequencydetection.ui" line="281"/>
         <source>Set</source>
         <translation>設定</translation>
     </message>
     <message>
-        <location filename="frequencydetection.ui" line="111"/>
+        <location filename="frequencydetection.ui" line="246"/>
         <source>Export to CSV</source>
         <translation>CSVにエクスポート</translation>
     </message>
     <message>
-        <location filename="frequencydetection.ui" line="248"/>
+        <location filename="frequencydetection.ui" line="255"/>
         <source>Run</source>
         <translation>実行</translation>
     </message>

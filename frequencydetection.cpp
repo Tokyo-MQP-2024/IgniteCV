@@ -112,19 +112,6 @@ void FrequencyDetection::on_pushButtonSet_clicked() {
     m_width = toDisplay.width();
     m_height = toDisplay.height();
 
-    // Loop through images to make sure width and height are same [TAKES TOO LONG]
-    // for(const QString item : m_imageFiles) {
-    //     QImageReader reader(ui->lineEdit->text() + "/" + item);
-    //     QSize size = reader.size();
-    //     if(size.height() != m_height || size.width() != m_width) {
-    //         QMessageBox::warning(this, tr("Error"), tr("Images have different dimensions"));
-    //         ui->lineEdit->clear();
-    //         m_height = -1;
-    //         m_width = -1;
-    //         return;
-    //     }
-    // }
-
     ui->horizontalSliderLowerLimit->setMaximum(toDisplay.height());
     ui->horizontalSliderUpperLimit->setMaximum(toDisplay.height());
     ui->spinBoxLowerLimit->setMaximum(toDisplay.height());
@@ -173,6 +160,7 @@ void FrequencyDetection::applyLines(cv::Mat &image) {
     cv::line(image, start_point, end_point, color, thickness);
 }
 
+// Update image when threshold slider changes
 void FrequencyDetection::on_thresholdSlider_valueChanged(int value){
     // Return if no images
     if(m_numFrames <= 0) {
@@ -255,6 +243,7 @@ void FrequencyDetection::handleComputationCompletion() {
 
 }
 
+// Run - start processing
 void FrequencyDetection::on_runButton_clicked() {
     // Check for empty files
     QString folderPath = ui->lineEdit->text();
@@ -345,6 +334,7 @@ void FrequencyDetection::on_runButton_clicked() {
     progressDialog->setMaximum(m_imageFiles.size());
 }
 
+// Export areas
 void FrequencyDetection::exportAreasToCSV(const std::vector<double> &areas) {
     // Show the Save File Dialog and get the file path
     // QString fileName = QFileDialog::getSaveFileName(
@@ -414,5 +404,296 @@ void FrequencyDetection::on_checkBoxApplyLimits_checkStateChanged(const Qt::Chec
         ui->horizontalSliderUpperLimit->setEnabled(false);
     }  
     refreshImage();
+}
+
+
+// CURVE DETECTION STUFF ----------------------------------------
+
+
+// On Tab Switch, clear member variables
+void FrequencyDetection::on_tabWidget_currentChanged(int index) {
+
+
+    // Clear graphicsview
+    //ui->graphicsView->scene()->clear();
+}
+
+// Select Folder
+void FrequencyDetection::on_pushButtonSelectCurve_clicked() {
+    QString folderPath = QFileDialog::getExistingDirectory(this, tr("Open a Folder"));
+    ui->lineEditFilenameCurve->setText(folderPath);
+}
+
+// Set
+void FrequencyDetection::on_pushButtonSetCurve_clicked() {
+    QString folderPath = ui->lineEditFilenameCurve->text();
+    if(folderPath == "") {
+        QMessageBox::warning(this, tr("Warning"), tr("Invalid file path. Please try again"));
+        return;
+    }
+    QDir dir(folderPath);
+
+    // Return if folder is invalid
+    if(!dir.exists()) {
+        QMessageBox::warning(this, tr("Warning"), tr("Invalid file path. Please try again"));
+        return;
+    }
+
+    // Filters to only include image files
+    QStringList filters;
+    filters << "*.jpg" << "*.jpeg" << "*.png" << "*.bmp";
+    dir.setNameFilters(filters);
+    dir.setSorting(QDir::Name | QDir::LocaleAware); // Natural order sorting
+
+    // Get the list of image files
+    m_imageFilesCurve = dir.entryList(QDir::Files);
+
+    // Error if no images
+    if(m_imageFilesCurve.size() < 1) {
+        QMessageBox::warning(this, tr("Warning"), tr("No images in folder. Please select another folder"));
+        return;
+    }
+
+    m_numFramesCurve = m_imageFilesCurve.size();
+
+    // Set trackbar and numbox max to number of images
+    ui->horizontalSliderFrameCurve->setMaximum(m_numFramesCurve);
+    ui->spinBoxFrameCurve->setMaximum(m_numFramesCurve);
+
+
+
+    // Load first image
+    QImage toDisplay = QImage(folderPath + "/" + m_imageFilesCurve[0]);
+    m_widthCurve = toDisplay.width();
+    m_heightCurve = toDisplay.height();
+
+    // Set max values for ROI boxes. No error checking.
+    ui->spinBoxX->setMaximum(m_widthCurve);
+    ui->spinBoxY->setMaximum(m_heightCurve);
+    ui->spinBoxWidth->setMaximum(m_widthCurve);
+    ui->spinBoxHeight->setMaximum(m_heightCurve);
+
+    ui->graphicsView->setScene(new QGraphicsScene(this));
+    ui->graphicsView->scene()->addPixmap(QPixmap::fromImage(toDisplay));
+    ui->graphicsView->fitInView(ui->graphicsView->scene()->sceneRect(), Qt::KeepAspectRatio);
+}
+
+// Apply Canny Edge Detection, returns edges.
+cv::Mat FrequencyDetection::applyCanny(cv::Mat &image) {
+    // Convert to grayscale
+    cv::Mat gray;
+    cv::cvtColor(image, gray, cv::COLOR_BGR2GRAY);
+
+    // Experimental
+    cv::Mat gradX, gradY, gradMagnitude;
+    cv::Sobel(gray, gradX, CV_64F, 1, 0, -1);
+    cv::Sobel(gray, gradY, CV_64F, 0, 1, -1);
+    cv::magnitude(gradX, gradY, gradMagnitude);
+    // Normalize to 8-bit range
+    cv::Mat gradMagnitude8U;
+    gradMagnitude.convertTo(gradMagnitude8U, CV_8U);
+    cv::Mat edges;
+    cv::threshold(gradMagnitude8U, edges, 50, 255, cv::THRESH_BINARY);
+    // Apply blur to remove noise
+    cv::Mat blurred;
+    cv::GaussianBlur(gray, blurred, cv::Size(5, 5), 1.5);
+
+    // The smallest value between threshold1 and threshold2 is used for edge linking.
+    // The largest value is used to find initial segments of strong edges
+    double thresh1 = ui->horizontalSliderThresh1->value();
+    double thresh2 = ui->horizontalSliderThresh2->value();
+    cv::Canny(blurred, edges, thresh1, thresh2, -1, true);
+    return edges;
+}
+
+// Draw center line, averaging min x and max x at every y level
+std::vector<int> FrequencyDetection::computeCenter(cv::Mat &image) {
+    std::vector<int> centerlineX;
+
+    // Variables to store previous valid centerline values for interpolation
+    int prevCenterX = -1;
+    int nextCenterX = -1;
+
+    for (int y = 0; y < image.rows; ++y) {
+        int left = -1;
+        int right = -1;
+
+        // Find the first (leftmost) edge
+        for (int x = 0; x < image.cols; ++x) {
+            if (image.at<uchar>(y, x) == 255) {
+                left = x;
+                break;
+            }
+        }
+
+        // Find the last (rightmost) edge
+        for (int x = image.cols - 1; x >= 0; --x) {
+            if (image.at<uchar>(y, x) == 255) {
+                right = x;
+                break;
+            }
+        }
+
+        // If valid edges are found, compute the centerline
+        if (left != -1 && right != -1) {
+            int centerX = (left + right) / 2;
+            centerlineX.push_back(centerX);
+            prevCenterX = centerX;
+            nextCenterX = -1;  // Reset the nextCenterX for interpolation
+        } else {
+            // Handle case where no edges are found in this row
+            if (prevCenterX != -1) {
+                // Interpolate or use previous centerline
+                centerlineX.push_back(prevCenterX);
+            } else if (nextCenterX != -1) {
+                // If previous centerline is not available, use the next valid centerline
+                centerlineX.push_back(nextCenterX);
+            } else {
+                // If both previous and next are unavailable, set to a default (image center)
+                centerlineX.push_back(image.cols / 2);
+            }
+        }
+    }
+    return centerlineX;
+}
+
+
+// Refresh image in graphics view
+void FrequencyDetection::refreshImageCurve() {
+    if(m_numFramesCurve <= 0) {
+        return;
+    }
+    // Assumes value is in range
+    QString filePath = ui->lineEditFilenameCurve->text() + "/" + m_imageFilesCurve[ui->horizontalSliderFrameCurve->value() - 1];
+    QFile file(filePath);
+    file.open(QFile::ReadOnly);
+    qint64 sz = file.size();
+    std::vector<uchar> buf(sz);
+    file.read((char*) buf.data(), sz);
+
+
+    cv::Mat image = cv::imdecode(buf, cv::IMREAD_COLOR);
+
+    //applyThreshold(image);
+    //if(ui->checkBoxApplyLimits->isChecked())
+    //    applyLines(image);
+
+    // If ROI checked
+    if(ui->checkBoxROI->isChecked()) {
+        cv::Rect2d roi;
+        roi.x = ui->spinBoxX->value();
+        roi.y = ui->spinBoxY->value();
+        roi.width = ui->spinBoxWidth->value();
+        roi.height = ui->spinBoxHeight->value();
+
+        if(roi.width == 0 || roi.height == 0) {
+            QMessageBox::warning(this, tr("Warning"), tr("Selection cannot be empty"));
+            ui->checkBoxROI->setCheckState(Qt::Unchecked);
+            return;
+        }
+
+        try {
+            image = image(roi);
+        } catch (const cv::Exception &e) {
+            QMessageBox::warning(this, tr("OpenCV Error"), QString::fromStdString(e.what()) + "\n The region of interest may be out of bounds");
+            ui->checkBoxROI->setCheckState(Qt::Unchecked);
+            return;
+        }
+
+    }
+
+    if(ui->checkBoxApplyCanny->isChecked()) {
+        cv::Mat edges = applyCanny(image);
+        image = edges;
+
+        // Find and draw center line
+        std::vector<int> centerlineX = computeCenter(image);
+        for (int y = 0; y < centerlineX.size(); ++y) {
+            int centerX = centerlineX[y];
+            if (centerX >= 0) {
+                cv::circle(image, cv::Point(centerX, y), 1, cv::Scalar(0, 0, 255), 1);  // Red points for the centerline
+            }
+        }
+    }
+
+
+
+    QImage toDisplay = matToQImage(image);
+    ui->graphicsView->scene()->clear();
+    ui->graphicsView->scene()->addPixmap(QPixmap::fromImage(toDisplay));
+    ui->graphicsView->fitInView(ui->graphicsView->scene()->sceneRect(), Qt::KeepAspectRatio);
+}
+
+// Refresh image
+void FrequencyDetection::on_horizontalSliderFrameCurve_valueChanged(int value) {
+    refreshImageCurve();
+}
+
+
+
+
+// On thresh1 value change, refresh image
+void FrequencyDetection::on_horizontalSliderThresh1_valueChanged(int value) {
+    refreshImageCurve();
+}
+
+// On thresh2 value change, refresh image
+void FrequencyDetection::on_horizontalSliderThresh2_valueChanged(int value) {
+    refreshImageCurve();
+}
+
+// On Canny checkbox clicked refresh image
+void FrequencyDetection::on_checkBoxApplyCanny_clicked() {
+    refreshImageCurve();
+}
+
+// Select ROI region and store attributes in boxes
+void FrequencyDetection::on_pushButtonSelectRegion_clicked() {
+    // Assumes value is in range
+    QString filePath = ui->lineEditFilenameCurve->text() + "/" + m_imageFilesCurve[ui->horizontalSliderFrameCurve->value() - 1];
+    QFile file(filePath);
+    file.open(QFile::ReadOnly);
+    qint64 sz = file.size();
+    std::vector<uchar> buf(sz);
+    file.read((char*) buf.data(), sz);
+
+
+    cv::Mat image = cv::imdecode(buf, cv::IMREAD_COLOR);
+
+    QMessageBox::information(this, tr("Information"), tr("Select a ROI and then press SPACE or ENTER button. Cancel the selection process by pressing c button and closing the ROI window."));
+    cv::Rect2d roi = cv::selectROI("Select ROI", image);
+
+    if(roi.width == 0 || roi.height == 0) {
+        QMessageBox::warning(this, tr("Warning"), tr("Selection cannot be empty"));
+        return;
+    }
+
+    cv::Mat imCropped;
+
+    try {
+        imCropped = image(roi);
+    } catch (const cv::Exception &e) {
+        QMessageBox::warning(this, tr("OpenCV Error"), QString::fromStdString(e.what()) + "\n The region of interest may be out of bounds");
+        return;
+    }
+    cv::destroyWindow("Select ROI");
+
+    // Set spinBoxes
+    ui->spinBoxX->setValue(roi.x);
+    ui->spinBoxY->setValue(roi.y);
+    ui->spinBoxWidth->setValue(roi.width);
+    ui->spinBoxHeight->setValue(roi.height);
+
+
+}
+
+// When ROI selected, apply, give error if bad.
+void FrequencyDetection::on_checkBoxROI_checkStateChanged(const Qt::CheckState &arg1) {
+    // cv::Rect2d roi;
+    // roi.x = ui->spinBoxX->value();
+    // roi.y = ui->spinBoxY->value();
+    // roi.width = ui->spinBoxWidth->value();
+    // roi.height = ui->spinBoxHeight->value();
+    refreshImageCurve();
 }
 
