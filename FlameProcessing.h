@@ -49,6 +49,9 @@ public:
     void drawLowestEdges(cv::Mat& image,const std::vector<cv::Point>& edgePoints,const cv::Scalar& color,int radius,int thickness);
 
     std::vector<cv::Point> findContourPixels(std::vector<cv::Point> contour, cv::Mat image);
+
+    double findAngle(double vx, double vy);
+
 private:
 
     bool stopProcess = false;

@@ -480,6 +480,7 @@ void FlameProcessing::recordAngle(std::vector<double> segments, cv::Mat &image){
             // do fitLine on that array
             // draw line
 
+
             if(!contourInfo.empty()) {
 
                 cv::Vec4f line;
@@ -490,18 +491,52 @@ void FlameProcessing::recordAngle(std::vector<double> segments, cv::Mat &image){
                 float x0 = line[2]; // x-coordinate of a point on the line
                 float y0 = line[3]; // y-coordinate of a point on the line
 
+                std::cout << "Contour Angle: ";
+                // calc angle here
+                double angle = findAngle(vx, vy);
+                std::cout<<angle<<std::endl;
+
+
+
+
+
                 // Calculate the endpoints of the line (20px long)
                 float halfLength = 40; // Half of the line length (20px total)
                 cv::Point start(x0 - vx * halfLength, y0 - vy * halfLength);
                 cv::Point end(x0 + vx * halfLength, y0 + vy * halfLength);
-
                 // Draw the line on the image
                 cv::line(image, start, end, cv::Scalar(0, 255, 0), 2);
             }
+
+
         }
     }
 
 
+}
+
+double FlameProcessing::findAngle(double vx, double vy) {
+    // Compute the magnitude of the direction vector
+    double magnitude = std::sqrt(vx * vx + vy * vy);
+    // Normalize the direction vector
+    double normVx = vx / magnitude;
+    double normVy = vy / magnitude;
+
+    // Vertical reference vector (1, 0)
+    double refVx = 1.0;
+    double refVy = 0.0;
+
+    // Compute dot product and cross product
+    double dotProduct = normVx * refVx + normVy * refVy; // = normVy
+    double crossProduct = normVx * refVy - normVy * refVx; // = -normVx
+
+    // Compute the angle using atan2
+    double angleRad = std::atan2(crossProduct, dotProduct);
+
+    // Convert the angle to degrees
+    double angleDeg = angleRad * 180.0 / CV_PI;
+
+    return angleDeg;
 }
 
 
@@ -572,7 +607,6 @@ std::vector<cv::Point> FlameProcessing::findLowestEdges(std::vector<cv::Point> c
     }
 
     for (const auto& [x, points] : xMap) {
-        std::cout << "X = " << x << ": ";
         cv::Point edgePt(-1,-1);
         for (const cv::Point& pt : points) {
             if(pt.y > edgePt.y) {
@@ -580,9 +614,9 @@ std::vector<cv::Point> FlameProcessing::findLowestEdges(std::vector<cv::Point> c
                 edgePt.x = pt.x;
             }
         }
-        std::cout << "(" << edgePt.x<< ", " << edgePt.y << ") ";
+
         edgePoints.push_back(edgePt);
-        std::cout << std::endl;
+
     }
 
     return edgePoints;
