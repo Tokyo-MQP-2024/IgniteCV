@@ -26,6 +26,26 @@ private slots:
     void on_horizontalSliderUpperLimit_valueChanged(int value);
     void on_horizontalSliderLowerLimit_valueChanged(int value);
     void on_checkBoxApplyLimits_checkStateChanged(const Qt::CheckState &arg1);
+    void on_pushButtonSelectCurve_clicked();
+
+    void on_pushButtonSetCurve_clicked();
+
+    void on_horizontalSliderFrameCurve_valueChanged(int value);
+
+    void on_tabWidget_currentChanged(int index);
+
+    void on_horizontalSliderThresh1_valueChanged(int value);
+
+    void on_horizontalSliderThresh2_valueChanged(int value);
+
+    void on_checkBoxApplyCanny_clicked();
+
+    void on_pushButtonSelectRegion_clicked();
+
+    void on_checkBoxROI_checkStateChanged(const Qt::CheckState &arg1);
+
+    void on_pushButtonRunCurve_clicked();
+
 private:
     Ui::frequencyDetection *ui;
     QProgressDialog *progressDialog = nullptr;
@@ -38,9 +58,11 @@ private:
 
     // Stores number of frames (images) in folder
     int m_numFrames;
+    int m_numFramesCurve;
 
     // Store list of image files in folder
     QStringList m_imageFiles;
+    QStringList m_imageFilesCurve;
 
     // Upper and lower bounds for image processing
     int m_upper;
@@ -50,12 +72,18 @@ private:
 
     // Store width and height of first image to check for discrepancies
     int m_width;
+    int m_widthCurve;
     int m_height;
+    int m_heightCurve;
+
+    // Store the array of centerlines (Curve)
+    std::vector<std::vector<int>> m_centerlines;
 
     //FUNCTIONS
 
     // Refresh image in QGraphicsView
     void refreshImage();
+    void refreshImageCurve();
 
     // Applies threshold based on settings from UI
     void applyThreshold(cv::Mat &image);
@@ -70,6 +98,12 @@ private:
 
     // For use in QtConcurrent
     void handleComputationCompletion();
+
+    // For use in Curve detection
+    cv::Mat applyCanny(cv::Mat &image);
+
+    // Draw center line, averaging min x and max x at every y level
+    std::vector<int> computeCenter(cv::Mat &image);
 };
 
 #endif // FREQUENCYDETECTION_H
