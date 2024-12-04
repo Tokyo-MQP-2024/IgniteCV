@@ -44,6 +44,8 @@ private slots:
 
     void on_checkBoxROI_checkStateChanged(const Qt::CheckState &arg1);
 
+    void on_pushButtonRunCurve_clicked();
+
 private:
     Ui::frequencyDetection *ui;
     QProgressDialog *progressDialog = nullptr;
@@ -73,6 +75,9 @@ private:
     int m_widthCurve;
     int m_height;
     int m_heightCurve;
+
+    // Store the array of centerlines (Curve)
+    std::vector<std::vector<int>> m_centerlines;
 
     //FUNCTIONS
 

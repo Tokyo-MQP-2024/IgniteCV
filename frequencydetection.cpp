@@ -508,6 +508,10 @@ cv::Mat FrequencyDetection::applyCanny(cv::Mat &image) {
 
 // Draw center line, averaging min x and max x at every y level
 std::vector<int> FrequencyDetection::computeCenter(cv::Mat &image) {
+    // Return early if cancelled
+    if(QThread::currentThread()->isInterruptionRequested()) {
+        return std::vector<int>();
+    }
     std::vector<int> centerlineX;
 
     // Variables to store previous valid centerline values for interpolation
@@ -604,14 +608,16 @@ void FrequencyDetection::refreshImageCurve() {
 
     if(ui->checkBoxApplyCanny->isChecked()) {
         cv::Mat edges = applyCanny(image);
+
         image = edges;
 
-        // Find and draw center line
         std::vector<int> centerlineX = computeCenter(image);
-        for (int y = 0; y < centerlineX.size(); ++y) {
-            int centerX = centerlineX[y];
-            if (centerX >= 0) {
-                cv::circle(image, cv::Point(centerX, y), 1, cv::Scalar(0, 0, 255), 1);  // Red points for the centerline
+        // Convert to color so centerline gets displayed
+        cv::cvtColor(image, image, cv::COLOR_GRAY2BGR);
+        for(int i = 0; i < centerlineX.size(); i++) {
+            int centerX = centerlineX[i];
+            if(centerX >= 0) {
+                cv::circle(image, cv::Point(centerX, i), 1, cv::Scalar(0,0,255), -1);
             }
         }
     }
@@ -624,13 +630,10 @@ void FrequencyDetection::refreshImageCurve() {
     ui->graphicsView->fitInView(ui->graphicsView->scene()->sceneRect(), Qt::KeepAspectRatio);
 }
 
-// Refresh image
+// Refresh image on slider change
 void FrequencyDetection::on_horizontalSliderFrameCurve_valueChanged(int value) {
     refreshImageCurve();
 }
-
-
-
 
 // On thresh1 value change, refresh image
 void FrequencyDetection::on_horizontalSliderThresh1_valueChanged(int value) {
@@ -695,5 +698,118 @@ void FrequencyDetection::on_checkBoxROI_checkStateChanged(const Qt::CheckState &
     // roi.width = ui->spinBoxWidth->value();
     // roi.height = ui->spinBoxHeight->value();
     refreshImageCurve();
+}
+
+// Run the program with selected parameters
+void FrequencyDetection::on_pushButtonRunCurve_clicked() {
+    // Check for empty files
+    QString folderPath = ui->lineEditFilenameCurve->text();
+    if(folderPath == "") {
+        QMessageBox::warning(this, tr("Warning"), tr("Invalid file path. Please try again"));
+        return;
+    }
+    QDir dir(folderPath);
+
+    // Return if folder is invalid
+    if(!dir.exists()) {
+        QMessageBox::warning(this, tr("Warning"), tr("Invalid file path. Please try again"));
+        return;
+    }
+
+    // Set m_fileName member variable to be used by helper function
+    if(ui->checkBoxCSVCurve->isChecked()) {
+        // Show the Save File Dialog and get the file path
+        m_fileName = QFileDialog::getSaveFileName(
+            nullptr,
+            "Save File",
+            "",
+            "CSV Files (*.csv);;All Files (*)"
+            );
+
+        // Strict file validity checks
+        if (m_fileName.isEmpty()) {
+            QMessageBox::warning(this, tr("Warning"), tr("No file selected. Please choose a file to save."));
+            return;
+        }
+        QFile file(m_fileName);
+        if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+            QMessageBox::warning(this, tr("Error"), tr("The file could not be opened for writing. Please check the file path and permissions."));
+            return;
+        }
+    }
+
+
+    // The meat of the matter
+
+    // Create the progress dialog with a cancel button
+    progressDialog = new QProgressDialog(tr("Processing images"), tr("Cancel"), 0, m_imageFilesCurve.size(), this);
+    progressDialog->setWindowModality(Qt::WindowModal); // Modal dialog to block interaction with the main window
+    progressDialog->setMinimumDuration(0); // Show instantly
+    progressDialog->setAutoClose(true);    // Close automatically when done
+    progressDialog->setAutoReset(true);    // Reset automatically when done
+
+    // Lock UI elements to prevent errors
+    ui->pushButtonRunCurve->setEnabled(false);
+
+    // Create FutureWatcher to monitor progress
+    QFutureWatcher<std::vector<int>> *watcher = new QFutureWatcher<std::vector<int>>(this);
+
+    // Connect progress dialog cancel button to stop processing
+    connect(progressDialog, &QProgressDialog::canceled, watcher, &QFutureWatcher<std::vector<int>>::cancel);
+
+    // Connect progress updates
+    connect(watcher, &QFutureWatcher<std::vector<int>>::progressValueChanged, progressDialog, &QProgressDialog::setValue);
+
+    // Connect when processing is finished
+    connect(watcher, &QFutureWatcher<std::vector<int>>::finished, this, [this, watcher](){
+        // Collect results when finished
+        QFuture<std::vector<int>> future = watcher->future();
+        m_centerlines.reserve(future.resultCount());
+
+        for (int i = 0; i < future.resultCount(); ++i) {
+            m_centerlines.push_back(future.resultAt(i));
+        }
+
+        // Enable the run button
+        ui->pushButtonRunCurve->setEnabled(true);
+
+        // Further processing: FFT calculation, exporting, etc.
+        //handleComputationCompletion();
+        watcher->deleteLater(); // Clean up the watcher
+        progressDialog->deleteLater(); // Clean up progress dialog
+    });
+
+    // Cool and chill little lambda function to replace std::bind
+    QFuture<std::vector<int>> future = QtConcurrent::mapped(m_imageFilesCurve, [this](const QString s){
+        // Open file
+        QString filePath = ui->lineEditFilenameCurve->text() + "/" + s;
+        QFile file(filePath);
+        file.open(QFile::ReadOnly);
+        qint64 sz = file.size();
+        std::vector<uchar> buf(sz);
+        file.read((char*) buf.data(), sz);
+
+        cv::Mat image = cv::imdecode(buf, cv::IMREAD_COLOR);
+
+        cv::Rect2d roi;
+        roi.x = ui->spinBoxX->value();
+        roi.y = ui->spinBoxY->value();
+        roi.width = ui->spinBoxWidth->value();
+        roi.height = ui->spinBoxHeight->value();
+
+        try {
+            image = image(roi);
+        } catch (const cv::Exception &e) {
+            QMessageBox::warning(this, tr("OpenCV Error"), QString::fromStdString(e.what()) + "\n The region of interest may be out of bounds");
+            ui->checkBoxROI->setCheckState(Qt::Unchecked);
+            return std::vector<int>();
+        }
+
+
+        cv::Mat edges = applyCanny(image);
+        return computeCenter(edges);
+    });
+    watcher->setFuture(future);
+    progressDialog->setMaximum(m_imageFilesCurve.size());
 }
 

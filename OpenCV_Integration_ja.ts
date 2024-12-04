@@ -150,8 +150,11 @@
         <location filename="frequencydetection.cpp" line="431"/>
         <location filename="frequencydetection.cpp" line="438"/>
         <location filename="frequencydetection.cpp" line="453"/>
-        <location filename="frequencydetection.cpp" line="590"/>
-        <location filename="frequencydetection.cpp" line="667"/>
+        <location filename="frequencydetection.cpp" line="594"/>
+        <location filename="frequencydetection.cpp" line="670"/>
+        <location filename="frequencydetection.cpp" line="708"/>
+        <location filename="frequencydetection.cpp" line="715"/>
+        <location filename="frequencydetection.cpp" line="731"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
@@ -162,6 +165,8 @@
         <location filename="frequencydetection.cpp" line="258"/>
         <location filename="frequencydetection.cpp" line="431"/>
         <location filename="frequencydetection.cpp" line="438"/>
+        <location filename="frequencydetection.cpp" line="708"/>
+        <location filename="frequencydetection.cpp" line="715"/>
         <source>Invalid file path. Please try again</source>
         <translation>ファイルパスが無効です。もう一度お試しください</translation>
     </message>
@@ -188,12 +193,14 @@
     </message>
     <message>
         <location filename="frequencydetection.cpp" line="291"/>
+        <location filename="frequencydetection.cpp" line="745"/>
         <source>Processing images</source>
         <oldsource>Processing images...</oldsource>
         <translation>画像を処理中</translation>
     </message>
     <message>
         <location filename="frequencydetection.cpp" line="291"/>
+        <location filename="frequencydetection.cpp" line="745"/>
         <source>Cancel</source>
         <translation>キャンセル</translation>
     </message>
@@ -213,24 +220,25 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="663"/>
+        <location filename="frequencydetection.cpp" line="666"/>
         <source>Information</source>
         <translation type="unfinished">お知らせ</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="663"/>
+        <location filename="frequencydetection.cpp" line="666"/>
         <source>Select a ROI and then press SPACE or ENTER button. Cancel the selection process by pressing c button and closing the ROI window.</source>
         <translation type="unfinished">ROI を選択して、SPACE キーまたは ENTER キーを押します。選択処理をキャンセルするには、c ボタンを押して ROI ウィンドウを閉じます。</translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="590"/>
-        <location filename="frequencydetection.cpp" line="667"/>
+        <location filename="frequencydetection.cpp" line="594"/>
+        <location filename="frequencydetection.cpp" line="670"/>
         <source>Selection cannot be empty</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="frequencydetection.cpp" line="598"/>
-        <location filename="frequencydetection.cpp" line="676"/>
+        <location filename="frequencydetection.cpp" line="602"/>
+        <location filename="frequencydetection.cpp" line="679"/>
+        <location filename="frequencydetection.cpp" line="803"/>
         <source>OpenCV Error</source>
         <translation type="unfinished">OpenCVエラー</translation>
     </message>
@@ -241,16 +249,19 @@
     </message>
     <message>
         <location filename="frequencydetection.cpp" line="280"/>
+        <location filename="frequencydetection.cpp" line="731"/>
         <source>No file selected. Please choose a file to save.</source>
         <translation>ファイルが選択されていません。保存するファイルを選択してください。</translation>
     </message>
     <message>
         <location filename="frequencydetection.cpp" line="285"/>
+        <location filename="frequencydetection.cpp" line="736"/>
         <source>Error</source>
         <translation>エラー</translation>
     </message>
     <message>
         <location filename="frequencydetection.cpp" line="285"/>
+        <location filename="frequencydetection.cpp" line="736"/>
         <source>The file could not be opened for writing. Please check the file path and permissions.</source>
         <translation>ファイルを書き込み用に開けませんでした。ファイル パスと権限を確認してください。</translation>
     </message>
@@ -702,11 +713,13 @@
     </message>
     <message>
         <location filename="frequencydetection.ui" line="246"/>
+        <location filename="frequencydetection.ui" line="466"/>
         <source>Export to CSV</source>
         <translation>CSVにエクスポート</translation>
     </message>
     <message>
         <location filename="frequencydetection.ui" line="255"/>
+        <location filename="frequencydetection.ui" line="473"/>
         <source>Run</source>
         <translation>実行</translation>
     </message>

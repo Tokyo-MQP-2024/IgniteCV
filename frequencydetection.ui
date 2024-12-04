@@ -320,7 +320,7 @@
             <x>0</x>
             <y>0</y>
             <width>321</width>
-            <height>181</height>
+            <height>128</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="gridLayout_4">
@@ -458,6 +458,20 @@
            </widget>
           </item>
          </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="checkBoxCSVCurve">
+         <property name="text">
+          <string>Export to CSV</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="pushButtonRunCurve">
+         <property name="text">
+          <string>Run</string>
+         </property>
         </widget>
        </item>
       </layout>
