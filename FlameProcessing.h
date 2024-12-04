@@ -15,9 +15,6 @@
 
 class FlameProcessing {
 public:
-
-
-
     //functions
     FlameProcessing();
 
@@ -38,16 +35,25 @@ public:
     void setIRLScale(double x, double y);
 
     cv::Mat findContourImage(cv::Mat original_frame);
+
     void setROIBox(int x, int y, int h, int w);
+
     std::vector<double> recordData(std::vector<double> segments);
 
     std::vector<std::vector<double>> cleanData(std::vector<std::vector<double>> positions);
 
+    void recordAngle(std::vector<double> segments, cv::Mat &image);
+
+    std::vector<cv::Point> findLowestEdges(std::vector<cv::Point> contourInfo);
+
+    void drawLowestEdges(cv::Mat& image,const std::vector<cv::Point>& edgePoints,const cv::Scalar& color,int radius,int thickness);
+
+    std::vector<cv::Point> findContourPixels(std::vector<cv::Point> contour, cv::Mat image);
 private:
+
     bool stopProcess = false;
     QGraphicsScene *scene = new QGraphicsScene();
     int scaleClicks = 0;
-
 
     int currX = 0;
     int currY = 0;
