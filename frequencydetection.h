@@ -77,7 +77,8 @@ private:
     int m_heightCurve;
 
     // Store the array of centerlines (Curve)
-    std::vector<std::vector<int>> m_centerlines;
+    cv::Mat m_centerlines;
+
 
     //FUNCTIONS
 
@@ -104,6 +105,8 @@ private:
 
     // Draw center line, averaging min x and max x at every y level
     std::vector<int> computeCenter(cv::Mat &image);
+
+    void exportCenterlineToCSV(const cv::Mat& data);
 };
 
 #endif // FREQUENCYDETECTION_H
