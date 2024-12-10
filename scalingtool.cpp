@@ -533,8 +533,6 @@ void ScalingTool::on_VMax_valueChanged(int arg1)
 // loop through lines, find lowest and closest point to each line between threshold
 // record position for each line every second
 
-
-
 void ScalingTool::on_pushButton_8_clicked() {
 
     cv::VideoCapture cap(videoFilePath);
@@ -573,12 +571,14 @@ void ScalingTool::on_pushButton_8_clicked() {
                 break;
             }
             if(accumulatedTime > sampleInterval) {
-                std::cout << frameCount << "\n";
+                //std::cout << frameCount << "\n";
                 accumulatedTime = accumulatedTime - sampleInterval;
                 seconds = seconds+1;
                 cv::Mat incoming = flame_process->findContourImage(frame);
+                flame_process->recordAngle(dataSegments, incoming);
                 std::vector<double> posData = flame_process->recordData(dataSegments);
                 totalPosData.emplace_back(posData);
+
 
 
 
@@ -593,13 +593,7 @@ void ScalingTool::on_pushButton_8_clicked() {
         }
         cap.release();
         ui->progressBar->setValue(100);
-        // for(int i = 0; i < totalPosData.size(); i++) {
 
-        //     for(int j = 0; j < totalPosData[i].size(); j++) {
-        //         std::cout<<"Line["<<j<<"]: "<<totalPosData[i][j];
-        //     }
-        //     std::cout<< std::endl;
-        // }
         totalPosData = flame_process->cleanData(totalPosData);
 
     }

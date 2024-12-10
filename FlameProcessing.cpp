@@ -12,6 +12,7 @@
 
 
 
+
 // FlameProcessing Constructor definition
 FlameProcessing::FlameProcessing() {
 
@@ -331,7 +332,7 @@ void FlameProcessing::parseVideo(std::string videoFilePath, QGraphicsView *view)
             cv::rectangle(newFrame, tl,br,cv::Scalar(0,255,0),cv::FILLED);
             cv::rectangle(newFrame, tl2,br2,cv::Scalar(0,200,0),cv::FILLED);
 
-            cv::drawContours(newFrame, contours, -1, cv::Scalar(255, 0, 0), cv::FILLED);
+            cv::drawContours(newFrame, contours, -1, cv::Scalar(255, 0, 0), cv::LINE_AA);
 
             if (frameCount % 5 == 0) { // Show every 5th frame
                 // //cv::imshow("cleaned mask", frame);
@@ -420,14 +421,124 @@ cv::Mat FlameProcessing::findContourImage(cv::Mat original_frame) {
         int area = cv::contourArea(contour);
         if (area > minBBArea) {
             filteredContours.push_back(contour);
-            std::cout<<"removing contour\n";
+            //std::cout<<"removing contour\n";
         }
     }
     //Replace the original contours with the filtered ones
     contours = filteredContours;
     cv::drawContours(newFrame, filteredContours, -1, cv::Scalar(255, 0, 0), cv::FILLED);
+    // if(!filteredContours.empty()) {
+    //     for (const auto& c : filteredContours) {
+    //         // Generate random color
+    //         cv::Scalar randomColor(
+    //             std::rand() % 255, // Blue
+    //             std::rand() % 255, // Green
+    //             std::rand() % 255  // Red
+    //             );
+
+
+    //         cv::drawContours(newFrame, std::vector<std::vector<cv::Point>>{c}, -1, randomColor, cv::FILLED);
+    //     }
+    // }
+
     return newFrame;
 }
+
+// loop through the lines, for each draw a line for the angle of direction
+void FlameProcessing::recordAngle(std::vector<double> segments, cv::Mat &image){
+    int threshold = 40;
+    std::vector<double> angleData;
+    for(int i = 0; i < segments.size(); i++) {
+        double currentX = segments[i];
+        cv::Point gridStart(currentX, 0);
+        cv::Point gridEnd(currentX, image.rows);
+        cv::line(image, gridStart, gridEnd, cv::Scalar(255, 115, 0), 2);
+        int leadingY = -1;
+        for (const auto& contour : filteredContours) { // empty
+            std::vector<cv::Point> contourInfo;
+
+
+            //TODO: before grouping, find the actual contour pixels
+            std::vector<cv::Point> contourPixels = findContourPixels(contour, image);
+
+
+
+            for(const auto& point : contourPixels) {
+                if(point.x > (currentX-threshold) && point.x < (currentX+threshold)) {
+                    contourInfo.emplace_back(point);
+                    //cv::circle(image, point, 1, cv::Scalar(170,255,115), -1);
+                }
+
+            }
+
+
+
+            // group the pixels by x value
+            // find lowest y, add to edge array
+            std::vector<cv::Point> leadingEdge = findLowestEdges(contourInfo);
+            drawLowestEdges(image, leadingEdge, cv::Scalar(0,0,255), 3, -1);
+            // do fitLine on that array
+            // draw line
+
+
+            if(!contourInfo.empty()) {
+
+                cv::Vec4f line;
+                cv::fitLine(leadingEdge, line, cv::DIST_L2, 0, 0.01, 0.01);
+                // Extract the line parameters
+                float vx = line[0]; // x component of the direction vector
+                float vy = line[1]; // y component of the direction vector
+                float x0 = line[2]; // x-coordinate of a point on the line
+                float y0 = line[3]; // y-coordinate of a point on the line
+
+                std::cout << "Contour Angle: ";
+                // calc angle here
+                double angle = findAngle(vx, vy);
+                std::cout<<angle<<std::endl;
+
+
+
+
+
+                // Calculate the endpoints of the line (20px long)
+                float halfLength = 40; // Half of the line length (20px total)
+                cv::Point start(x0 - vx * halfLength, y0 - vy * halfLength);
+                cv::Point end(x0 + vx * halfLength, y0 + vy * halfLength);
+                // Draw the line on the image
+                cv::line(image, start, end, cv::Scalar(0, 255, 0), 2);
+            }
+
+
+        }
+    }
+
+
+}
+
+double FlameProcessing::findAngle(double vx, double vy) {
+    // Compute the magnitude of the direction vector
+    double magnitude = std::sqrt(vx * vx + vy * vy);
+    // Normalize the direction vector
+    double normVx = vx / magnitude;
+    double normVy = vy / magnitude;
+
+    // Vertical reference vector (1, 0)
+    double refVx = 1.0;
+    double refVy = 0.0;
+
+    // Compute dot product and cross product
+    double dotProduct = normVx * refVx + normVy * refVy; // = normVy
+    double crossProduct = normVx * refVy - normVy * refVx; // = -normVx
+
+    // Compute the angle using atan2
+    double angleRad = std::atan2(crossProduct, dotProduct);
+
+    // Convert the angle to degrees
+    double angleDeg = angleRad * 180.0 / CV_PI;
+
+    return angleDeg;
+}
+
 
 // loop through lines, find lowest and closest point to each line between threshold
 std::vector<double> FlameProcessing::recordData(std::vector<double> segments){
@@ -449,10 +560,7 @@ std::vector<double> FlameProcessing::recordData(std::vector<double> segments){
             }
         }
         posData.push_back(leadingY);
-
-
     }
-
     filteredContours.clear();
     return posData;
 }
@@ -481,11 +589,101 @@ std::vector<std::vector<double>> FlameProcessing::cleanData(std::vector<std::vec
                 last_known_position = (curr - initialPx) * cmPerPixel;
                 cleanedPositions.push_back(last_known_position);
             }
-
-            std::cout<<"Line[" << line << "]:" << cleanedPositions[frame]<< ", with px:" << positions[frame][line]<<std::endl;
+            //std::cout<<"Line[" << line << "]:" << cleanedPositions[frame]<< ", with px:" << positions[frame][line]<<std::endl;
         }
-        std::cout << "NEXT DATA SEGMENT" << std::endl;
+        //std::cout << "NEXT DATA SEGMENT" << std::endl;
         allLines.emplace_back(cleanedPositions);
     }
     return allLines;
+}
+
+
+std::vector<cv::Point> FlameProcessing::findLowestEdges(std::vector<cv::Point> contourInfo) {
+    std::vector<cv::Point> edgePoints;
+    std::map<int, std::vector<cv::Point>> xMap;
+
+    for (const cv::Point& pt : contourInfo) {
+        xMap[pt.x].push_back(pt); // Group points with the same x
+    }
+
+    for (const auto& [x, points] : xMap) {
+        cv::Point edgePt(-1,-1);
+        for (const cv::Point& pt : points) {
+            if(pt.y > edgePt.y) {
+                edgePt.y = pt.y;
+                edgePt.x = pt.x;
+            }
+        }
+
+        edgePoints.push_back(edgePt);
+
+    }
+
+    return edgePoints;
+
+
+}
+
+// std::vector<cv::Point> FlameProcessing::findLowestEdges(std::vector<cv::Point> contourInfo) {
+//     std::vector<cv::Point> edgePoints;
+//     std::map<int, std::vector<cv::Point>> xMap;
+
+//     // Group points by x-coordinate
+//     for (const cv::Point& pt : contourInfo) {
+//         xMap[pt.x].push_back(pt); // Group points with the same x
+//     }
+
+//     // Process each group
+//     for (const auto& [x, points] : xMap) {
+//         std::cout << "Processing x = " << x << ":\n";
+
+//         cv::Point edgePt(-1, -1); // Initialize with invalid point
+
+//         for (const cv::Point& pt : points) {
+//             std::cout << "  Considering point (" << pt.x << ", " << pt.y << ") ";
+//             if (pt.y > edgePt.y) {
+//                 edgePt = pt; // Update to the point with the maximum y
+//                 std::cout << "-> New edge point selected.\n";
+//             } else {
+//                 std::cout << "-> Not selected.\n";
+//             }
+//         }
+
+//         if (edgePt.x != -1) { // Valid point found
+//             edgePoints.push_back(edgePt);
+//             std::cout << "  Final edge point for x = " << x << ": ("
+//                       << edgePt.x << ", " << edgePt.y << ")\n";
+//         } else {
+//             std::cout << "  No valid points found for x = " << x << ".\n";
+//         }
+//     }
+
+//     return edgePoints;
+// }
+
+void FlameProcessing::drawLowestEdges(cv::Mat& image,const std::vector<cv::Point>& edgePoints, const cv::Scalar& color, int radius, int thickness) {
+    for (const cv::Point& pt : edgePoints) {
+        if (pt.x >= 0 && pt.y >= 0 && pt.x < image.cols && pt.y < image.rows) {
+            cv::circle(image, pt, radius, color, thickness);
+        } else {
+            std::cerr << "Point (" << pt.x << ", " << pt.y << ") is outside the image bounds!" << std::endl;
+        }
+    }
+}
+
+
+// takes a contour and returns all pixels found within the contour
+std::vector<cv::Point> FlameProcessing::findContourPixels(std::vector<cv::Point> contour, cv::Mat image) {
+    cv::Mat mask = cv::Mat::zeros(image.size(), CV_8UC1);
+    cv::drawContours(mask, std::vector<std::vector<cv::Point>>{contour}, -1, cv::Scalar(255), cv::FILLED);
+    std::vector<cv::Point> whitePixels;
+    CV_Assert(mask.type() == CV_8UC1);
+    for (int y = 0; y < mask.rows; ++y) {
+        for (int x = 0; x < mask.cols; ++x) {
+            if (mask.at<uchar>(y, x) == 255) {
+                whitePixels.emplace_back(x, y);
+            }
+        }
+    }
+    return whitePixels;
 }
