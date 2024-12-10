@@ -34,7 +34,7 @@ void FlameProcessing::scalingMouse(int event, int x, int y, int flags) {
         scaleClicks = scaleClicks + 1;
         currPos.x = x;
         currPos.y = y;
-        std::cout<<event<<" "<<x<<" "<<y<<" clicks:"<<scaleClicks<<"\n";
+        //std::cout<<event<<" "<<x<<" "<<y<<" clicks:"<<scaleClicks<<"\n";
     }
 
     else if(event == 0) {
@@ -158,14 +158,10 @@ void FlameProcessing::imageScaling(std::string videoFilePath, char axis) {
                 pixelsY = abs((startingPos.y*2)-(endingPos.y*2));
             }
 
-
-
             break;
         }
-
-
         if (cv::waitKey(1) == 27) { // Press 'ESC' to exit early
-            std::cout << "Exiting before two points were selected.\n";
+            //std::cout << "Exiting before two points were selected.\n";
             break; // Exit the loop gracefully
         }
 
@@ -214,7 +210,7 @@ void FlameProcessing::parseVideo(std::string videoFilePath, QGraphicsView *view)
         double sampleInterval = 1.0;
         int seconds = 0;
 
-        std::cout << "Frames per second: " << fps << std::endl;
+        //std::cout << "Frames per second: " << fps << std::endl;
 
 
 
@@ -292,7 +288,7 @@ void FlameProcessing::parseVideo(std::string videoFilePath, QGraphicsView *view)
                 int bottom_y = boundingBox.y + boundingBox.height;
                 int top_y = boundingBox.y;
 
-                //std::cout << bottom_y << " ";
+                ////std::cout << bottom_y << " ";
                 if (bottom_y > currY && frameCount > 10) {
                     currY = bottom_y;
                 }
@@ -303,15 +299,15 @@ void FlameProcessing::parseVideo(std::string videoFilePath, QGraphicsView *view)
                 }
             }
 
-            //std::cout << "NEXT" << "\n";
+            ////std::cout << "NEXT" << "\n";
 
             if(accumulatedTime > sampleInterval) {
-                std::cout << frameCount << "\n";
+                //std::cout << frameCount << "\n";
 
                 fireVerticalPositions.emplace_back(seconds, currY, lastY);
                 //fireLastPositions.emplace_back(seconds, lastY);
 
-                //std::cout << " " << fireVerticalPositions() "\n";
+                ////std::cout << " " << fireVerticalPositions() "\n";
 
 
                 accumulatedTime = accumulatedTime - sampleInterval;
@@ -387,11 +383,12 @@ void FlameProcessing::setROIBox(int x, int y, int h, int w) {
     maskH = h;
     maskW = w;
 }
+
 cv::Mat FlameProcessing::findContourImage(cv::Mat original_frame) {
     int minThresh = 200, maxThresh = 255;
     int blurAmount = 2;
     int minBBArea = 60;
-    // HSV range to detect blue color
+
     int minHue = 0, maxHue = 50;
     int minSat = 50, maxSat = 255;
     int minVal =  150, maxVal = 255;
@@ -421,32 +418,40 @@ cv::Mat FlameProcessing::findContourImage(cv::Mat original_frame) {
         int area = cv::contourArea(contour);
         if (area > minBBArea) {
             filteredContours.push_back(contour);
-            //std::cout<<"removing contour\n";
+            ////std::cout<<"removing contour\n";
         }
     }
     //Replace the original contours with the filtered ones
     contours = filteredContours;
     cv::drawContours(newFrame, filteredContours, -1, cv::Scalar(255, 0, 0), cv::FILLED);
-    // if(!filteredContours.empty()) {
-    //     for (const auto& c : filteredContours) {
-    //         // Generate random color
-    //         cv::Scalar randomColor(
-    //             std::rand() % 255, // Blue
-    //             std::rand() % 255, // Green
-    //             std::rand() % 255  // Red
-    //             );
-
-
-    //         cv::drawContours(newFrame, std::vector<std::vector<cv::Point>>{c}, -1, randomColor, cv::FILLED);
-    //     }
-    // }
-
     return newFrame;
 }
 
+// find lowest contour for each segment so that there is only one angle being found
+std::vector<cv::Point> FlameProcessing::selectLowestContour(int threshold, int currentX) {
+    std::vector<cv::Point> lowestC;
+    int lowest = -1;
+    for (const auto& contour : filteredContours) {
+        cv::Rect boundingBox = cv::boundingRect(contour);
+        int bottom_y = boundingBox.y + boundingBox.height;
+        // loop through contour points
+        for(const auto& point : contour) {
+            // if contour points are in the threshold
+            if(point.x > (currentX-threshold) && point.x < (currentX+threshold)) {
+                if (bottom_y > lowest) {
+                    lowestC = contour;
+                    lowest = bottom_y;
+                }
+                break;
+            }
+        }
+    }
+    return lowestC;
+}
+
 // loop through the lines, for each draw a line for the angle of direction
-void FlameProcessing::recordAngle(std::vector<double> segments, cv::Mat &image){
-    int threshold = 40;
+std::vector<double> FlameProcessing::recordAngle(std::vector<double> segments, cv::Mat &image, int threshold){
+
     std::vector<double> angleData;
     for(int i = 0; i < segments.size(); i++) {
         double currentX = segments[i];
@@ -454,104 +459,80 @@ void FlameProcessing::recordAngle(std::vector<double> segments, cv::Mat &image){
         cv::Point gridEnd(currentX, image.rows);
         cv::line(image, gridStart, gridEnd, cv::Scalar(255, 115, 0), 2);
         int leadingY = -1;
-        for (const auto& contour : filteredContours) { // empty
+        // selectLowestContour(threshold, filteredContours);
+        // instead of filtering through each contor, find the lowest one withing the threshold
+        std::vector<cv::Point> bestContour = selectLowestContour(threshold, currentX);
+        //for (const auto& contour : filteredContours) {
+        if(!bestContour.empty()) {
             std::vector<cv::Point> contourInfo;
 
-
-            //TODO: before grouping, find the actual contour pixels
-            std::vector<cv::Point> contourPixels = findContourPixels(contour, image);
-
-
+            //before grouping, find the actual contour pixels
+            std::vector<cv::Point> contourPixels = findContourPixels(bestContour, image);
 
             for(const auto& point : contourPixels) {
                 if(point.x > (currentX-threshold) && point.x < (currentX+threshold)) {
                     contourInfo.emplace_back(point);
-                    //cv::circle(image, point, 1, cv::Scalar(170,255,115), -1);
                 }
 
             }
-
-
-
             // group the pixels by x value
             // find lowest y, add to edge array
             std::vector<cv::Point> leadingEdge = findLowestEdges(contourInfo);
             drawLowestEdges(image, leadingEdge, cv::Scalar(0,0,255), 3, -1);
             // do fitLine on that array
             // draw line
-
-
             if(!contourInfo.empty()) {
-
                 cv::Vec4f line;
                 cv::fitLine(leadingEdge, line, cv::DIST_L2, 0, 0.01, 0.01);
-                // Extract the line parameters
-                float vx = line[0]; // x component of the direction vector
-                float vy = line[1]; // y component of the direction vector
-                float x0 = line[2]; // x-coordinate of a point on the line
-                float y0 = line[3]; // y-coordinate of a point on the line
-
-                std::cout << "Contour Angle: ";
-                // calc angle here
-                double angle = findAngle(vx, vy);
-                std::cout<<angle<<std::endl;
-
-
-
-
+                float vx = line[0];//vector x component
+                float vy = line[1];//vector y component
+                float x0 = line[2];
+                float y0 = line[3];
+                //std::cout << "Contour Angle: ";
+                // calc angle here, use x = 1 and y = 0 for regular x axis
+                double angle = calcLOBFAngle(vx, vy, 1.0, 0.0);
+                //std::cout<<angle<<std::endl;
+                angleData.push_back(angle);
 
                 // Calculate the endpoints of the line (20px long)
-                float halfLength = 40; // Half of the line length (20px total)
+                float halfLength = threshold; // Half of the line length (20px total)
                 cv::Point start(x0 - vx * halfLength, y0 - vy * halfLength);
                 cv::Point end(x0 + vx * halfLength, y0 + vy * halfLength);
                 // Draw the line on the image
                 cv::line(image, start, end, cv::Scalar(0, 255, 0), 2);
             }
 
-
         }
+
     }
+    return angleData;
 
 
 }
 
-double FlameProcessing::findAngle(double vx, double vy) {
-    // Compute the magnitude of the direction vector
+//calc angle from horizontal axis to line of best fit
+double FlameProcessing::findAngle(double vx, double vy, double refVx, double refVy) {
     double magnitude = std::sqrt(vx * vx + vy * vy);
-    // Normalize the direction vector
     double normVx = vx / magnitude;
     double normVy = vy / magnitude;
-
-    // Vertical reference vector (1, 0)
-    double refVx = 1.0;
-    double refVy = 0.0;
-
-    // Compute dot product and cross product
-    double dotProduct = normVx * refVx + normVy * refVy; // = normVy
-    double crossProduct = normVx * refVy - normVy * refVx; // = -normVx
-
-    // Compute the angle using atan2
+    double dotProduct = normVx * refVx + normVy * refVy;
+    double crossProduct = normVx * refVy - normVy * refVx;
     double angleRad = std::atan2(crossProduct, dotProduct);
-
-    // Convert the angle to degrees
     double angleDeg = angleRad * 180.0 / CV_PI;
-
     return angleDeg;
 }
 
 
 // loop through lines, find lowest and closest point to each line between threshold
-std::vector<double> FlameProcessing::recordData(std::vector<double> segments){
+std::vector<double> FlameProcessing::recordPositions(std::vector<double> segments){
     int threshold = 5;
     std::vector<double> posData; // array of each line
     //loop through all segments
     for(int i = 0; i < segments.size(); i++) {
         double currentX = segments[i];
         int leadingY = -1;
-
         // loop through all contours
         for (const auto& contour : filteredContours) {
-
             //loop through each contour pixel
             for (const auto& point : contour) {
                 if(point.x > (currentX-threshold) && point.x < (currentX+threshold) && point.y > leadingY) {
@@ -560,21 +541,22 @@ std::vector<double> FlameProcessing::recordData(std::vector<double> segments){
             }
         }
         posData.push_back(leadingY);
+        std::cout<<leadingY<<" ";
     }
     filteredContours.clear();
+    std::cout<<""<<std::endl;
     return posData;
 }
 
 std::vector<std::vector<double>> FlameProcessing::cleanData(std::vector<std::vector<double>> positions) {
     int numOfLines = positions[0].size();
     std::vector<std::vector<double>> allLines;
-    std::cout<<"CM PER PIXEL:" << cmPerPixel << std::endl;
+    //std::cout<<"CM PER PIXEL:" << cmPerPixel << std::endl;
     for (int line = 0; line < numOfLines; line++) {
         std::vector<double> cleanedPositions;
         bool firstDataEncountered = false;
         double last_known_position = 0.0; // Initialize position at 0 cm
         double initialPx = 0;
-
         //loop through all frames
         for (int frame = 0; frame < positions.size(); frame++) {
             int curr = positions[frame][line];
@@ -589,9 +571,9 @@ std::vector<std::vector<double>> FlameProcessing::cleanData(std::vector<std::vec
                 last_known_position = (curr - initialPx) * cmPerPixel;
                 cleanedPositions.push_back(last_known_position);
             }
-            //std::cout<<"Line[" << line << "]:" << cleanedPositions[frame]<< ", with px:" << positions[frame][line]<<std::endl;
+            std::cout<<"Line[" << line << "]:" << cleanedPositions[frame]<< ", with px:" << positions[frame][line]<<std::endl;
         }
-        //std::cout << "NEXT DATA SEGMENT" << std::endl;
+        std::cout << "NEXT DATA SEGMENT" << std::endl;
         allLines.emplace_back(cleanedPositions);
     }
     return allLines;
@@ -635,26 +617,26 @@ std::vector<cv::Point> FlameProcessing::findLowestEdges(std::vector<cv::Point> c
 
 //     // Process each group
 //     for (const auto& [x, points] : xMap) {
-//         std::cout << "Processing x = " << x << ":\n";
+//         //std::cout << "Processing x = " << x << ":\n";
 
 //         cv::Point edgePt(-1, -1); // Initialize with invalid point
 
 //         for (const cv::Point& pt : points) {
-//             std::cout << "  Considering point (" << pt.x << ", " << pt.y << ") ";
+//             //std::cout << "  Considering point (" << pt.x << ", " << pt.y << ") ";
 //             if (pt.y > edgePt.y) {
 //                 edgePt = pt; // Update to the point with the maximum y
-//                 std::cout << "-> New edge point selected.\n";
+//                 //std::cout << "-> New edge point selected.\n";
 //             } else {
-//                 std::cout << "-> Not selected.\n";
+//                 //std::cout << "-> Not selected.\n";
 //             }
 //         }
 
 //         if (edgePt.x != -1) { // Valid point found
 //             edgePoints.push_back(edgePt);
-//             std::cout << "  Final edge point for x = " << x << ": ("
+//             //std::cout << "  Final edge point for x = " << x << ": ("
 //                       << edgePt.x << ", " << edgePt.y << ")\n";
 //         } else {
-//             std::cout << "  No valid points found for x = " << x << ".\n";
+//             ////std::cout << "  No valid points found for x = " << x << ".\n";
 //         }
 //     }
 
@@ -687,3 +669,4 @@ std::vector<cv::Point> FlameProcessing::findContourPixels(std::vector<cv::Point>
     }
     return whitePixels;
 }
+

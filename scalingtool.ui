@@ -199,52 +199,17 @@
            <item row="1" column="0">
             <widget class="QTabWidget" name="tabWidget">
              <property name="currentIndex">
-              <number>0</number>
+              <number>1</number>
              </property>
              <widget class="QWidget" name="Speed">
               <attribute name="title">
                <string>Speed Tracking</string>
               </attribute>
               <layout class="QGridLayout" name="gridLayout_10">
-               <item row="7" column="0" colspan="3">
-                <widget class="QPushButton" name="pushButton_4">
+               <item row="5" column="0">
+                <widget class="QLabel" name="label_5">
                  <property name="text">
-                  <string>Detect Circles</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="1">
-                <widget class="QSlider" name="WhiteSlider">
-                 <property name="orientation">
-                  <enum>Qt::Orientation::Horizontal</enum>
-                 </property>
-                </widget>
-               </item>
-               <item row="2" column="2">
-                <widget class="QLabel" name="WhiteVal">
-                 <property name="text">
-                  <string>TextLabel</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="6" column="0">
-                <widget class="QLabel" name="label_6">
-                 <property name="text">
-                  <string>Accumulator </string>
-                 </property>
-                </widget>
-               </item>
-               <item row="1" column="2">
-                <widget class="QLabel" name="BlackVal">
-                 <property name="text">
-                  <string>TextLabel</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="5" column="1">
-                <widget class="QSlider" name="CannySlider">
-                 <property name="orientation">
-                  <enum>Qt::Orientation::Horizontal</enum>
+                  <string>Canny Threshold</string>
                  </property>
                 </widget>
                </item>
@@ -255,25 +220,33 @@
                  </property>
                 </widget>
                </item>
-               <item row="8" column="0" colspan="3">
-                <widget class="QPushButton" name="pushButton_8">
-                 <property name="text">
-                  <string>Track Flames</string>
+               <item row="5" column="1">
+                <widget class="QSlider" name="CannySlider">
+                 <property name="orientation">
+                  <enum>Qt::Orientation::Horizontal</enum>
                  </property>
                 </widget>
                </item>
-               <item row="10" column="1">
-                <spacer name="verticalSpacer_2">
+               <item row="2" column="1">
+                <widget class="QSlider" name="WhiteSlider">
                  <property name="orientation">
-                  <enum>Qt::Orientation::Vertical</enum>
+                  <enum>Qt::Orientation::Horizontal</enum>
                  </property>
-                 <property name="sizeHint" stdset="0">
-                  <size>
-                   <width>20</width>
-                   <height>40</height>
-                  </size>
+                </widget>
+               </item>
+               <item row="4" column="2">
+                <widget class="QLabel" name="MaxLabel">
+                 <property name="text">
+                  <string>TextLabel</string>
                  </property>
-                </spacer>
+                </widget>
+               </item>
+               <item row="2" column="2">
+                <widget class="QLabel" name="WhiteVal">
+                 <property name="text">
+                  <string>TextLabel</string>
+                 </property>
+                </widget>
                </item>
                <item row="1" column="1">
                 <widget class="QSlider" name="BlackSlider">
@@ -282,29 +255,50 @@
                  </property>
                 </widget>
                </item>
-               <item row="3" column="2">
-                <widget class="QLabel" name="minLabel">
+               <item row="5" column="2">
+                <widget class="QLabel" name="CannyLabel">
                  <property name="text">
                   <string>TextLabel</string>
                  </property>
                 </widget>
                </item>
-               <item row="3" column="0">
-                <widget class="QLabel" name="label">
+               <item row="4" column="0">
+                <widget class="QLabel" name="label_2">
                  <property name="text">
-                  <string>min radius</string>
+                  <string>max radius</string>
                  </property>
                 </widget>
                </item>
-               <item row="5" column="0">
-                <widget class="QLabel" name="label_5">
+               <item row="14" column="0" colspan="3">
+                <widget class="QPushButton" name="SavePosDataButton">
                  <property name="text">
-                  <string>Canny Threshold</string>
+                  <string>Save Position Data</string>
                  </property>
                 </widget>
                </item>
-               <item row="4" column="2">
-                <widget class="QLabel" name="MaxLabel">
+               <item row="7" column="0" colspan="3">
+                <widget class="QPushButton" name="pushButton_4">
+                 <property name="text">
+                  <string>Detect Circles</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="15" column="0" colspan="3">
+                <widget class="QPushButton" name="pushButton_9">
+                 <property name="text">
+                  <string>Back</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="8" column="0" colspan="3">
+                <widget class="QPushButton" name="pushButton_8">
+                 <property name="text">
+                  <string>Track Flames</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="2">
+                <widget class="QLabel" name="minLabel">
                  <property name="text">
                   <string>TextLabel</string>
                  </property>
@@ -317,38 +311,10 @@
                  </property>
                 </widget>
                </item>
-               <item row="9" column="0" colspan="3">
-                <widget class="QProgressBar" name="progressBar">
-                 <property name="value">
-                  <number>24</number>
-                 </property>
-                </widget>
-               </item>
-               <item row="5" column="2">
-                <widget class="QLabel" name="CannyLabel">
+               <item row="6" column="0">
+                <widget class="QLabel" name="label_6">
                  <property name="text">
-                  <string>TextLabel</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="1">
-                <widget class="QSlider" name="MaxRadSlider">
-                 <property name="orientation">
-                  <enum>Qt::Orientation::Horizontal</enum>
-                 </property>
-                </widget>
-               </item>
-               <item row="3" column="1">
-                <widget class="QSlider" name="MinRadSlider">
-                 <property name="orientation">
-                  <enum>Qt::Orientation::Horizontal</enum>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="0">
-                <widget class="QLabel" name="label_2">
-                 <property name="text">
-                  <string>max radius</string>
+                  <string>Accumulator </string>
                  </property>
                 </widget>
                </item>
@@ -359,10 +325,109 @@
                  </property>
                 </widget>
                </item>
-               <item row="11" column="1">
-                <widget class="QPushButton" name="pushButton_9">
+               <item row="12" column="1">
+                <spacer name="verticalSpacer_2">
+                 <property name="orientation">
+                  <enum>Qt::Orientation::Vertical</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>20</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item row="4" column="1">
+                <widget class="QSlider" name="MaxRadSlider">
+                 <property name="orientation">
+                  <enum>Qt::Orientation::Horizontal</enum>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="2">
+                <widget class="QLabel" name="BlackVal">
                  <property name="text">
-                  <string>Back</string>
+                  <string>TextLabel</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="0">
+                <widget class="QLabel" name="label">
+                 <property name="text">
+                  <string>min radius</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="3" column="1">
+                <widget class="QSlider" name="MinRadSlider">
+                 <property name="orientation">
+                  <enum>Qt::Orientation::Horizontal</enum>
+                 </property>
+                </widget>
+               </item>
+               <item row="13" column="0" colspan="3">
+                <widget class="QProgressBar" name="progressBar">
+                 <property name="value">
+                  <number>24</number>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="Angle">
+              <attribute name="title">
+               <string>Angle Tracking</string>
+              </attribute>
+              <layout class="QGridLayout" name="gridLayout_12">
+               <item row="1" column="0" colspan="2">
+                <widget class="QPushButton" name="pushButton_14">
+                 <property name="text">
+                  <string>Draw Lines</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="0">
+                <widget class="QLabel" name="label_16">
+                 <property name="text">
+                  <string>Number of segments</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QSpinBox" name="SegmentSpinBox"/>
+               </item>
+               <item row="4" column="1">
+                <spacer name="verticalSpacer_4">
+                 <property name="orientation">
+                  <enum>Qt::Orientation::Vertical</enum>
+                 </property>
+                 <property name="sizeHint" stdset="0">
+                  <size>
+                   <width>20</width>
+                   <height>40</height>
+                  </size>
+                 </property>
+                </spacer>
+               </item>
+               <item row="6" column="0" colspan="2">
+                <widget class="QPushButton" name="pushButton_13">
+                 <property name="text">
+                  <string>PushButton</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="5" column="0" colspan="2">
+                <widget class="QProgressBar" name="progressBar_3">
+                 <property name="value">
+                  <number>24</number>
+                 </property>
+                </widget>
+               </item>
+               <item row="2" column="0" colspan="2">
+                <widget class="QPushButton" name="TrackAnglesButton">
+                 <property name="text">
+                  <string>Track Angles</string>
                  </property>
                 </widget>
                </item>
@@ -403,24 +468,10 @@
             </property>
            </widget>
           </item>
-          <item row="2" column="1">
-           <widget class="QPushButton" name="manualButton2">
-            <property name="text">
-             <string>Manual Scale</string>
-            </property>
-           </widget>
-          </item>
           <item row="1" column="1">
            <widget class="QLabel" name="FileLabel">
             <property name="text">
              <string>TextLabel</string>
-            </property>
-           </widget>
-          </item>
-          <item row="2" column="0">
-           <widget class="QPushButton" name="AutoButton2">
-            <property name="text">
-             <string>Auto Scale</string>
             </property>
            </widget>
           </item>

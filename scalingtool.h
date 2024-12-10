@@ -117,6 +117,18 @@ private slots:
 
     void on_pushButton_9_clicked();
 
+    void writePixelDataToCSV(const std::vector<std::vector<double>>& totalPixelData, const std::string& filePath);
+
+
+
+    void on_SavePosDataButton_clicked();
+
+
+
+    void on_SegmentSpinBox_valueChanged(int arg1);
+
+    void on_TrackAnglesButton_clicked();
+
 private:
     Ui::ScalingTool *ui;
 
@@ -163,6 +175,12 @@ private:
 
 
     std::vector<double> dataSegments;
+    std::vector<std::vector<double>> totalPosData;
+    std::vector<std::vector<double>> totalAngleData;
+
+    int segmentLines;
+
+    int angleThreshold;
 
 
 

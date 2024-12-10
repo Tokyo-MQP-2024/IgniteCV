@@ -38,11 +38,11 @@ public:
 
     void setROIBox(int x, int y, int h, int w);
 
-    std::vector<double> recordData(std::vector<double> segments);
+    std::vector<double> recordPositions(std::vector<double> segments);
 
     std::vector<std::vector<double>> cleanData(std::vector<std::vector<double>> positions);
 
-    void recordAngle(std::vector<double> segments, cv::Mat &image);
+    std::vector<double> recordAngle(std::vector<double> segments, cv::Mat &image, int threshold);
 
     std::vector<cv::Point> findLowestEdges(std::vector<cv::Point> contourInfo);
 
@@ -50,7 +50,11 @@ public:
 
     std::vector<cv::Point> findContourPixels(std::vector<cv::Point> contour, cv::Mat image);
 
-    double findAngle(double vx, double vy);
+    std::vector<cv::Point> selectLowestContour(int threshold, int currentX);
+
+    double findAngle(double vx, double vy, double refVx, double refVy);
+
+
 
 private:
 
@@ -70,8 +74,6 @@ private:
 
     cv::Point currPos;
 
-
-
     int maskX = 0;
     int maskY = 0;
     int maskH = 0;
@@ -81,13 +83,15 @@ private:
     double unitPerPixelY = 0;
     static void mouseCallback(int event, int x, int y, int flags, void* userdata);
 
-
     cv::Mat frame, HSVFrame, foreground, mask, hsvMask, resultImage, dilateErodeMask;
     cv::Mat dMask, eMask;
     cv::Mat kernel = cv::getStructuringElement(cv::MORPH_ELLIPSE, cv::Size(3, 3));
     cv::Ptr<cv::BackgroundSubtractor> bg_sub = cv::createBackgroundSubtractorKNN();
 
     std::vector<std::vector<cv::Point>> filteredContours;
+
+    std::vector<std::vector<double>> flamePositionData;
+
 };
 
 

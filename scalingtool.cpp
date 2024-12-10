@@ -53,7 +53,7 @@ ScalingTool::ScalingTool(QWidget *parent)
 
 
 
-
+    angleThreshold = 40;
 
     //setupHistogram();
     //ui->WhiteVal->setText();
@@ -380,7 +380,6 @@ void ScalingTool::on_BlackSlider_valueChanged(int value)
     QString valSTR = QString::number(value);
     ui->BlackVal->setText(valSTR);
     if(!currSelectFrame.empty()) {
-
         adjustLevels(currSelectFrame);
         //graphicsViewHelper(ui->FileViewWindow, flame_process, croppedFrame);
     }
@@ -534,13 +533,10 @@ void ScalingTool::on_VMax_valueChanged(int arg1)
 // record position for each line every second
 
 void ScalingTool::on_pushButton_8_clicked() {
-
     cv::VideoCapture cap(videoFilePath);
-
     // Check if the video file was opened successfully
     if (!cap.isOpened()) {
         std::cerr << "Error: FAILED OPENING FILE" << std::endl;
-
     } else {
         // Get video frame rate
         cap.set(cv::CAP_PROP_POS_FRAMES, 0);
@@ -549,19 +545,13 @@ void ScalingTool::on_pushButton_8_clicked() {
         double accumulatedTime = 0.0;
         double sampleInterval = 1.0;
         int seconds = 0;
-
-
         int frameCount = 0;
         cv::Mat frame;
-
-        std::vector<std::vector<double>> totalPosData;
-
+        std::vector<std::vector<double>> totalPixelData;
         while (true) {
-
             if(stopProcess) {
                 break;
             }
-
             accumulatedTime = accumulatedTime + timePerFrame;
             // Capture each frame
             cap >> frame;
@@ -575,35 +565,147 @@ void ScalingTool::on_pushButton_8_clicked() {
                 accumulatedTime = accumulatedTime - sampleInterval;
                 seconds = seconds+1;
                 cv::Mat incoming = flame_process->findContourImage(frame);
-                flame_process->recordAngle(dataSegments, incoming);
-                std::vector<double> posData = flame_process->recordData(dataSegments);
-                totalPosData.emplace_back(posData);
-
-
-
-
-
+                flame_process->recordAngle(dataSegments, incoming, angleThreshold);
+                std::vector<double> posData = flame_process->recordPositions(dataSegments);
+                totalPixelData.emplace_back(posData);
                 graphicsViewHelper(ui->FileViewWindow, incoming, scene);
                 int out = 0 + ((100/cap.get(cv::CAP_PROP_FRAME_COUNT)) * (frameCount));
                 ui->progressBar->setValue(out);
-
                 QCoreApplication::processEvents();
             }
             frameCount++;
         }
         cap.release();
         ui->progressBar->setValue(100);
-
-        totalPosData = flame_process->cleanData(totalPosData);
-
+        totalPosData = flame_process->cleanData(totalPixelData);
     }
-
-
 }
+
+
+
 
 void ScalingTool::on_pushButton_9_clicked()
 {
     stopProcess = true;
     ui->EditPanel->setCurrentIndex(0);
+}
+
+
+
+// Function to write pixel data to a CSV file
+void ScalingTool::writePixelDataToCSV(const std::vector<std::vector<double>>& totalPixelData, const std::string& filePath) {
+    // Combine folder path and file name to get the full file path
+    //std::string filePath = folderPath;
+
+    // Open the file for writing
+    std::ofstream outFile(filePath);
+    if (!outFile.is_open()) {
+        std::cerr << "Error: Could not open file for writing: " << filePath << std::endl;
+        return;
+    }
+
+    // Write the pixel data to the file
+
+    // Determine the maximum length of any segment
+    size_t numRows = totalPixelData[0].size(); // Assume all segments have the same size
+    size_t numSegments = totalPixelData.size();
+
+    for (int i = 0; i < numSegments; i++) {
+        outFile << "Segment " << i;
+        if(i != numSegments - 1) {
+            outFile << ",";
+        }else {
+            outFile << "\n";
+        }
+    }
+
+    // Write transposed data
+    for (size_t i = 0; i < numRows; ++i) {
+        for (size_t j = 0; j < numSegments; ++j) {
+            outFile << totalPixelData[j][i]; // Write element in the transposed position
+            if (j < numSegments - 1) {
+                outFile << ","; // Add comma between elements
+            }
+        }
+        outFile << "\n"; // Newline after each transposed row
+    }
+
+    // Close the file
+    outFile.close();
+
+    std::cout << "File written successfully to: " << filePath << std::endl;
+}
+
+
+void ScalingTool::on_SavePosDataButton_clicked()
+{
+    // Open a file dialog to allow the user to select a location and name
+    QString fileName = QFileDialog::getSaveFileName(nullptr,"Save File","","CSV Files (*.csv);;All Files (*)");
+    if (fileName.isEmpty()) {
+        // User canceled the save dialog
+        return;
+    }
+    std::string filePathSTD = fileName.toStdString();
+    writePixelDataToCSV(totalPosData, filePathSTD);
+}
+
+
+void ScalingTool::on_SegmentSpinBox_valueChanged(int arg1)
+{
+    segmentLines = arg1;
+}
+
+
+
+
+
+void ScalingTool::on_TrackAnglesButton_clicked()
+{
+    cv::VideoCapture cap(videoFilePath);
+    // Check if the video file was opened successfully
+    if (!cap.isOpened()) {
+        std::cerr << "Error: FAILED OPENING FILE" << std::endl;
+    } else {
+        // Get video frame rate
+        cap.set(cv::CAP_PROP_POS_FRAMES, 0);
+        double fps = cap.get(cv::CAP_PROP_FPS);
+        double timePerFrame = 1.0/fps; // in seconds
+        double accumulatedTime = 0.0;
+        double sampleInterval = 1.0;
+        int seconds = 0;
+        int frameCount = 0;
+        cv::Mat frame;
+        std::vector<std::vector<double>> angleData;
+        while (true) {
+            if(stopProcess) {
+                break;
+            }
+            accumulatedTime = accumulatedTime + timePerFrame;
+            // Capture each frame
+            cap >> frame;
+
+            // If the frame is empty, break the loop (end of video)
+            if (frame.empty()) {
+                break;
+            }
+            if(accumulatedTime > sampleInterval) {
+                //std::cout << frameCount << "\n";
+                accumulatedTime = accumulatedTime - sampleInterval;
+                seconds = seconds+1;
+                cv::Mat incoming = flame_process->findContourImage(frame);
+                std::vector<double> angleData = flame_process->recordAngle(dataSegments, incoming, angleThreshold);
+                totalAngleData.emplace_back(angleData);
+                graphicsViewHelper(ui->FileViewWindow, incoming, scene);
+                int out = 0 + ((100/cap.get(cv::CAP_PROP_FRAME_COUNT)) * (frameCount));
+                ui->progressBar->setValue(out);
+                QCoreApplication::processEvents();
+            }
+            frameCount++;
+        }
+        cap.release();
+        ui->progressBar->setValue(100);
+        //totalPosData = flame_process->cleanData(totalPixelData);
+    }
+
 }
 

@@ -478,3 +478,14 @@ void updateNumericalLabel(QLabel *label, int val) {
     QString valSTR = QString::number(val);
     label->setText(valSTR);
 }
+
+double calcLOBFAngle(double vx, double vy, double refVx, double refVy) {
+    double magnitude = std::sqrt(vx * vx + vy * vy);
+    double normVx = vx / magnitude;
+    double normVy = vy / magnitude;
+    double dotProduct = normVx * refVx + normVy * refVy;
+    double crossProduct = normVx * refVy - normVy * refVx;
+    double angleRad = std::atan2(crossProduct, dotProduct);
+    double angleDeg = angleRad * 180.0 / CV_PI;
+    return angleDeg;
+}

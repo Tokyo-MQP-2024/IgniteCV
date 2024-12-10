@@ -22,6 +22,7 @@ void graphicsViewHSV(QGraphicsView *view, cv::Mat f);
 void computeFFT(const std::vector<double> &inputSignal, std::vector<double> &amplitudeSpectrum);
 void detectCircles(cv::Mat &image, std::vector<cv::Vec3f> &circles, int min, int max, int canny, int accum);
 void updateNumericalLabel(QLabel *label, int val);
+double calcLOBFAngle(double vx, double vy, double refVx, double refVy);
 
 
 
