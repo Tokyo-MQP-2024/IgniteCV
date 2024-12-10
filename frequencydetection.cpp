@@ -700,6 +700,20 @@ void FrequencyDetection::on_checkBoxROI_checkStateChanged(const Qt::CheckState &
     refreshImageCurve();
 }
 
+// Function to compute standard deviation for each column (y-value)
+double computeStdDevForColumn(const cv::Mat& mat, int colIdx) {
+    std::vector<double> columnData;
+    for (int i = 0; i < mat.rows; ++i) {
+        columnData.push_back(mat.at<double>(i, colIdx)); // Collect data for the column (y-value)
+    }
+
+    double mean = std::accumulate(columnData.begin(), columnData.end(), 0.0) / columnData.size();
+    double variance = std::accumulate(columnData.begin(), columnData.end(), 0.0,
+                                      [mean](double acc, double x) { return acc + (x - mean) * (x - mean); }) /
+                      columnData.size();
+    return std::sqrt(variance); // Return standard deviation
+}
+
 // Run the program with selected parameters
 void FrequencyDetection::on_pushButtonRunCurve_clicked() {
     // Check for empty files
@@ -766,9 +780,30 @@ void FrequencyDetection::on_pushButtonRunCurve_clicked() {
         QFuture<std::vector<int>> future = watcher->future();
         m_centerlines.reserve(future.resultCount());
 
-        for (int i = 0; i < future.resultCount(); ++i) {
-            m_centerlines.push_back(future.resultAt(i));
+
+        // Note: Rows are frames, Columns are every x value in that frame, index of column is y value.
+        int numFrames = future.resultCount(); // Rows
+        int numYValues = future.resultAt(0).size(); // Columns
+
+        m_centerlines = cv::Mat(numFrames, numYValues, CV_32S);
+
+        // Step 3: Fill the cv::Mat with data
+        for (int i = 0; i < numFrames; ++i) {
+            std::vector<int> frameData = future.resultAt(i);
+            for (int j = 0; j < numYValues; ++j) {
+                m_centerlines.at<int>(i, j) = frameData[j];
+            }
         }
+
+        // Check mat
+        // std::cout << "Numrows: " << m_centerlines.rows << std::endl;
+        // std::cout << "Numcols: " << m_centerlines.cols << std::endl;
+
+        if(ui->checkBoxCSVCurve->isChecked()) {
+            exportCenterlineToCSV(m_centerlines);
+        }
+
+
 
         // Enable the run button
         ui->pushButtonRunCurve->setEnabled(true);
@@ -811,5 +846,47 @@ void FrequencyDetection::on_pushButtonRunCurve_clicked() {
     });
     watcher->setFuture(future);
     progressDialog->setMaximum(m_imageFilesCurve.size());
+}
+
+// Export areas
+void FrequencyDetection::exportCenterlineToCSV(const cv::Mat &data) {
+    QString fileName = m_fileName;
+    // Check if the user canceled the dialog
+    if (fileName.isEmpty()) {
+        return;
+    }
+
+    // Open the selected file for writing
+    QFile file(fileName);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QMessageBox::warning(nullptr, "Error", "Could not open file for writing!");
+        return;
+    }
+
+    // Create a QTextStream to write data to the file
+    QTextStream out(&file);
+    // Write CSV headers (optional)
+    out << tr("Frame");
+
+    // Write headers for each column
+    for (int col = 0; col < data.cols; ++col) {
+        out << "," << tr("Y ") + QString::number(col + 1); // Optional: you can name columns based on index
+    }
+    out << "\n"; // New line after header
+
+    // Write each row of the matrix
+    for (int row = 0; row < data.rows; ++row) {
+        out << row;  // Write row index
+
+        // Write each column value in the current row
+        for (int col = 0; col < data.cols; ++col) {
+            out << "," << data.at<int>(row, col); // Assuming float type, adjust if needed
+        }
+
+        out << "\n"; // New line after each row
+    }
+
+    // Close the file
+    file.close();
 }
 

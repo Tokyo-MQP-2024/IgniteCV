@@ -191,7 +191,6 @@
    <addaction name="menuFile"/>
    <addaction name="menuLanguage"/>
   </widget>
-  <widget class="QStatusBar" name="statusbar"/>
   <widget class="QToolBar" name="toolBar">
    <property name="windowTitle">
     <string>toolBar</string>
@@ -204,6 +203,7 @@
    </attribute>
    <addaction name="actionHome"/>
   </widget>
+  <widget class="QStatusBar" name="statusbar"/>
   <action name="actionHome">
    <property name="icon">
     <iconset theme="QIcon::ThemeIcon::GoHome"/>
