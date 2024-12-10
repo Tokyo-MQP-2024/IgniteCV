@@ -400,37 +400,6 @@ void ScalingTool::on_WhiteSlider_valueChanged(int value)
 }
 
 
-// void ScalingTool::setupHistogram()
-// {
-//     // Example data for the histogram
-//     QVector<double> bins = {1, 2, 3, 4, 5};      // X-axis bins
-//     QVector<double> frequencies = {5, 15, 25, 10, 8}; // Y-axis values
-
-//     // Create a QCPBars object
-//     QCPBars *histogram = new QCPBars(ui->customPlot->xAxis, ui->customPlot->yAxis);
-//     histogram->setWidth(0.5);                   // Bar width
-//     histogram->setBrush(QBrush(Qt::blue));     // Bar color
-//     histogram->setPen(QPen(Qt::black));        // Border color
-
-//     // Set data
-//     histogram->setData(bins, frequencies);
-
-//     // Customize axes
-//     ui->customPlot->xAxis->setLabel("Bins");
-//     ui->customPlot->yAxis->setLabel("Frequency");
-
-//     // Automatically scale axes to fit the histogram
-//     ui->customPlot->xAxis->setRange(bins.first() - 1, bins.last() + 1); // Add padding
-//     ui->customPlot->yAxis->setRange(0, *std::max_element(frequencies.begin(), frequencies.end()) * 1.1); // Add 10% padding
-
-//     // Enable dynamic rescaling when data changes
-//     ui->customPlot->rescaleAxes();
-
-//     // Replot
-//     ui->customPlot->replot();
-// }
-
-
 void ScalingTool::on_MinRadSlider_valueChanged(int value)
 {
     minRad = value;
@@ -565,7 +534,7 @@ void ScalingTool::on_pushButton_8_clicked() {
                 accumulatedTime = accumulatedTime - sampleInterval;
                 seconds = seconds+1;
                 cv::Mat incoming = flame_process->findContourImage(frame);
-                flame_process->recordAngle(dataSegments, incoming, angleThreshold);
+                //flame_process->recordAngle(dataSegments, incoming, angleThreshold);
                 std::vector<double> posData = flame_process->recordPositions(dataSegments);
                 totalPixelData.emplace_back(posData);
                 graphicsViewHelper(ui->FileViewWindow, incoming, scene);
@@ -592,49 +561,6 @@ void ScalingTool::on_pushButton_9_clicked()
 
 
 
-// Function to write pixel data to a CSV file
-void ScalingTool::writePixelDataToCSV(const std::vector<std::vector<double>>& totalPixelData, const std::string& filePath) {
-    // Combine folder path and file name to get the full file path
-    //std::string filePath = folderPath;
-
-    // Open the file for writing
-    std::ofstream outFile(filePath);
-    if (!outFile.is_open()) {
-        std::cerr << "Error: Could not open file for writing: " << filePath << std::endl;
-        return;
-    }
-
-    // Write the pixel data to the file
-
-    // Determine the maximum length of any segment
-    size_t numRows = totalPixelData[0].size(); // Assume all segments have the same size
-    size_t numSegments = totalPixelData.size();
-
-    for (int i = 0; i < numSegments; i++) {
-        outFile << "Segment " << i;
-        if(i != numSegments - 1) {
-            outFile << ",";
-        }else {
-            outFile << "\n";
-        }
-    }
-
-    // Write transposed data
-    for (size_t i = 0; i < numRows; ++i) {
-        for (size_t j = 0; j < numSegments; ++j) {
-            outFile << totalPixelData[j][i]; // Write element in the transposed position
-            if (j < numSegments - 1) {
-                outFile << ","; // Add comma between elements
-            }
-        }
-        outFile << "\n"; // Newline after each transposed row
-    }
-
-    // Close the file
-    outFile.close();
-
-    std::cout << "File written successfully to: " << filePath << std::endl;
-}
 
 
 void ScalingTool::on_SavePosDataButton_clicked()
@@ -646,14 +572,25 @@ void ScalingTool::on_SavePosDataButton_clicked()
         return;
     }
     std::string filePathSTD = fileName.toStdString();
-    writePixelDataToCSV(totalPosData, filePathSTD);
+    writePosDataToCSV(totalPosData, filePathSTD);
 }
 
 
 void ScalingTool::on_SegmentSpinBox_valueChanged(int arg1)
 {
     segmentLines = arg1;
+    cv::Mat newImg;
+    currSelectFrame.copyTo(newImg);
+    //std::cout << "DETETCING CIRCLES\n";
+    //std::vector<cv::Vec3f> circles;
+    //detectCircles(newImg, circles, minRad, maxRad, canny, accumulator);
+    int maskWCoord = maskX + maskW;
+    dataSegments = createManualGridlines(newImg, segmentLines, maskX, maskWCoord);
+    graphicsViewHelper(ui->FileViewWindow, newImg, scene);
+
 }
+
+
 
 
 
@@ -661,6 +598,7 @@ void ScalingTool::on_SegmentSpinBox_valueChanged(int arg1)
 
 void ScalingTool::on_TrackAnglesButton_clicked()
 {
+    totalAngleData.clear();
     cv::VideoCapture cap(videoFilePath);
     // Check if the video file was opened successfully
     if (!cap.isOpened()) {
@@ -706,6 +644,30 @@ void ScalingTool::on_TrackAnglesButton_clicked()
         ui->progressBar->setValue(100);
         //totalPosData = flame_process->cleanData(totalPixelData);
     }
+
+}
+
+
+void ScalingTool::on_AngleSaveButton_clicked()
+{
+    // Open a file dialog to allow the user to select a location and name
+    QString fileName = QFileDialog::getSaveFileName(nullptr,"Save File","","CSV Files (*.csv);;All Files (*)");
+    if (fileName.isEmpty()) {
+        return;
+    }
+    std::string filePathSTD = fileName.toStdString();
+    writeAngleDataToCSV(totalAngleData, filePathSTD);
+}
+
+
+void ScalingTool::on_AngleThresholdWheel_valueChanged(int arg1)
+{
+    angleThreshold = arg1;
+}
+
+
+void ScalingTool::on_AreaTrackButton_clicked()
+{
 
 }
 

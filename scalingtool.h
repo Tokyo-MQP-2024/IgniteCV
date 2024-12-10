@@ -117,7 +117,7 @@ private slots:
 
     void on_pushButton_9_clicked();
 
-    void writePixelDataToCSV(const std::vector<std::vector<double>>& totalPixelData, const std::string& filePath);
+    //void writePixelDataToCSV(const std::vector<std::vector<double>>& totalPixelData, const std::string& filePath);
 
 
 
@@ -128,6 +128,10 @@ private slots:
     void on_SegmentSpinBox_valueChanged(int arg1);
 
     void on_TrackAnglesButton_clicked();
+
+    void on_AngleSaveButton_clicked();
+
+    void on_AngleThresholdWheel_valueChanged(int arg1);
 
 private:
     Ui::ScalingTool *ui;

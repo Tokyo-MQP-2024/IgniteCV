@@ -54,6 +54,8 @@ public:
 
     double findAngle(double vx, double vy, double refVx, double refVy);
 
+    cv::Mat findContourMask(cv::Mat original_frame);
+
 
 
 private:

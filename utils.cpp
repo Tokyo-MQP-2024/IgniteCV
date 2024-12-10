@@ -371,6 +371,8 @@ void detectCircles(cv::Mat &image, std::vector<cv::Vec3f> &circles, int min, int
 
 }
 
+
+
 std::vector<double> createGridlines(cv::Mat &image, std::vector<cv::Vec3f> &circles) {
     // Sort circle vector by x values
     std::sort(circles.begin(), circles.end(), [](const cv::Vec3i &a, const cv::Vec3i &b) {
@@ -418,19 +420,25 @@ std::vector<double> createGridlines(cv::Mat &image, std::vector<cv::Vec3f> &circ
     return lines;
 }
 
-// std::vector<double> getLines() {
-//     std::vector<double> lines;
-//     // Draw vertical lines between the averages
-//     for(int i = 0; i < averages.size() - 1; i++) {
-//         double lineX = (averages[i] + averages[i + 1]) / 2.0;
-//         cv::Point startPoint(lineX, 0);
-//         cv::Point endPoint(lineX, image.rows);
-//         cv::line(image, startPoint, endPoint, cv::Scalar(0, 255, 0), 2);
-//     }
+std::vector<double> createManualGridlines(cv::Mat &image, int numLines, int left, int right) {
+    std::vector<double> xLineCoords;
+    int width = right-left;
+    // Calculate the spacing between each line
+    int spacing = width / (numLines + 1);  // Evenly distribute lines between the left and right
+    // Generate the x coordinates for the gridlines
+    for (int i = 1; i <= numLines; ++i) {
+        int xCoord = left + i * spacing;
+        xLineCoords.push_back(xCoord); // Add the x-coordinate to the vector
+    }
+    for(int i = 0; i < xLineCoords.size(); i++) {
+        cv::Point startPoint(xLineCoords[i], 0);
+        cv::Point endPoint(xLineCoords[i], image.rows);
+        cv::line(image, startPoint, endPoint, cv::Scalar(0, 255, 0), 2);
+    }
+    return xLineCoords;
+}
 
-//     return averages;
 
-// }
 
 void graphicsViewHelper(QGraphicsView *view, cv::Mat f, QGraphicsScene *scene) {
     //std::cout<<"frame\n";
@@ -488,4 +496,77 @@ double calcLOBFAngle(double vx, double vy, double refVx, double refVy) {
     double angleRad = std::atan2(crossProduct, dotProduct);
     double angleDeg = angleRad * 180.0 / CV_PI;
     return angleDeg;
+}
+
+
+// Function to write pixel data to a CSV file
+void writePosDataToCSV(const std::vector<std::vector<double>>& totalPosData, const std::string& filePath) {
+    // Open the file for writing
+    std::ofstream outFile(filePath);
+    if (!outFile.is_open()) {
+        std::cerr << "Error: Could not open file for writing: " << filePath << std::endl;
+        return;
+    }
+    // Determine the maximum length of any segment
+    size_t numRows = totalPosData[0].size(); // Assume all segments have the same size
+    size_t numSegments = totalPosData.size();
+    for (int i = 0; i < numSegments; i++) {
+        outFile << "Segment " << i;
+        if(i != numSegments - 1) {
+            outFile << ",";
+        }else {
+            outFile << "\n";
+        }
+    }
+    // Write transposed data
+    for (size_t i = 0; i < numRows; ++i) {
+        for (size_t j = 0; j < numSegments; ++j) {
+            outFile << totalPosData[j][i]; // Write element in the transposed position
+            if (j < numSegments - 1) {
+                outFile << ","; // Add comma between elements
+            }
+        }
+        outFile << "\n"; // Newline after each transposed row
+    }
+    // Close the file
+    outFile.close();
+    std::cout << "File written successfully to: " << filePath << std::endl;
+}
+
+
+
+void writeAngleDataToCSV(const std::vector<std::vector<double>>& totalAngleData, const std::string& filePath) {
+    // Open the file for writing
+    std::ofstream outFile(filePath);
+    if (!outFile.is_open()) {
+        std::cerr << "Error: Could not open file for writing: " << filePath << std::endl;
+        return;
+    }
+    // Determine the maximum length of any segment
+    //size_t numRows = totalPosData.size(); // Assume all segments have the same size
+    size_t numSegments = totalAngleData[0].size();
+    size_t numRows = totalAngleData.size();
+    for (int i = 0; i < numSegments; i++) {
+        outFile << "Segment " << i;
+        if(i != numSegments - 1) {
+            outFile << ",";
+        }else {
+            outFile << "\n";
+        }
+    }
+
+    for (size_t i = 0; i < numRows; ++i) {
+        for(size_t j = 0; j < numSegments; ++j) {
+            outFile << totalAngleData[i][j];
+            if (j < numSegments - 1) {
+                outFile << ","; // Add comma between elements
+            }
+        }
+        outFile << "\n";
+    }
+
+
+
+    outFile.close();
+    std::cout << "File written successfully to: " << filePath << std::endl;
 }

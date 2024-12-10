@@ -502,11 +502,13 @@ std::vector<double> FlameProcessing::recordAngle(std::vector<double> segments, c
                 cv::line(image, start, end, cv::Scalar(0, 255, 0), 2);
             }
 
+        } else {
+            angleData.push_back(0);
         }
 
     }
+    filteredContours.clear();
     return angleData;
-
 
 }
 
