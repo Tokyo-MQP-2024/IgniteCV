@@ -1,4 +1,4 @@
-# Note About Contributions
+# Note About Contributors
 
 Due to a GitHub account issue, all commit history done by "cwalczak66" have been replaced with "Your Name"
 
