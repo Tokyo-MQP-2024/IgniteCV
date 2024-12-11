@@ -1,3 +1,7 @@
+# Note About Contributions
+
+Due to a GitHub account issue, all commit history done by "cwalczak66" have been replaced with "Your Name"
+
 # Overview
 
 Install the latest releast from the Releases tab on this repository
