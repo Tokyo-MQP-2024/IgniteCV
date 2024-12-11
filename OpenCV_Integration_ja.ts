@@ -461,7 +461,7 @@
     <message>
         <location filename="scalingtool.ui" line="430"/>
         <source>Upload File</source>
-        <translation type="unfinished"></translation>
+        <translation>ファイルを開く</translation>
     </message>
     <message>
         <location filename="scalingtool.ui" line="58"/>

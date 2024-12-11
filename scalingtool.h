@@ -117,6 +117,30 @@ private slots:
 
     void on_pushButton_9_clicked();
 
+    //void writePixelDataToCSV(const std::vector<std::vector<double>>& totalPixelData, const std::string& filePath);
+
+
+
+    void on_SavePosDataButton_clicked();
+
+
+
+    void on_SegmentSpinBox_valueChanged(int arg1);
+
+    void on_TrackAnglesButton_clicked();
+
+    void on_AngleSaveButton_clicked();
+
+    void on_AngleThresholdWheel_valueChanged(int arg1);
+
+    void on_AreaTrackButton_clicked();
+
+    void on_FrameThreshSlider_valueChanged(int value);
+
+    void on_startFrame_valueChanged(int arg1);
+
+    void changeEvent(QEvent* event);
+
 private:
     Ui::ScalingTool *ui;
 
@@ -163,6 +187,14 @@ private:
 
 
     std::vector<double> dataSegments;
+    std::vector<std::vector<double>> totalPosData;
+    std::vector<std::vector<double>> totalAngleData;
+
+    int segmentLines;
+
+    int angleThreshold;
+
+    int areaFrameThreshold;
 
 
 

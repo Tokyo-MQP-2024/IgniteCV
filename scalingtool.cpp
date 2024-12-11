@@ -53,12 +53,25 @@ ScalingTool::ScalingTool(QWidget *parent)
 
 
 
+    angleThreshold = 40;
 
+    areaFrameThreshold = 50;
+    ui->FrameThreshSlider->setMaximum(400);
+    ui->FrameThreshSlider->setValue(areaFrameThreshold);
+    updateNumericalLabel(ui->FrameThreshLabel, areaFrameThreshold);
 
     //setupHistogram();
     //ui->WhiteVal->setText();
 
 
+}
+
+void ScalingTool::changeEvent(QEvent* event) {
+    if (event->type() == QEvent::LanguageChange) {
+        // Update the UI elements to the new language
+        ui->retranslateUi(this);
+    }
+    QWidget::changeEvent(event);
 }
 
 ScalingTool::~ScalingTool()
@@ -207,7 +220,7 @@ void ScalingTool::on_ScaleXEdit_editingFinished()
 {
     editXDone = true;
     if (scaleXDone && scaleYDone && editXDone && editYDone) {
-        ui->ROIButton->setDisabled(false);
+        ui->BeginButton->setDisabled(false);
     }
 }
 
@@ -216,7 +229,7 @@ void ScalingTool::on_ScaleYEdit_editingFinished()
 {
     editYDone = true;
     if (scaleXDone && scaleYDone && editXDone && editYDone) {
-        ui->ROIButton->setDisabled(false);
+        ui->BeginButton->setDisabled(false);
     }
 }
 
@@ -246,6 +259,7 @@ void ScalingTool::on_AutoButton2_clicked()
 // FILE UPLOAD FUNCTION
 void ScalingTool::on_pushButton_2_clicked()
 {
+    stopProcess = false;
     QString filePath = QFileDialog::getOpenFileName(this, tr("Open a File"), "C://");
     std::string filePathSTD = filePath.toStdString();
     flame_process = new FlameProcessing(); // create new instance of flame process
@@ -380,7 +394,6 @@ void ScalingTool::on_BlackSlider_valueChanged(int value)
     QString valSTR = QString::number(value);
     ui->BlackVal->setText(valSTR);
     if(!currSelectFrame.empty()) {
-
         adjustLevels(currSelectFrame);
         //graphicsViewHelper(ui->FileViewWindow, flame_process, croppedFrame);
     }
@@ -399,37 +412,6 @@ void ScalingTool::on_WhiteSlider_valueChanged(int value)
     }
     //graphicsViewHelper(ui->FileViewWindow, flame_process, croppedFrame);
 }
-
-
-// void ScalingTool::setupHistogram()
-// {
-//     // Example data for the histogram
-//     QVector<double> bins = {1, 2, 3, 4, 5};      // X-axis bins
-//     QVector<double> frequencies = {5, 15, 25, 10, 8}; // Y-axis values
-
-//     // Create a QCPBars object
-//     QCPBars *histogram = new QCPBars(ui->customPlot->xAxis, ui->customPlot->yAxis);
-//     histogram->setWidth(0.5);                   // Bar width
-//     histogram->setBrush(QBrush(Qt::blue));     // Bar color
-//     histogram->setPen(QPen(Qt::black));        // Border color
-
-//     // Set data
-//     histogram->setData(bins, frequencies);
-
-//     // Customize axes
-//     ui->customPlot->xAxis->setLabel("Bins");
-//     ui->customPlot->yAxis->setLabel("Frequency");
-
-//     // Automatically scale axes to fit the histogram
-//     ui->customPlot->xAxis->setRange(bins.first() - 1, bins.last() + 1); // Add padding
-//     ui->customPlot->yAxis->setRange(0, *std::max_element(frequencies.begin(), frequencies.end()) * 1.1); // Add 10% padding
-
-//     // Enable dynamic rescaling when data changes
-//     ui->customPlot->rescaleAxes();
-
-//     // Replot
-//     ui->customPlot->replot();
-// }
 
 
 void ScalingTool::on_MinRadSlider_valueChanged(int value)
@@ -534,13 +516,10 @@ void ScalingTool::on_VMax_valueChanged(int arg1)
 // record position for each line every second
 
 void ScalingTool::on_pushButton_8_clicked() {
-
     cv::VideoCapture cap(videoFilePath);
-
     // Check if the video file was opened successfully
     if (!cap.isOpened()) {
         std::cerr << "Error: FAILED OPENING FILE" << std::endl;
-
     } else {
         // Get video frame rate
         cap.set(cv::CAP_PROP_POS_FRAMES, 0);
@@ -549,19 +528,13 @@ void ScalingTool::on_pushButton_8_clicked() {
         double accumulatedTime = 0.0;
         double sampleInterval = 1.0;
         int seconds = 0;
-
-
         int frameCount = 0;
         cv::Mat frame;
-
-        std::vector<std::vector<double>> totalPosData;
-
+        std::vector<std::vector<double>> totalPixelData;
         while (true) {
-
             if(stopProcess) {
                 break;
             }
-
             accumulatedTime = accumulatedTime + timePerFrame;
             // Capture each frame
             cap >> frame;
@@ -575,35 +548,201 @@ void ScalingTool::on_pushButton_8_clicked() {
                 accumulatedTime = accumulatedTime - sampleInterval;
                 seconds = seconds+1;
                 cv::Mat incoming = flame_process->findContourImage(frame);
-                flame_process->recordAngle(dataSegments, incoming);
-                std::vector<double> posData = flame_process->recordData(dataSegments);
-                totalPosData.emplace_back(posData);
-
-
-
-
-
+                //flame_process->recordAngle(dataSegments, incoming, angleThreshold);
+                std::vector<double> posData = flame_process->recordPositions(dataSegments);
+                totalPixelData.emplace_back(posData);
                 graphicsViewHelper(ui->FileViewWindow, incoming, scene);
                 int out = 0 + ((100/cap.get(cv::CAP_PROP_FRAME_COUNT)) * (frameCount));
                 ui->progressBar->setValue(out);
-
                 QCoreApplication::processEvents();
             }
             frameCount++;
         }
         cap.release();
         ui->progressBar->setValue(100);
-
-        totalPosData = flame_process->cleanData(totalPosData);
-
+        totalPosData = flame_process->cleanData(totalPixelData);
     }
-
-
 }
+
+
+
 
 void ScalingTool::on_pushButton_9_clicked()
 {
+    //stopProcess = true;
+    dataSegments.clear();
+    totalAngleData.clear();
+    totalPosData.clear();
     stopProcess = true;
+    delete flame_process;
     ui->EditPanel->setCurrentIndex(0);
+    ui->BeginButton->setDisabled(true);
+}
+
+
+
+
+
+void ScalingTool::on_SavePosDataButton_clicked()
+{
+    // Open a file dialog to allow the user to select a location and name
+    QString fileName = QFileDialog::getSaveFileName(nullptr,"Save File","","CSV Files (*.csv);;All Files (*)");
+    if (fileName.isEmpty()) {
+        // User canceled the save dialog
+        return;
+    }
+    std::string filePathSTD = fileName.toStdString();
+    writePosDataToCSV(totalPosData, filePathSTD);
+}
+
+
+void ScalingTool::on_SegmentSpinBox_valueChanged(int arg1)
+{
+    segmentLines = arg1;
+    cv::Mat newImg;
+    currSelectFrame.copyTo(newImg);
+    //std::cout << "DETETCING CIRCLES\n";
+    //std::vector<cv::Vec3f> circles;
+    //detectCircles(newImg, circles, minRad, maxRad, canny, accumulator);
+    int maskWCoord = maskX + maskW;
+    dataSegments = createManualGridlines(newImg, segmentLines, maskX, maskWCoord);
+    graphicsViewHelper(ui->FileViewWindow, newImg, scene);
+
+}
+
+
+
+
+
+
+
+void ScalingTool::on_TrackAnglesButton_clicked()
+{
+    totalAngleData.clear();
+    cv::VideoCapture cap(videoFilePath);
+    // Check if the video file was opened successfully
+    if (!cap.isOpened()) {
+        std::cerr << "Error: FAILED OPENING FILE" << std::endl;
+    } else {
+        // Get video frame rate
+        cap.set(cv::CAP_PROP_POS_FRAMES, 0);
+        double fps = cap.get(cv::CAP_PROP_FPS);
+        double timePerFrame = 1.0/fps; // in seconds
+        double accumulatedTime = 0.0;
+        double sampleInterval = 1.0;
+        int seconds = 0;
+        int frameCount = 0;
+        cv::Mat frame;
+        std::vector<std::vector<double>> angleData;
+        while (true) {
+            if(stopProcess) {
+                break;
+            }
+            accumulatedTime = accumulatedTime + timePerFrame;
+            // Capture each frame
+            cap >> frame;
+
+            // If the frame is empty, break the loop (end of video)
+            if (frame.empty()) {
+                break;
+            }
+            if(accumulatedTime > sampleInterval) {
+                //std::cout << frameCount << "\n";
+                accumulatedTime = accumulatedTime - sampleInterval;
+                seconds = seconds+1;
+                cv::Mat incoming = flame_process->findContourImage(frame);
+                std::vector<double> angleData = flame_process->recordAngle(dataSegments, incoming, angleThreshold);
+                totalAngleData.emplace_back(angleData);
+                graphicsViewHelper(ui->FileViewWindow, incoming, scene);
+                int out = 0 + ((100/cap.get(cv::CAP_PROP_FRAME_COUNT)) * (frameCount));
+                ui->progressBar->setValue(out);
+                QCoreApplication::processEvents();
+            }
+            frameCount++;
+        }
+        cap.release();
+        ui->progressBar->setValue(100);
+        //totalPosData = flame_process->cleanData(totalPixelData);
+    }
+
+}
+
+
+void ScalingTool::on_AngleSaveButton_clicked()
+{
+    // Open a file dialog to allow the user to select a location and name
+    QString fileName = QFileDialog::getSaveFileName(nullptr,"Save File","","CSV Files (*.csv);;All Files (*)");
+    if (fileName.isEmpty()) {
+        return;
+    }
+    std::string filePathSTD = fileName.toStdString();
+    writeAngleDataToCSV(totalAngleData, filePathSTD);
+}
+
+
+void ScalingTool::on_AngleThresholdWheel_valueChanged(int arg1)
+{
+    angleThreshold = arg1;
+}
+
+
+void ScalingTool::on_AreaTrackButton_clicked()
+{
+    cv::VideoCapture cap(videoFilePath);
+    // Check if the video file was opened successfully
+    if (!cap.isOpened()) {
+        std::cerr << "Error: FAILED OPENING FILE" << std::endl;
+    } else {
+        // Get video frame rate
+
+    int frameCount = 0;
+    cv::Mat frame;
+    cap >> frame;
+    cv::Mat contourMask = cv::Mat::zeros(frame.size(), frame.type());
+    cv::Mat newFrame = cv::Mat::zeros(frame.size(), frame.type());
+
+    while (true) {
+        if(stopProcess) {
+            break;
+        }
+
+        // Capture each frame
+        cap >> frame;
+
+        // If the frame is empty, break the loop (end of video)
+        if (frame.empty()) {
+            break;
+        }
+
+            //std::cout << frameCount << "\n";
+        if(frameCount % areaFrameThreshold == 0) {
+            cv::Mat incoming = flame_process->findContourMask(frame, newFrame, contourMask);
+            double realArea = flame_process->calculateArea(incoming);
+            updateDoubleLabel(ui->AreaLabel, realArea);
+            graphicsViewHelper(ui->FileViewWindow, incoming, scene);
+            int out = 0 + ((100/cap.get(cv::CAP_PROP_FRAME_COUNT)) * (frameCount));
+            ui->AreaProgress->setValue(out);
+            QCoreApplication::processEvents();
+        }
+        frameCount++;
+        }
+
+    }
+    cap.release();
+    ui->AreaProgress->setValue(100);
+
+}
+
+
+void ScalingTool::on_FrameThreshSlider_valueChanged(int value)
+{
+    areaFrameThreshold = value;
+    updateNumericalLabel(ui->FrameThreshLabel, value);
+}
+
+
+void ScalingTool::on_startFrame_valueChanged(int arg1)
+{
+
 }
 
