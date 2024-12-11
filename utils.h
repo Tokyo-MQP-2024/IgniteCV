@@ -23,7 +23,7 @@ void computeFFT(const std::vector<double> &inputSignal, std::vector<double> &amp
 void detectCircles(cv::Mat &image, std::vector<cv::Vec3f> &circles, int min, int max, int canny, int accum);
 void updateNumericalLabel(QLabel *label, int val);
 
-
+void accumulateBatch(cv::Mat& accumulator, const cv::Mat& batchAverage);
 
 
 #endif // UTILS_H

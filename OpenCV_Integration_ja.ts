@@ -294,12 +294,12 @@
         <translation>オプションを選択してください</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="80"/>
+        <location filename="mainwindow.ui" line="111"/>
         <source>Run</source>
         <translation>実行</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="183"/>
+        <location filename="mainwindow.ui" line="167"/>
         <source>File</source>
         <translation>ファイル</translation>
     </message>
@@ -319,77 +319,111 @@
         <translation>周波数検出</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="89"/>
+        <location filename="mainwindow.ui" line="82"/>
         <source>Select Folder</source>
         <translation>フォルダを選択</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="105"/>
-        <source>Save</source>
-        <translation>セーブ</translation>
-    </message>
-    <message>
-        <location filename="mainwindow.ui" line="138"/>
+        <location filename="mainwindow.ui" line="122"/>
         <source>TextLabel</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="145"/>
+        <location filename="mainwindow.ui" line="129"/>
         <source>Open Video</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="152"/>
+        <location filename="mainwindow.ui" line="136"/>
         <source>Cancel Process</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="162"/>
+        <location filename="mainwindow.ui" line="146"/>
         <source>Run Video Processing</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="188"/>
+        <location filename="mainwindow.ui" line="172"/>
         <source>Language</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="196"/>
+        <location filename="mainwindow.ui" line="180"/>
         <source>toolBar</source>
         <translation>ツールバー</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="212"/>
+        <location filename="mainwindow.ui" line="196"/>
         <source>Home</source>
         <translation>ホーム</translation>
     </message>
     <message>
-        <location filename="mainwindow.ui" line="215"/>
+        <location filename="mainwindow.ui" line="199"/>
         <source>Return to homepage</source>
         <translation>ホームページに戻る</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="111"/>
+        <location filename="mainwindow.cpp" line="113"/>
         <source>Current Language changed to %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="162"/>
+        <location filename="mainwindow.cpp" line="164"/>
         <source>Open a Folder</source>
         <translation>フォルダを開く</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="170"/>
-        <source>Error</source>
-        <translation>エラー</translation>
+        <location filename="mainwindow.cpp" line="252"/>
+        <location filename="mainwindow.cpp" line="259"/>
+        <location filename="mainwindow.cpp" line="269"/>
+        <location filename="mainwindow.cpp" line="320"/>
+        <source>Warning</source>
+        <translation type="unfinished">警告</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="170"/>
-        <source>Invalid folder path</source>
-        <translation>フォルダパスが無効です。もう一度お試しください</translation>
+        <location filename="mainwindow.cpp" line="252"/>
+        <location filename="mainwindow.cpp" line="259"/>
+        <source>Invalid file path. Please try again</source>
+        <translation type="unfinished">ファイルパスが無効です。もう一度お試しください</translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="197"/>
+        <location filename="mainwindow.cpp" line="269"/>
+        <source>No valid images found in the directory</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="290"/>
+        <source>Processing images</source>
+        <translation type="unfinished">画像を処理中</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="290"/>
+        <source>Cancel</source>
+        <translation type="unfinished">キャンセル</translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="309"/>
+        <source>Canceled</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="309"/>
+        <source>The operation was canceled by the user.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="320"/>
+        <source>No images found</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="328"/>
+        <source>Result</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="mainwindow.cpp" line="368"/>
         <source>Open a File</source>
         <translation>ファイルを開く</translation>
     </message>
@@ -397,12 +431,12 @@
 <context>
     <name>QFileDevice</name>
     <message>
-        <location filename="utils.cpp" line="99"/>
+        <location filename="mainwindow.cpp" line="215"/>
         <source>Skipping invalid or incompatible file:</source>
         <translation>無効または互換性のないファイルをスキップします：</translation>
     </message>
     <message>
-        <location filename="utils.cpp" line="119"/>
+        <location filename="mainwindow.cpp" line="235"/>
         <source>No valid images could be processed for averaging.</source>
         <translation>平均化のために有効な画像を処理できませんでした。</translation>
     </message>

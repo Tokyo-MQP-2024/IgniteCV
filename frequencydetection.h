@@ -46,6 +46,8 @@ private slots:
 
     void on_pushButtonRunCurve_clicked();
 
+    void on_pushButtonReset_clicked();
+
 private:
     Ui::frequencyDetection *ui;
     QProgressDialog *progressDialog = nullptr;

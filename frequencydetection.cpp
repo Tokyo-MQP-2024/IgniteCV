@@ -890,3 +890,12 @@ void FrequencyDetection::exportCenterlineToCSV(const cv::Mat &data) {
     file.close();
 }
 
+
+void FrequencyDetection::on_pushButtonReset_clicked() {
+    ui->checkBoxROI->setCheckState(Qt::Unchecked);
+    ui->spinBoxX->setValue(0);
+    ui->spinBoxY->setValue(0);
+    ui->spinBoxWidth->setValue(0);
+    ui->spinBoxHeight->setValue(0);
+}
+

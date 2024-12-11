@@ -62,6 +62,8 @@ private:
     QString videoFilePath;
     FlameProcessing *flame_process;
 
+    QProgressDialog *progressDialog = nullptr;
+
     // Language
     // loads a language by the given language shortcur (e.g. de, en)
     void loadLanguage(const QString& rLanguage);
@@ -72,5 +74,7 @@ private:
     QTranslator m_translatorQt; // contains the translations for qt
     QString m_currLang; // contains the currently loaded language
     QString m_langPath; // Path of language files. This is always fixed to /translations.
+
+    cv::Mat averageBatch(const QStringList& batchPaths);
 };
 #endif // MAINWINDOW_H
