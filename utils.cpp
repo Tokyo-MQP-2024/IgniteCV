@@ -78,60 +78,64 @@ cv::Mat QImageToMat(const QImage& qimage) {
 //--------------------- IMAGE AVERAGING FUNCTIONS ---------------------
 
 // Map function to average a batch of images
-cv::Mat averageBatch(const QStringList& batchPaths) {
-    QFileInfoList fileList;
+// cv::Mat averageBatch(const QStringList& batchPaths) {
+//     QFileInfoList fileList;
 
-    // Convert each QString in batchPaths to a QFileInfo and add it to fileList
-    for (const QString& path : batchPaths) {
-        fileList.append(QFileInfo(path));
-    }
+//     // Convert each QString in batchPaths to a QFileInfo and add it to fileList
+//     for (const QString& path : batchPaths) {
+//         fileList.append(QFileInfo(path));
+//     }
 
-    // Initialize an accumulator matrix with the size of the first valid image and float precision
-    cv::Mat accumulator;
+//     // Initialize an accumulator matrix with the size of the first valid image and float precision
+//     cv::Mat accumulator;
 
-    int imageCount = 0;
-    for (const QFileInfo& fileInfo : fileList) {
-        QString filePath = fileInfo.absoluteFilePath();
-        cv::Mat img = cv::imread(filePath.toStdString());  // Load the image using OpenCV
+//     int imageCount = 0;
+//     for (const QFileInfo& fileInfo : fileList) {
+//         QString filePath = fileInfo.absoluteFilePath();
+//         cv::Mat img = cv::imread(filePath.toStdString());  // Load the image using OpenCV
 
-        // Check if the image is valid
-        if (img.empty()) {
-            qWarning() << QFileDevice::tr("Skipping invalid or incompatible file:") << filePath;
-            continue;
-        }
+//         // Check if the image is valid
+//         if (img.empty()) {
+//             qWarning() << QFileDevice::tr("Skipping invalid or incompatible file:") << filePath;
+//             continue;
+//         }
 
-        // Convert the image to float format for accumulation
-        cv::Mat floatImg;
-        img.convertTo(floatImg, CV_32FC3);
+//         // Convert the image to float format for accumulation
+//         cv::Mat floatImg;
+//         img.convertTo(floatImg, CV_32FC3);
 
-        // Initialize accumulator on the first valid image
-        if (accumulator.empty()) {
-            accumulator = cv::Mat::zeros(floatImg.size(), CV_32FC3);
-        }
+//         // Initialize accumulator on the first valid image
+//         if (accumulator.empty()) {
+//             accumulator = cv::Mat::zeros(floatImg.size(), CV_32FC3);
+//         }
 
-        // Add the current image to the accumulator
-        accumulator += floatImg;
-        ++imageCount;
-    }
+//         // Add the current image to the accumulator
+//         accumulator += floatImg;
+//         ++imageCount;
+//     }
 
-    // Ensure we have at least one valid image to average
-    if (imageCount == 0) {
-        qWarning() << QFileDevice::tr("No valid images could be processed for averaging.");
-        return cv::Mat();
-    }
+//     // Ensure we have at least one valid image to average
+//     if (imageCount == 0) {
+//         qWarning() << QFileDevice::tr("No valid images could be processed for averaging.");
+//         return cv::Mat();
+//     }
 
-    // Divide the accumulator by the number of images to get the average
-    accumulator /= static_cast<float>(imageCount);
+//     // Divide the accumulator by the number of images to get the average
+//     accumulator /= static_cast<float>(imageCount);
 
-    // Convert the result back to 8-bit for display or saving - DONT DO THIS
-    //cv::Mat averageImage;
-    //accumulator.convertTo(averageImage, CV_8UC3);
+//     // Convert the result back to 8-bit for display or saving - DONT DO THIS
+//     //cv::Mat averageImage;
+//     //accumulator.convertTo(averageImage, CV_8UC3);
 
-    return accumulator;
-}
+//     return accumulator;
+// }
 
 // Reduce function to accumulate each batch average
 void accumulateBatch(cv::Mat& accumulator, const cv::Mat& batchAverage) {
+    // Return early if cancelled
+    if(QThread::currentThread()->isInterruptionRequested()) {
+        return;
+    }
     if (batchAverage.empty()) return;
 
     // Initialize accumulator on the first valid batch
@@ -143,56 +147,56 @@ void accumulateBatch(cv::Mat& accumulator, const cv::Mat& batchAverage) {
 }
 
 // Main function to average images from a folder using optimized batch size
-cv::Mat averageImagesFromFolder(const QString& folderPath) {
-    QDir directory(folderPath);
-    directory.setFilter(QDir::Files);
-    directory.setNameFilters({"*.jpg", "*.jpeg", "*.png", "*.bmp", "*.tif", "*.tiff"});
-    QFileInfoList fileList = directory.entryInfoList();
+// cv::Mat averageImagesFromFolder(const QString& folderPath) {
+//     QDir directory(folderPath);
+//     directory.setFilter(QDir::Files);
+//     directory.setNameFilters({"*.jpg", "*.jpeg", "*.png", "*.bmp", "*.tif", "*.tiff"});
+//     QFileInfoList fileList = directory.entryInfoList();
 
-    if (fileList.isEmpty()) {
-        qWarning() << "No valid images found in the folder.";
-        return cv::Mat();
-    }
+//     if (fileList.isEmpty()) {
+//         qWarning() << "No valid images found in the folder.";
+//         return cv::Mat();
+//     }
 
-    // Convert QFileInfoList to QStringList of file paths
-    QStringList filePaths;
-    for (const QFileInfo& fileInfo : fileList) {
-        filePaths << fileInfo.absoluteFilePath();
-    }
+//     // Convert QFileInfoList to QStringList of file paths
+//     QStringList filePaths;
+//     for (const QFileInfo& fileInfo : fileList) {
+//         filePaths << fileInfo.absoluteFilePath();
+//     }
 
-    // Calculate optimized batch size with a minimum of 1
-    int idealThreadCount = QThread::idealThreadCount();
-    int batchSize = std::max(1, (int)(filePaths.size() / idealThreadCount));
+//     // Calculate optimized batch size with a minimum of 1
+//     int idealThreadCount = QThread::idealThreadCount();
+//     int batchSize = std::max(1, (int)(filePaths.size() / idealThreadCount));
 
-    // Divide file paths into batches, ensuring all files are included
-    QList<QStringList> batches;
-    for (int i = 0; i < filePaths.size(); i += batchSize) {
-        batches.append(filePaths.mid(i, batchSize));
-    }
+//     // Divide file paths into batches, ensuring all files are included
+//     QList<QStringList> batches;
+//     for (int i = 0; i < filePaths.size(); i += batchSize) {
+//         batches.append(filePaths.mid(i, batchSize));
+//     }
 
-    // Run QtConcurrent::mappedReduced with optimized batch size
-    cv::Mat accumulator = QtConcurrent::mappedReduced<cv::Mat>(
-                              batches,                      // Input batches
-                              averageBatch,                 // Map function
-                              accumulateBatch//,              // Reduce function
-                              //QtConcurrent::OrderedReduce   // Ensures reduction order
-                              ).result();
+//     // Run QtConcurrent::mappedReduced with optimized batch size
+//     cv::Mat accumulator = QtConcurrent::mappedReduced<cv::Mat>(
+//                               batches,                      // Input batches
+//                               averageBatch,                 // Map function
+//                               accumulateBatch//,              // Reduce function
+//                               //QtConcurrent::OrderedReduce   // Ensures reduction order
+//                               ).result();
 
-    // Final averaging
-    int totalBatchCount = batches.size();
-    if (totalBatchCount > 0 && !accumulator.empty()) {
-        accumulator /= static_cast<float>(totalBatchCount);
-    } else {
-        qWarning() << "No valid images could be processed for averaging.";
-        return cv::Mat();
-    }
+//     // Final averaging
+//     int totalBatchCount = batches.size();
+//     if (totalBatchCount > 0 && !accumulator.empty()) {
+//         accumulator /= static_cast<float>(totalBatchCount);
+//     } else {
+//         qWarning() << "No valid images could be processed for averaging.";
+//         return cv::Mat();
+//     }
 
-    // Convert to 8-bit for display or saving
-    cv::Mat averageImage;
-    accumulator.convertTo(averageImage, CV_8UC3);
+//     // Convert to 8-bit for display or saving
+//     cv::Mat averageImage;
+//     accumulator.convertTo(averageImage, CV_8UC3);
 
-    return averageImage;
-}
+//     return averageImage;
+// }
 
 //-------------------- WIDTH MEASUREMENT FUNCTIONS --------------------
 
@@ -335,6 +339,7 @@ void imageWidthOverlay(cv::Mat &image) {
 // Edits image and circles vector in place.
 void detectCircles(cv::Mat &image, std::vector<cv::Vec3f> &circles, int min, int max, int canny, int accum) {
 
+
     // Convert to gray
     std::cout << "made it to function call\n";
     cv::Mat gray;
@@ -370,7 +375,9 @@ void detectCircles(cv::Mat &image, std::vector<cv::Vec3f> &circles, int min, int
 
 }
 
-void createGridlines(cv::Mat &image, std::vector<cv::Vec3f> &circles) {
+
+
+std::vector<double> createGridlines(cv::Mat &image, std::vector<cv::Vec3f> &circles) {
     // Sort circle vector by x values
     std::sort(circles.begin(), circles.end(), [](const cv::Vec3i &a, const cv::Vec3i &b) {
         return a[0] < b[0];
@@ -381,7 +388,7 @@ void createGridlines(cv::Mat &image, std::vector<cv::Vec3f> &circles) {
     }
 
     // Average x values of circles within threshold
-    int threshold = 10;
+    int threshold = 10; // TODO: add slider for this
     float prev = -1;
     std::vector<double> averages;
     double columnSum = 0;
@@ -405,37 +412,46 @@ void createGridlines(cv::Mat &image, std::vector<cv::Vec3f> &circles) {
         }
         prev = value;
     }
-
-    // Draw vertical lines between the averages
+    std::vector<double> lines;    // Draw vertical lines between the averages
     for(int i = 0; i < averages.size() - 1; i++) {
         double lineX = (averages[i] + averages[i + 1]) / 2.0;
+        lines.push_back(lineX);
         cv::Point startPoint(lineX, 0);
         cv::Point endPoint(lineX, image.rows);
-
         cv::line(image, startPoint, endPoint, cv::Scalar(0, 255, 0), 2);
     }
 
+    return lines;
 }
-void graphicsViewHelper(QGraphicsView *view, FlameProcessing *fp, cv::Mat f) {
 
-    //TOD: rm fp
+std::vector<double> createManualGridlines(cv::Mat &image, int numLines, int left, int right) {
+    std::vector<double> xLineCoords;
+    int width = right-left;
+    // Calculate the spacing between each line
+    int spacing = width / (numLines + 1);  // Evenly distribute lines between the left and right
+    // Generate the x coordinates for the gridlines
+    for (int i = 1; i <= numLines; ++i) {
+        int xCoord = left + i * spacing;
+        xLineCoords.push_back(xCoord); // Add the x-coordinate to the vector
+    }
+    for(int i = 0; i < xLineCoords.size(); i++) {
+        cv::Point startPoint(xLineCoords[i], 0);
+        cv::Point endPoint(xLineCoords[i], image.rows);
+        cv::line(image, startPoint, endPoint, cv::Scalar(0, 255, 0), 2);
+    }
+    return xLineCoords;
+}
 
 
-    //std::string filePathSTD = filePath.toStdString();
-    //ui->FileLabel->setText(filePath);
-    //videoFilePath = filePathSTD;
-    //view = new QGraphicsView();
-    QGraphicsScene *scene = new QGraphicsScene();
+
+void graphicsViewHelper(QGraphicsView *view, cv::Mat f, QGraphicsScene *scene) {
+    //std::cout<<"frame\n";
     view->setScene(scene);
-    //cv::VideoCapture cap(videoFilePath);
-    //cv::Mat frame1;
-    //cap >> frame1;
     view->scene()->clear();
     QImage qimg = matToQImage(f);
     QPixmap pixmap = QPixmap::fromImage(qimg);
     QGraphicsPixmapItem *item = scene->addPixmap(pixmap);
     view->fitInView(item, Qt::KeepAspectRatio);
-
 }
 
 // Fast Fourier Transform for frequency detection
@@ -473,4 +489,93 @@ void updateNumericalLabel(QLabel *label, int val) {
 
     QString valSTR = QString::number(val);
     label->setText(valSTR);
+}
+
+void updateDoubleLabel(QLabel *label, double val) {
+    QString valSTR = QString::number(val)+ " cm^2";
+    label->setText(valSTR);
+}
+
+double calcLOBFAngle(double vx, double vy, double refVx, double refVy) {
+    double magnitude = std::sqrt(vx * vx + vy * vy);
+    double normVx = vx / magnitude;
+    double normVy = vy / magnitude;
+    double dotProduct = normVx * refVx + normVy * refVy;
+    double crossProduct = normVx * refVy - normVy * refVx;
+    double angleRad = std::atan2(crossProduct, dotProduct);
+    double angleDeg = angleRad * 180.0 / CV_PI;
+    return angleDeg;
+}
+
+
+// Function to write pixel data to a CSV file
+void writePosDataToCSV(const std::vector<std::vector<double>>& totalPosData, const std::string& filePath) {
+    // Open the file for writing
+    std::ofstream outFile(filePath);
+    if (!outFile.is_open()) {
+        std::cerr << "Error: Could not open file for writing: " << filePath << std::endl;
+        return;
+    }
+    // Determine the maximum length of any segment
+    size_t numRows = totalPosData[0].size(); // Assume all segments have the same size
+    size_t numSegments = totalPosData.size();
+    for (int i = 0; i < numSegments; i++) {
+        outFile << "Segment " << i;
+        if(i != numSegments - 1) {
+            outFile << ",";
+        }else {
+            outFile << "\n";
+        }
+    }
+    // Write transposed data
+    for (size_t i = 0; i < numRows; ++i) {
+        for (size_t j = 0; j < numSegments; ++j) {
+            outFile << totalPosData[j][i]; // Write element in the transposed position
+            if (j < numSegments - 1) {
+                outFile << ","; // Add comma between elements
+            }
+        }
+        outFile << "\n"; // Newline after each transposed row
+    }
+    // Close the file
+    outFile.close();
+    std::cout << "File written successfully to: " << filePath << std::endl;
+}
+
+
+
+void writeAngleDataToCSV(const std::vector<std::vector<double>>& totalAngleData, const std::string& filePath) {
+    // Open the file for writing
+    std::ofstream outFile(filePath);
+    if (!outFile.is_open()) {
+        std::cerr << "Error: Could not open file for writing: " << filePath << std::endl;
+        return;
+    }
+    // Determine the maximum length of any segment
+    //size_t numRows = totalPosData.size(); // Assume all segments have the same size
+    size_t numSegments = totalAngleData[0].size();
+    size_t numRows = totalAngleData.size();
+    for (int i = 0; i < numSegments; i++) {
+        outFile << "Segment " << i;
+        if(i != numSegments - 1) {
+            outFile << ",";
+        }else {
+            outFile << "\n";
+        }
+    }
+
+    for (size_t i = 0; i < numRows; ++i) {
+        for(size_t j = 0; j < numSegments; ++j) {
+            outFile << totalAngleData[i][j];
+            if (j < numSegments - 1) {
+                outFile << ","; // Add comma between elements
+            }
+        }
+        outFile << "\n";
+    }
+
+
+
+    outFile.close();
+    std::cout << "File written successfully to: " << filePath << std::endl;
 }

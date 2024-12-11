@@ -9,6 +9,8 @@
 #include <qtranslator.h>
 #include <QtUiTools/QUiLoader>
 #include "utils.h"
+#include <QFutureWatcher>
+#include <QTConcurrent/QtConcurrentMap>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -164,19 +166,188 @@ void MainWindow::on_pushButton_2_clicked() {
 }
 
 // Average images in selected folder
+// void MainWindow::on_pushButton_4_clicked() {
+//     // Make sure file path is valid
+//     if(!QDir(ui->label_4->text()).exists() || ui->label_4->text() == "") {
+//         QMessageBox::critical(this, tr("Error"), tr("Invalid folder path"));
+//         return;
+//     }
+//     // Helper function from utils
+//     ui->pushButton_4->setDisabled(true);
+
+
+//     QFuture<cv::Mat> future = QtConcurrent::run(averageImagesFromFolder, ui->label_4->text());
+//     cv::Mat averageImage = future.result();
+//     cv::imshow("test", averageImage);
+//     ui->pushButton_4->setDisabled(false);
+// }
+
+// Map function to average a batch of images
+cv::Mat MainWindow::averageBatch(const QStringList& batchPaths) {
+    QFileInfoList fileList;
+
+    // Convert each QString in batchPaths to a QFileInfo and add it to fileList
+    for (const QString& path : batchPaths) {
+        fileList.append(QFileInfo(path));
+    }
+
+    // Initialize an accumulator matrix with the size of the first valid image and float precision
+    cv::Mat accumulator;
+
+    int imageCount = 0;
+    for (const QFileInfo& fileInfo : fileList) {
+        // Return early if cancelled
+        if(QThread::currentThread()->isInterruptionRequested()) {
+            return cv::Mat();
+        }
+        QString filePath = fileInfo.absoluteFilePath();
+
+        QFile file(filePath);
+        file.open(QFile::ReadOnly);
+        qint64 sz = file.size();
+        std::vector<uchar> buf(sz);
+        file.read((char*) buf.data(), sz);
+
+        cv::Mat img = cv::imdecode(buf, cv::IMREAD_COLOR); // For japanese filepath compatibility
+
+        // Check if the image is valid
+        if (img.empty()) {
+            qWarning() << QFileDevice::tr("Skipping invalid or incompatible file:") << filePath;
+            continue;
+        }
+
+        // Convert the image to float format for accumulation
+        cv::Mat floatImg;
+        img.convertTo(floatImg, CV_32FC3);
+
+        // Initialize accumulator on the first valid image
+        if (accumulator.empty()) {
+            accumulator = cv::Mat::zeros(floatImg.size(), CV_32FC3);
+        }
+
+        // Add the current image to the accumulator
+        accumulator += floatImg;
+        ++imageCount;
+    }
+
+    // Ensure we have at least one valid image to average
+    if (imageCount == 0) {
+        qWarning() << QFileDevice::tr("No valid images could be processed for averaging.");
+        return cv::Mat();
+    }
+
+    // Divide the accumulator by the number of images to get the average
+    accumulator /= static_cast<float>(imageCount);
+
+    // Convert the result back to 8-bit for display or saving - DONT DO THIS
+    //cv::Mat averageImage;
+    //accumulator.convertTo(averageImage, CV_8UC3);
+    return accumulator;
+}
+
 void MainWindow::on_pushButton_4_clicked() {
-    // Make sure file path is valid
-    if(!QDir(ui->label_4->text()).exists() || ui->label_4->text() == "") {
-        QMessageBox::critical(this, tr("Error"), tr("Invalid folder path"));
+    // Check for empty files
+    QString folderPath = ui->label_4->text();
+    if(folderPath == "") {
+        QMessageBox::warning(this, tr("Warning"), tr("Invalid file path. Please try again"));
         return;
     }
-    // Helper function from utils
-    ui->pushButton_4->setDisabled(true);
-    QFuture<cv::Mat> future = QtConcurrent::run(averageImagesFromFolder, ui->label_4->text());
-    cv::Mat averageImage = future.result();
-    cv::imshow("test", averageImage);
-    ui->pushButton_4->setDisabled(false);
+    QDir dir(folderPath);
+
+    // Return if folder is invalid
+    if(!dir.exists()) {
+        QMessageBox::warning(this, tr("Warning"), tr("Invalid file path. Please try again"));
+        return;
+    }
+
+
+    dir.setFilter(QDir::Files);
+    dir.setNameFilters({"*.jpg", "*.jpeg", "*.png", "*.bmp", "*.tif", "*.tiff"});
+    QFileInfoList fileList = dir.entryInfoList();
+
+    if (fileList.isEmpty()) {
+        QMessageBox::warning(this, tr("Warning"), tr("No valid images found in the directory"));
+        return;
+    }
+
+    // Convert QFileInfoList to QStringList of file paths
+    QStringList filePaths;
+    for (const QFileInfo& fileInfo : fileList) {
+        filePaths << fileInfo.absoluteFilePath();
+    }
+
+    // Calculate optimized batch size with a minimum of 1
+    int idealThreadCount = QThread::idealThreadCount();
+    int batchSize = std::max(1, (int)(filePaths.size() / idealThreadCount));
+
+    // Divide file paths into batches, ensuring all files are included
+    QList<QStringList> batches;
+    for (int i = 0; i < filePaths.size(); i += batchSize) {
+        batches.append(filePaths.mid(i, batchSize));
+    }
+
+    // Create the progress dialog with a cancel button
+    progressDialog = new QProgressDialog(tr("Processing images"), tr("Cancel"), 0, filePaths.size(), this);
+    progressDialog->setWindowModality(Qt::WindowModal); // Modal dialog to block interaction with the main window
+    progressDialog->setMinimumDuration(0); // Show instantly
+    progressDialog->setAutoClose(true);    // Close automatically when done
+    progressDialog->setAutoReset(true);    // Reset automatically when done
+
+
+    // Create FutureWatcher to monitor progress
+    QFutureWatcher<cv::Mat> *watcher = new QFutureWatcher<cv::Mat>(this);
+
+    // Connect progress dialog cancel button to stop processing
+    connect(progressDialog, &QProgressDialog::canceled, watcher, &QFutureWatcher<cv::Mat>::cancel);
+
+    // Connect progress updates
+    connect(watcher, &QFutureWatcher<cv::Mat>::progressValueChanged, progressDialog, &QProgressDialog::setValue);
+
+    // Connect when processing is finished
+    connect(watcher, &QFutureWatcher<cv::Mat>::finished, this, [this, watcher, batches](){
+        if(watcher->isCanceled()) {
+            QMessageBox::information(this, tr("Canceled"), tr("The operation was canceled by the user."));
+        } else {
+            // Collect results when finished
+            QFuture<cv::Mat> future = watcher->future();
+            cv::Mat accumulator = future.result();
+
+            // Final averaging
+            int totalBatchCount = batches.size();
+            if (totalBatchCount > 0 && !accumulator.empty()) {
+                accumulator /= static_cast<float>(totalBatchCount);
+            } else {
+                QMessageBox::warning(this, tr("Warning"), tr("No images found"));
+                return 0;
+            }
+
+            // Convert to 8-bit for display or saving
+            cv::Mat averageImage;
+            accumulator.convertTo(averageImage, CV_8UC3);
+
+            cv::imshow(tr("Result").toStdString(), averageImage);
+        }
+        watcher->deleteLater(); // Clean up the watcher
+        progressDialog->deleteLater(); // Clean up progress dialog
+        return 0;
+    });
+
+    // Cool and chill little lambda function to replace std::bind
+    QFuture<cv::Mat> future = QtConcurrent::mappedReduced<cv::Mat>(batches, [this](const QStringList& batchPaths){
+        // Return early if cancelled
+        if(QThread::currentThread()->isInterruptionRequested()) {
+            return cv::Mat();
+        }
+        cv::Mat result = averageBatch(batchPaths);
+        QMetaObject::invokeMethod(progressDialog, "setValue", Q_ARG(int, progressDialog->value() + 1));
+        return result;
+    }, accumulateBatch);
+    watcher->setFuture(future);
+    progressDialog->setMaximum(batches.size());
 }
+
+
+
 
 // button for running video processing program
 void MainWindow::on_ProcessVideoButton_clicked()

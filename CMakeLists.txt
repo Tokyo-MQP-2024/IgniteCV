@@ -21,11 +21,7 @@ link_directories(${CMAKE_SOURCE_DIR}/fftw-3.3.5-dll64)
 
 qt_standard_project_setup(I18N_TRANSLATED_LANGUAGES ja)
 
-#set(TS_FILES OpenCV_Integration_en_US.ts)
-set(TS_FILES OpenCV_Integration_ja.ts)
-
 set(PROJECT_SOURCES
-        #${TS_FILES}
         mainwindow.cpp mainwindow.h mainwindow.ui
         image.png
         main.cpp mainwindow.cpp
@@ -49,8 +45,6 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
 #    set_property(TARGET OpenCV_Integration APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
 #                 ${CMAKE_CURRENT_SOURCE_DIR}/android)
 # For more information, see https://doc.qt.io/qt-6/qt-add-executable.html#target-creation
-
-    #qt_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 else()
     if(ANDROID)
         add_library(OpenCV_Integration SHARED
@@ -63,18 +57,7 @@ else()
             ${PROJECT_SOURCES}
         )
     endif()
-
-    #qt5_create_translation(QM_FILES ${CMAKE_SOURCE_DIR} ${TS_FILES})
 endif()
-
-# Language stuff
-# configure_file(${QM_FILES} ${CMAKE_SOURCE_DIR} COPYONLY)
-# qt_collect_translation_source_targets(TARGETS)
-# qt_add_lupdate(
-#    TS_FILES ${TS_FILES}
-#   SOURCES ${TARGETS}
-# )
-
 
 # MAKE SURE TO GO TO BUILD STEPS TO ADD update_translations AND release_translations AS BUILD STEPS!
 qt6_add_translations(TARGETS OpenCV_Integration

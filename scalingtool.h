@@ -14,6 +14,8 @@
 #include <QtCharts/QBarCategoryAxis>
 #include <QtCharts/QValueAxis>
 
+#include <QTimer>
+
 
 //#include "mainwindow.h"
 //#include "FlameProcessing.h"
@@ -94,6 +96,51 @@ private slots:
 
 
 
+    void on_HSVbutton_clicked();
+
+
+
+
+    void on_HMin_valueChanged(int arg1);
+
+    void on_HMax_valueChanged(int arg1);
+
+    void on_SMin_valueChanged(int arg1);
+
+    void on_SMax_valueChanged(int arg1);
+
+    void on_VMin_valueChanged(int arg1);
+
+    void on_VMax_valueChanged(int arg1);
+
+    void on_pushButton_8_clicked();
+
+    void on_pushButton_9_clicked();
+
+    //void writePixelDataToCSV(const std::vector<std::vector<double>>& totalPixelData, const std::string& filePath);
+
+
+
+    void on_SavePosDataButton_clicked();
+
+
+
+    void on_SegmentSpinBox_valueChanged(int arg1);
+
+    void on_TrackAnglesButton_clicked();
+
+    void on_AngleSaveButton_clicked();
+
+    void on_AngleThresholdWheel_valueChanged(int arg1);
+
+    void on_AreaTrackButton_clicked();
+
+    void on_FrameThreshSlider_valueChanged(int value);
+
+    void on_startFrame_valueChanged(int arg1);
+
+    void changeEvent(QEvent* event);
+
 private:
     Ui::ScalingTool *ui;
 
@@ -104,8 +151,12 @@ private:
     bool scaleYDone = false;
     bool editXDone = false;
     bool editYDone = false;
+    bool stopProcess = false;
 
     cv::VideoCapture globalCap;
+    QGraphicsScene *scene = new QGraphicsScene();
+    // QTimer *timer;
+    QThread *workerThread = nullptr;
 
 
 
@@ -128,6 +179,22 @@ private:
     int maxRad = 11;
     int canny = 10;
     int accumulator = 5;
+
+
+    int minHue = 0, maxHue = 50;
+    int minSat = 50, maxSat = 255;
+    int minVal =  150, maxVal = 255;
+
+
+    std::vector<double> dataSegments;
+    std::vector<std::vector<double>> totalPosData;
+    std::vector<std::vector<double>> totalAngleData;
+
+    int segmentLines;
+
+    int angleThreshold;
+
+    int areaFrameThreshold;
 
 
 

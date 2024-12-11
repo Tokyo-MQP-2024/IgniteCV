@@ -4,6 +4,8 @@
 
 
 
+
+
 ScalingTool::ScalingTool(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::ScalingTool)
@@ -34,10 +36,42 @@ ScalingTool::ScalingTool(QWidget *parent)
     updateNumericalLabel(ui->MaxLabel, maxRad);
 
 
+    std::cout<<maxHue;
+    ui->HMax->setMaximum(179);
+    ui->HMin->setMaximum(278);
+    ui->HMax->setValue(maxHue);
+
+    ui->SMax->setMaximum(255);
+    ui->SMax->setValue(maxSat);
+    ui->SMin->setValue(minSat);
+    ui->SMin->setMaximum(254);
+
+    ui->VMax->setMaximum(255);
+    ui->VMin->setMaximum(254);
+    ui->VMin->setValue(minVal);
+    ui->VMax->setValue(maxVal);
+
+
+
+    angleThreshold = 40;
+
+    areaFrameThreshold = 50;
+    ui->FrameThreshSlider->setMaximum(400);
+    ui->FrameThreshSlider->setValue(areaFrameThreshold);
+    updateNumericalLabel(ui->FrameThreshLabel, areaFrameThreshold);
+
     //setupHistogram();
     //ui->WhiteVal->setText();
 
 
+}
+
+void ScalingTool::changeEvent(QEvent* event) {
+    if (event->type() == QEvent::LanguageChange) {
+        // Update the UI elements to the new language
+        ui->retranslateUi(this);
+    }
+    QWidget::changeEvent(event);
 }
 
 ScalingTool::~ScalingTool()
@@ -124,9 +158,6 @@ void ScalingTool::imageROISelect(std::string vf) {
     //cv::resize(image, image, cv::Size(), 0.5, 0.5); // Scale down by half
     cv::Rect roi;
 
-    // // Resize the window for displaying the image
-    // cv::namedWindow("Select ROI", cv::WINDOW_NORMAL);
-    // cv::resizeWindow("Select ROI", 800, 600); // Resize the window (example: 800x600)
 
     cv::Mat imgCopy;
     image.copyTo(imgCopy);
@@ -155,6 +186,8 @@ void ScalingTool::imageROISelect(std::string vf) {
     maskH = roi.height;
     maskW = roi.width;
 
+    flame_process->setROIBox(maskX, maskY, maskH, maskW);
+
     roiSelected = true;
 
     cv::Mat frame;
@@ -162,7 +195,7 @@ void ScalingTool::imageROISelect(std::string vf) {
         applyROIMask(frame);
         frame.copyTo(currSelectFrame);
     }
-    graphicsViewHelper(ui->FileViewWindow, flame_process, frame);
+    graphicsViewHelper(ui->FileViewWindow, frame, scene);
 
 
 
@@ -187,7 +220,7 @@ void ScalingTool::on_ScaleXEdit_editingFinished()
 {
     editXDone = true;
     if (scaleXDone && scaleYDone && editXDone && editYDone) {
-        ui->ROIButton->setDisabled(false);
+        ui->BeginButton->setDisabled(false);
     }
 }
 
@@ -196,7 +229,7 @@ void ScalingTool::on_ScaleYEdit_editingFinished()
 {
     editYDone = true;
     if (scaleXDone && scaleYDone && editXDone && editYDone) {
-        ui->ROIButton->setDisabled(false);
+        ui->BeginButton->setDisabled(false);
     }
 }
 
@@ -204,6 +237,7 @@ void ScalingTool::on_ScaleYEdit_editingFinished()
 void ScalingTool::on_BeginButton_clicked()
 {
     //flame_process->parseVideo()
+    flame_process->setScale();
     ui->EditPanel->setCurrentIndex(1);
 }
 
@@ -225,6 +259,7 @@ void ScalingTool::on_AutoButton2_clicked()
 // FILE UPLOAD FUNCTION
 void ScalingTool::on_pushButton_2_clicked()
 {
+    stopProcess = false;
     QString filePath = QFileDialog::getOpenFileName(this, tr("Open a File"), "C://");
     std::string filePathSTD = filePath.toStdString();
     flame_process = new FlameProcessing(); // create new instance of flame process
@@ -241,7 +276,7 @@ void ScalingTool::on_pushButton_2_clicked()
 
         globalCap.open(videoFilePath);
 
-        graphicsViewHelper(ui->FileViewWindow, flame_process, frame1);
+        graphicsViewHelper(ui->FileViewWindow, frame1, scene);
 
 
         int totalFrames = static_cast<int>(cap.get(cv::CAP_PROP_FRAME_COUNT));
@@ -250,9 +285,6 @@ void ScalingTool::on_pushButton_2_clicked()
     } else {
         ui->FileLabel->setText("File must be .mp4");
     }
-
-
-
 }
 
 
@@ -270,10 +302,10 @@ void ScalingTool::on_VideoScroll_valueChanged(int value)
     if (globalCap.read(frame)) {
         if(roiSelected) {
             applyROIMask(frame);
-            graphicsViewHelper(ui->FileViewWindow, flame_process, frame);
+            graphicsViewHelper(ui->FileViewWindow, frame, scene);
 
         } else {
-            graphicsViewHelper(ui->FileViewWindow, flame_process, frame);
+            graphicsViewHelper(ui->FileViewWindow, frame, scene);
         }
 
         frame.copyTo(currSelectFrame);
@@ -298,76 +330,58 @@ void ScalingTool::on_pushButton_7_clicked()
 // Open circle detect edit panel
 void ScalingTool::on_pushButton_4_clicked()
 {
-    cv::Mat newImg;
-    levelsIMG.copyTo(newImg);
+    if(!levelsIMG.empty()) {
+        cv::Mat newImg;
+        levelsIMG.copyTo(newImg);
+        std::cout << "DETETCING CIRCLES\n";
+        std::vector<cv::Vec3f> circles;
+        detectCircles(newImg, circles, minRad, maxRad, canny, accumulator);
+        dataSegments = createGridlines(newImg, circles);
+        graphicsViewHelper(ui->FileViewWindow, newImg, scene);
+    }
 
-    std::cout << "DETETCING CIRCLES\n";
-    std::vector<cv::Vec3f> circles;
-    detectCircles(newImg, circles, minRad, maxRad, canny, accumulator);
+    // if(!levelsIMG.empty()) {
+    //     cv::Mat newImg;
+    //     currSelectFrame.copyTo(levelsIMG);
 
-    createGridlines(newImg, circles);
-    graphicsViewHelper(ui->FileViewWindow, flame_process, newImg);
+    //     std::cout << "DETETCING CIRCLES\n";
+    //     std::vector<cv::Vec3f> circles;
+    //     detectCircles(newImg, circles, minRad, maxRad, canny, accumulator);
+
+    //     createGridlines(newImg, circles);
+    //     graphicsViewHelper(ui->FileViewWindow, newImg, scene);
+    // }
 
 }
 
 
 
 void ScalingTool::adjustLevels(cv::Mat image) {
-
     double gamma = 1.0;
-
     image.copyTo(levelsIMG);
-
-
-
-
-    // Create a chart
-    //QChart *chart = new QChart();
-
-    // Set the title for the chart
-    //chart->setTitle("RGB Histogram");
-
-
     if (clipBlack >= clipWhite) {
         std::cerr << "Error: Black level must be less than white level!" << std::endl;
-
     } else {
-
-
-
         // Loop through each pixel
         for (int row = 0; row < levelsIMG.rows; ++row) {
             for (int col = 0; col < levelsIMG.cols; ++col) {
-
                 // Access each color channel for the pixel (BGR format)
                 cv::Vec3b& pixel = levelsIMG.at<cv::Vec3b>(row, col);
-
                 // Adjust each channel: Blue, Green, Red
                 for (int channel = 0; channel < 3; ++channel) {
                     uchar& colorValue = pixel[channel];
-
                     // Normalize to [0, 1]
                     float normalized = (colorValue - clipBlack) / static_cast<float>(clipWhite - clipBlack);
                     normalized = std::clamp(normalized, 0.0f, 1.0f); // Clamp to [0, 1]
-
                     // Apply gamma correction
                     float corrected = std::pow(normalized, 1.0 / gamma);
-
                     // Scale back to [0, 255]
                     colorValue = static_cast<uchar>(corrected * 255.0f);
                 }
-
             }
         }
-
-        graphicsViewHelper(ui->FileViewWindow, flame_process, levelsIMG);
+        graphicsViewHelper(ui->FileViewWindow, levelsIMG, scene);
     }
-
-
-
-
-
-
 }
 
 
@@ -379,8 +393,8 @@ void ScalingTool::on_BlackSlider_valueChanged(int value)
     clipBlack = value;
     QString valSTR = QString::number(value);
     ui->BlackVal->setText(valSTR);
-    if(!croppedFrame.empty()) {
-        adjustLevels(croppedFrame);
+    if(!currSelectFrame.empty()) {
+        adjustLevels(currSelectFrame);
         //graphicsViewHelper(ui->FileViewWindow, flame_process, croppedFrame);
     }
 
@@ -392,43 +406,12 @@ void ScalingTool::on_WhiteSlider_valueChanged(int value)
 {
     clipWhite = value;
     updateNumericalLabel(ui->WhiteVal, value);
-    if(!croppedFrame.empty()) {
-        adjustLevels(croppedFrame);
+    if(!currSelectFrame.empty()) {
+        adjustLevels(currSelectFrame);
         //graphicsViewHelper(ui->FileViewWindow, flame_process, croppedFrame);
     }
     //graphicsViewHelper(ui->FileViewWindow, flame_process, croppedFrame);
 }
-
-
-// void ScalingTool::setupHistogram()
-// {
-//     // Example data for the histogram
-//     QVector<double> bins = {1, 2, 3, 4, 5};      // X-axis bins
-//     QVector<double> frequencies = {5, 15, 25, 10, 8}; // Y-axis values
-
-//     // Create a QCPBars object
-//     QCPBars *histogram = new QCPBars(ui->customPlot->xAxis, ui->customPlot->yAxis);
-//     histogram->setWidth(0.5);                   // Bar width
-//     histogram->setBrush(QBrush(Qt::blue));     // Bar color
-//     histogram->setPen(QPen(Qt::black));        // Border color
-
-//     // Set data
-//     histogram->setData(bins, frequencies);
-
-//     // Customize axes
-//     ui->customPlot->xAxis->setLabel("Bins");
-//     ui->customPlot->yAxis->setLabel("Frequency");
-
-//     // Automatically scale axes to fit the histogram
-//     ui->customPlot->xAxis->setRange(bins.first() - 1, bins.last() + 1); // Add padding
-//     ui->customPlot->yAxis->setRange(0, *std::max_element(frequencies.begin(), frequencies.end()) * 1.1); // Add 10% padding
-
-//     // Enable dynamic rescaling when data changes
-//     ui->customPlot->rescaleAxes();
-
-//     // Replot
-//     ui->customPlot->replot();
-// }
 
 
 void ScalingTool::on_MinRadSlider_valueChanged(int value)
@@ -456,6 +439,310 @@ void ScalingTool::on_Accumulator_valueChanged(int value)
 {
     accumulator = value;
     //updateNumericalLabel(ui, value);
+
+}
+
+
+void ScalingTool::on_HSVbutton_clicked()
+{
+    cv::Mat hsvFrame, hsvMask, resultFrame;
+    cv::cvtColor(currSelectFrame, hsvFrame, cv::COLOR_BGR2HSV); // Convert to HSV
+    // Create an HSV mask for flame colors
+    cv::inRange(hsvFrame, cv::Scalar(minHue, minSat, minVal), cv::Scalar(maxHue, maxSat, maxVal), hsvMask);
+    currSelectFrame.copyTo(resultFrame, hsvMask);
+    graphicsViewHelper(ui->FileViewWindow, resultFrame, scene);
+}
+
+
+
+
+void ScalingTool::on_HMin_valueChanged(int arg1)
+{
+    if(minHue < maxHue && !(videoFilePath.empty())) {
+        minHue = arg1;
+        on_HSVbutton_clicked();
+    }
+}
+
+
+void ScalingTool::on_HMax_valueChanged(int arg1)
+{
+    if(maxHue > minHue && !(videoFilePath.empty())) {
+        maxHue = arg1;
+        on_HSVbutton_clicked();
+    }
+}
+
+
+void ScalingTool::on_SMin_valueChanged(int arg1)
+{
+    if(minSat < maxSat && !(videoFilePath.empty())) {
+        minSat = arg1;
+        on_HSVbutton_clicked();
+    }
+}
+
+
+void ScalingTool::on_SMax_valueChanged(int arg1)
+{
+    if(maxSat > minSat && !(videoFilePath.empty())) {
+        maxSat = arg1;
+        on_HSVbutton_clicked();
+    }
+}
+
+
+void ScalingTool::on_VMin_valueChanged(int arg1)
+{
+    if(minVal < maxVal && !(videoFilePath.empty())) {
+        minVal = arg1;
+        on_HSVbutton_clicked();
+    }
+}
+
+
+void ScalingTool::on_VMax_valueChanged(int arg1)
+{
+    if(maxVal > minVal && !(videoFilePath.empty())) {
+        maxVal = arg1;
+        on_HSVbutton_clicked();
+    }
+}
+
+
+// IMPORTANT FUNCTION TO PREFORM SPEED TRACKING AND ANALYZING
+// get filtered flame contour
+// loop through lines, find lowest and closest point to each line between threshold
+// record position for each line every second
+
+void ScalingTool::on_pushButton_8_clicked() {
+    cv::VideoCapture cap(videoFilePath);
+    // Check if the video file was opened successfully
+    if (!cap.isOpened()) {
+        std::cerr << "Error: FAILED OPENING FILE" << std::endl;
+    } else {
+        // Get video frame rate
+        cap.set(cv::CAP_PROP_POS_FRAMES, 0);
+        double fps = cap.get(cv::CAP_PROP_FPS);
+        double timePerFrame = 1.0/fps; // in seconds
+        double accumulatedTime = 0.0;
+        double sampleInterval = 1.0;
+        int seconds = 0;
+        int frameCount = 0;
+        cv::Mat frame;
+        std::vector<std::vector<double>> totalPixelData;
+        while (true) {
+            if(stopProcess) {
+                break;
+            }
+            accumulatedTime = accumulatedTime + timePerFrame;
+            // Capture each frame
+            cap >> frame;
+
+            // If the frame is empty, break the loop (end of video)
+            if (frame.empty()) {
+                break;
+            }
+            if(accumulatedTime > sampleInterval) {
+                //std::cout << frameCount << "\n";
+                accumulatedTime = accumulatedTime - sampleInterval;
+                seconds = seconds+1;
+                cv::Mat incoming = flame_process->findContourImage(frame);
+                //flame_process->recordAngle(dataSegments, incoming, angleThreshold);
+                std::vector<double> posData = flame_process->recordPositions(dataSegments);
+                totalPixelData.emplace_back(posData);
+                graphicsViewHelper(ui->FileViewWindow, incoming, scene);
+                int out = 0 + ((100/cap.get(cv::CAP_PROP_FRAME_COUNT)) * (frameCount));
+                ui->progressBar->setValue(out);
+                QCoreApplication::processEvents();
+            }
+            frameCount++;
+        }
+        cap.release();
+        ui->progressBar->setValue(100);
+        totalPosData = flame_process->cleanData(totalPixelData);
+    }
+}
+
+
+
+
+void ScalingTool::on_pushButton_9_clicked()
+{
+    //stopProcess = true;
+    dataSegments.clear();
+    totalAngleData.clear();
+    totalPosData.clear();
+    stopProcess = true;
+    delete flame_process;
+    ui->EditPanel->setCurrentIndex(0);
+    ui->BeginButton->setDisabled(true);
+}
+
+
+
+
+
+void ScalingTool::on_SavePosDataButton_clicked()
+{
+    // Open a file dialog to allow the user to select a location and name
+    QString fileName = QFileDialog::getSaveFileName(nullptr,"Save File","","CSV Files (*.csv);;All Files (*)");
+    if (fileName.isEmpty()) {
+        // User canceled the save dialog
+        return;
+    }
+    std::string filePathSTD = fileName.toStdString();
+    writePosDataToCSV(totalPosData, filePathSTD);
+}
+
+
+void ScalingTool::on_SegmentSpinBox_valueChanged(int arg1)
+{
+    segmentLines = arg1;
+    cv::Mat newImg;
+    currSelectFrame.copyTo(newImg);
+    //std::cout << "DETETCING CIRCLES\n";
+    //std::vector<cv::Vec3f> circles;
+    //detectCircles(newImg, circles, minRad, maxRad, canny, accumulator);
+    int maskWCoord = maskX + maskW;
+    dataSegments = createManualGridlines(newImg, segmentLines, maskX, maskWCoord);
+    graphicsViewHelper(ui->FileViewWindow, newImg, scene);
+
+}
+
+
+
+
+
+
+
+void ScalingTool::on_TrackAnglesButton_clicked()
+{
+    totalAngleData.clear();
+    cv::VideoCapture cap(videoFilePath);
+    // Check if the video file was opened successfully
+    if (!cap.isOpened()) {
+        std::cerr << "Error: FAILED OPENING FILE" << std::endl;
+    } else {
+        // Get video frame rate
+        cap.set(cv::CAP_PROP_POS_FRAMES, 0);
+        double fps = cap.get(cv::CAP_PROP_FPS);
+        double timePerFrame = 1.0/fps; // in seconds
+        double accumulatedTime = 0.0;
+        double sampleInterval = 1.0;
+        int seconds = 0;
+        int frameCount = 0;
+        cv::Mat frame;
+        std::vector<std::vector<double>> angleData;
+        while (true) {
+            if(stopProcess) {
+                break;
+            }
+            accumulatedTime = accumulatedTime + timePerFrame;
+            // Capture each frame
+            cap >> frame;
+
+            // If the frame is empty, break the loop (end of video)
+            if (frame.empty()) {
+                break;
+            }
+            if(accumulatedTime > sampleInterval) {
+                //std::cout << frameCount << "\n";
+                accumulatedTime = accumulatedTime - sampleInterval;
+                seconds = seconds+1;
+                cv::Mat incoming = flame_process->findContourImage(frame);
+                std::vector<double> angleData = flame_process->recordAngle(dataSegments, incoming, angleThreshold);
+                totalAngleData.emplace_back(angleData);
+                graphicsViewHelper(ui->FileViewWindow, incoming, scene);
+                int out = 0 + ((100/cap.get(cv::CAP_PROP_FRAME_COUNT)) * (frameCount));
+                ui->progressBar->setValue(out);
+                QCoreApplication::processEvents();
+            }
+            frameCount++;
+        }
+        cap.release();
+        ui->progressBar->setValue(100);
+        //totalPosData = flame_process->cleanData(totalPixelData);
+    }
+
+}
+
+
+void ScalingTool::on_AngleSaveButton_clicked()
+{
+    // Open a file dialog to allow the user to select a location and name
+    QString fileName = QFileDialog::getSaveFileName(nullptr,"Save File","","CSV Files (*.csv);;All Files (*)");
+    if (fileName.isEmpty()) {
+        return;
+    }
+    std::string filePathSTD = fileName.toStdString();
+    writeAngleDataToCSV(totalAngleData, filePathSTD);
+}
+
+
+void ScalingTool::on_AngleThresholdWheel_valueChanged(int arg1)
+{
+    angleThreshold = arg1;
+}
+
+
+void ScalingTool::on_AreaTrackButton_clicked()
+{
+    cv::VideoCapture cap(videoFilePath);
+    // Check if the video file was opened successfully
+    if (!cap.isOpened()) {
+        std::cerr << "Error: FAILED OPENING FILE" << std::endl;
+    } else {
+        // Get video frame rate
+
+    int frameCount = 0;
+    cv::Mat frame;
+    cap >> frame;
+    cv::Mat contourMask = cv::Mat::zeros(frame.size(), frame.type());
+    cv::Mat newFrame = cv::Mat::zeros(frame.size(), frame.type());
+
+    while (true) {
+        if(stopProcess) {
+            break;
+        }
+
+        // Capture each frame
+        cap >> frame;
+
+        // If the frame is empty, break the loop (end of video)
+        if (frame.empty()) {
+            break;
+        }
+
+            //std::cout << frameCount << "\n";
+        if(frameCount % areaFrameThreshold == 0) {
+            cv::Mat incoming = flame_process->findContourMask(frame, newFrame, contourMask);
+            double realArea = flame_process->calculateArea(incoming);
+            updateDoubleLabel(ui->AreaLabel, realArea);
+            graphicsViewHelper(ui->FileViewWindow, incoming, scene);
+            int out = 0 + ((100/cap.get(cv::CAP_PROP_FRAME_COUNT)) * (frameCount));
+            ui->AreaProgress->setValue(out);
+            QCoreApplication::processEvents();
+        }
+        frameCount++;
+        }
+
+    }
+    cap.release();
+    ui->AreaProgress->setValue(100);
+
+}
+
+
+void ScalingTool::on_FrameThreshSlider_valueChanged(int value)
+{
+    areaFrameThreshold = value;
+    updateNumericalLabel(ui->FrameThreshLabel, value);
+}
+
+
+void ScalingTool::on_startFrame_valueChanged(int arg1)
+{
 
 }
 
