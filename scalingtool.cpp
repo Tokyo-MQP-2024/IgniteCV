@@ -126,9 +126,7 @@ void ScalingTool::on_ScaleYEdit_textEdited(const QString &arg1)
 
 void ScalingTool::on_comboBox_currentIndexChanged(int index)
 {
-    for(int i =0; i < 10; i++) {
-        std::cout << "test";
-    }
+
 }
 
 
