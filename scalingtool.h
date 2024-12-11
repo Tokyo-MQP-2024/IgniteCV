@@ -133,6 +133,14 @@ private slots:
 
     void on_AngleThresholdWheel_valueChanged(int arg1);
 
+    void on_AreaTrackButton_clicked();
+
+    void on_FrameThreshSlider_valueChanged(int value);
+
+    void on_startFrame_valueChanged(int arg1);
+
+    void changeEvent(QEvent* event);
+
 private:
     Ui::ScalingTool *ui;
 
@@ -185,6 +193,8 @@ private:
     int segmentLines;
 
     int angleThreshold;
+
+    int areaFrameThreshold;
 
 
 

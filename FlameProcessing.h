@@ -54,35 +54,39 @@ public:
 
     double findAngle(double vx, double vy, double refVx, double refVy);
 
-    cv::Mat findContourMask(cv::Mat original_frame);
+    cv::Mat findContourMask(cv::Mat original_frame, cv::Mat newFrame, cv::Mat contourMask);
 
+    void addNewPixels(std::vector<cv::Point> contourPixels);
+
+    double calculateArea(cv::Mat areaImg);
 
 
 private:
 
-    bool stopProcess = false;
+    bool stopProcess;
     QGraphicsScene *scene = new QGraphicsScene();
-    int scaleClicks = 0;
+    int scaleClicks;
 
-    int currX = 0;
-    int currY = 0;
-    int pixelsX = 0;
-    int pixelsY = 0;
-    double irlScaleX = 0.0;
-    double irlScaleY = 0.0;
-    double cmPerPixel = 0.0;
+    int currX;
+    int currY;
+    int pixelsX;
+    int pixelsY;
+    double irlScaleX;
+    double irlScaleY;
+    double cmPerPixel;
+    double areaPerPixel;
 
-    bool fist_point_selected = false;
+    bool fist_point_selected;
 
     cv::Point currPos;
 
-    int maskX = 0;
-    int maskY = 0;
-    int maskH = 0;
-    int maskW = 0;
+    int maskX;
+    int maskY;
+    int maskH;
+    int maskW;
 
-    double unitPerPixelX = 0;
-    double unitPerPixelY = 0;
+    double unitPerPixelX;
+    double unitPerPixelY;
     static void mouseCallback(int event, int x, int y, int flags, void* userdata);
 
     cv::Mat frame, HSVFrame, foreground, mask, hsvMask, resultImage, dilateErodeMask;
@@ -93,6 +97,8 @@ private:
     std::vector<std::vector<cv::Point>> filteredContours;
 
     std::vector<std::vector<double>> flamePositionData;
+
+    std::vector<cv::Point> burnedAreaPixels;
 
 };
 

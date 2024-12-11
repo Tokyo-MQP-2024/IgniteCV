@@ -487,6 +487,11 @@ void updateNumericalLabel(QLabel *label, int val) {
     label->setText(valSTR);
 }
 
+void updateDoubleLabel(QLabel *label, double val) {
+    QString valSTR = QString::number(val)+ " cm^2";
+    label->setText(valSTR);
+}
+
 double calcLOBFAngle(double vx, double vy, double refVx, double refVy) {
     double magnitude = std::sqrt(vx * vx + vy * vy);
     double normVx = vx / magnitude;

@@ -9,6 +9,7 @@
 
 #include "utils.h"
 #include <qgraphicsview.h>
+#include <unordered_set>
 
 
 
@@ -16,6 +17,29 @@
 // FlameProcessing Constructor definition
 FlameProcessing::FlameProcessing() {
 
+    stopProcess = false;
+    scaleClicks = 0;
+
+    currX = 0;
+    currY = 0;
+    pixelsX = 0;
+    pixelsY = 0;
+    irlScaleX = 0.0;
+    irlScaleY = 0.0;
+    cmPerPixel = 0.0;
+    areaPerPixel = 0.0;
+
+    fist_point_selected = false;
+
+
+
+    maskX = 0;
+    maskY = 0;
+    maskH = 0;
+    maskW = 0;
+
+    unitPerPixelX = 0;
+    unitPerPixelY = 0;
 
 }
 
@@ -27,6 +51,8 @@ void FlameProcessing::setIRLScale(double x, double y){
 
 void FlameProcessing::setScale() {
     cmPerPixel = irlScaleY / pixelsY;
+    double cmPerPixelX = irlScaleX / pixelsX;
+    areaPerPixel = cmPerPixel * cmPerPixelX;
 }
 
 void FlameProcessing::scalingMouse(int event, int x, int y, int flags) {
@@ -375,8 +401,6 @@ void FlameProcessing::mouseCallback(int event, int x, int y, int flags, void* us
 
 
 
-
-
 void FlameProcessing::setROIBox(int x, int y, int h, int w) {
     maskX = x;
     maskY = y;
@@ -660,6 +684,7 @@ void FlameProcessing::drawLowestEdges(cv::Mat& image,const std::vector<cv::Point
 std::vector<cv::Point> FlameProcessing::findContourPixels(std::vector<cv::Point> contour, cv::Mat image) {
     cv::Mat mask = cv::Mat::zeros(image.size(), CV_8UC1);
     cv::drawContours(mask, std::vector<std::vector<cv::Point>>{contour}, -1, cv::Scalar(255), cv::FILLED);
+    //cv::imshow("LOOK", mask);
     std::vector<cv::Point> whitePixels;
     CV_Assert(mask.type() == CV_8UC1);
     for (int y = 0; y < mask.rows; ++y) {
@@ -672,3 +697,115 @@ std::vector<cv::Point> FlameProcessing::findContourPixels(std::vector<cv::Point>
     return whitePixels;
 }
 
+
+
+cv::Mat FlameProcessing::findContourMask(cv::Mat original_frame, cv::Mat newFrame, cv::Mat contourMask) {
+
+    //std::cout << "HERE!!" << std::endl;
+    int minThresh = 200, maxThresh = 255;
+    int blurAmount = 2;
+    int minBBArea = 60;
+
+    int minHue = 0, maxHue = 50;
+    int minSat = 50, maxSat = 255;
+    int minVal =  150, maxVal = 255;
+    burnedAreaPixels.clear();
+    // Create a black mask
+
+    // Define the rectangle for the mask
+    cv::Rect box(maskX, maskY, maskW, maskH);
+    // Copy the contents of the rectangle from the frame to the mask
+    original_frame(box).copyTo(newFrame(box));
+    // apply mask
+    //bg_sub->apply(newFrame, mask);
+    // reinit image processing masks
+    foreground.setTo(cv::Scalar(0, 0, 0));
+    HSVFrame.setTo(cv::Scalar(0, 0, 0));
+    dilateErodeMask.setTo(cv::Scalar(0,0,0));
+    newFrame.copyTo(foreground);
+    // convert foreground to HSV
+    cv::cvtColor(foreground, HSVFrame, cv::COLOR_BGR2HSV);
+    // Create an HSV mask for flame colors
+    cv::inRange(HSVFrame, cv::Scalar(minHue, minSat, minVal), cv::Scalar(maxHue, maxSat, maxVal), hsvMask);
+    // dilate the flame
+    cv::dilate(hsvMask, dMask, kernel, cv::Point(-1, -1), 2);
+    std::vector<std::vector<cv::Point>> contours;
+
+    cv::findContours(dMask, contours, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+    // for (const auto& contour : contours) {
+    //     int area = cv::contourArea(contour);
+
+    //     //std::vector<cv::Point> contourPixels = findContourPixels(contour, original_frame);
+    //     //addNewPixels(contourPixels);
+
+
+
+    //     // if (area > minBBArea) {
+    //     //     filteredContours.push_back(contour);
+
+    //     // }
+    // }
+
+    // if(!burnedAreaPixels.empty()) {
+    //     if (contourMask.channels() == 1) {
+    //         for (const auto& pixel : burnedAreaPixels) {
+    //             contourMask.at<uchar>(pixel.y, pixel.x) = 255; // Set pixel to white
+    //         }
+    //     }
+
+    //     else if (contourMask.channels() == 3) {
+    //         for (const auto& pixel : burnedAreaPixels) {
+    //             contourMask.at<cv::Vec3b>(pixel.y, pixel.x) = cv::Vec3b(255, 255, 255); // Set pixel to white
+    //         }
+    //     } else {
+    //         std::cerr << "Unsupported number of channels in the image!" << std::endl;
+    //     }
+    // }
+
+    cv::drawContours(contourMask, contours, -1, cv::Scalar(255,255,255), cv::FILLED);
+
+
+    return contourMask;
+}
+
+
+
+
+// Define a hash function for cv::Point to use with std::unordered_set
+struct PointHash {
+    std::size_t operator()(const cv::Point& point) const {
+        return std::hash<int>()(point.x) ^ (std::hash<int>()(point.y) << 1);
+    }
+};
+
+void FlameProcessing::addNewPixels(std::vector<cv::Point> contourPixels) {
+    // Use a static unordered_set to track unique points efficiently
+    static std::unordered_set<cv::Point, PointHash> burnedAreaSet;
+
+    for (const auto& pixel : contourPixels) {
+        burnedAreaSet.insert(pixel); // Add pixel to the set (duplicates are ignored)
+    }
+
+    // Clear burnedAreaPixels and update it with the unique points
+    burnedAreaPixels.assign(burnedAreaSet.begin(), burnedAreaSet.end());
+}
+
+
+double FlameProcessing::calculateArea(cv::Mat areaImg) {
+    if (areaImg.empty() || areaImg.channels() != 3) {
+        std::cerr << "Invalid input image! Ensure it's a non-empty 3-channel image." << std::endl;
+        //return;
+    }
+
+    int whitePixelCount = 0;
+    for (int row = 0; row < areaImg.rows; row++) {
+        for (int col = 0; col < areaImg.cols; col++) {
+            cv::Vec3b pixel = areaImg.at<cv::Vec3b>(row, col);
+            if (pixel[0] == 255 && pixel[1] == 255 && pixel[2] == 255) {
+                whitePixelCount++;
+            }
+        }
+    }
+    double realArea = areaPerPixel * whitePixelCount;
+    return realArea;
+}
