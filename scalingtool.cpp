@@ -60,8 +60,6 @@ ScalingTool::ScalingTool(QWidget *parent)
     ui->FrameThreshSlider->setValue(areaFrameThreshold);
     updateNumericalLabel(ui->FrameThreshLabel, areaFrameThreshold);
 
-    //setupHistogram();
-    //ui->WhiteVal->setText();
 
 
 }
@@ -81,8 +79,6 @@ ScalingTool::~ScalingTool()
 
 void ScalingTool::on_manualButton_clicked()
 {
-    // int index = ui->stackedWidget->indexOf(scalingTool);
-    // ui->stackedWidget->setCurrentIndex(index);
     ui->stackedWidget->setCurrentIndex(0);
 }
 
@@ -130,7 +126,9 @@ void ScalingTool::on_ScaleYEdit_textEdited(const QString &arg1)
 
 void ScalingTool::on_comboBox_currentIndexChanged(int index)
 {
-    std::cout << "cuurent index:" << index << "\n";
+    for(int i =0; i < 10; i++) {
+        std::cout << "test";
+    }
 }
 
 
