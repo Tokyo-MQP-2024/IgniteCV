@@ -360,7 +360,7 @@ void FrequencyDetection::exportAreasToCSV(const std::vector<double> &areas) {
     // Create a QTextStream to write data to the file
     QTextStream out(&file);
     // Write CSV headers (optional)
-    out << tr("Index") + "," + tr("Area") + "," + tr("Time") + "\n";
+    out << "Index,Area,Time\n";
 
     // Write each element of the vector to the file
     for (size_t i = 0; i < areas.size(); ++i) {

@@ -36,7 +36,7 @@
       </sizepolicy>
      </property>
      <property name="currentIndex">
-      <number>1</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="area">
       <attribute name="title">
@@ -53,7 +53,11 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit"/>
+          <widget class="QLineEdit" name="lineEdit">
+           <property name="inputMask">
+            <string notr="true"/>
+           </property>
+          </widget>
          </item>
          <item>
           <widget class="QPushButton" name="pushButtonSet">
@@ -279,7 +283,11 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEditFilenameCurve"/>
+          <widget class="QLineEdit" name="lineEditFilenameCurve">
+           <property name="inputMask">
+            <string notr="true"/>
+           </property>
+          </widget>
          </item>
          <item>
           <widget class="QPushButton" name="pushButtonSetCurve">
